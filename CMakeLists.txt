@@ -26,3 +26,4 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(raylib)
 
 add_executable(4mbjam src/main.cpp)
+target_link_libraries(4mbjam raylib)
