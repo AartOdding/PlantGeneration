@@ -4,11 +4,17 @@ project(4mbjam LANGUAGES CXX)
 include(FetchContent)
 include("${CMAKE_SOURCE_DIR}/cmake/CMakeRC.cmake")
 
+set(SHADER_FILES
+  resources/shaders/test.frag
+)
+
 cmrc_add_resource_library(static-resources
   NAMESPACE resources
   WHENCE resources
-  resources/shaders/test.frag
+  ${SHADER_FILES}
 )
+
+source_group(Shaders FILES resources/shaders/test.frag)
 
 # provide default build type release
 set(default_build_type "Release")
@@ -32,7 +38,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(raylib)
 
-add_executable(4mbjam src/main.cpp)
+add_executable(4mbjam src/main.cpp ${SHADER_FILES})
 target_link_libraries(4mbjam PRIVATE raylib)
 target_link_libraries(4mbjam PRIVATE static-resources)
 
