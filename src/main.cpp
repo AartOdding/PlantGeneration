@@ -1,8 +1,19 @@
 #include "raylib.h"
 
+#include <cmrc/cmrc.hpp>
+#include <iostream>
+
+CMRC_DECLARE(resources);
+
 
 int main()
 {
+    auto fs = cmrc::resources::get_filesystem();
+    auto f = fs.open("shaders/test.frag");
+
+    std::string frag = std::string(f.begin(), f.end());
+    std::cout << frag << std::endl;
+
     const int screenWidth = 800;
     const int screenHeight = 450;
 
