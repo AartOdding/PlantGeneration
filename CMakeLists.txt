@@ -27,3 +27,5 @@ FetchContent_MakeAvailable(raylib)
 
 add_executable(4mbjam src/main.cpp)
 target_link_libraries(4mbjam raylib)
+
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT 4mbjam)
