@@ -2,6 +2,24 @@ cmake_minimum_required(VERSION 3.16)
 project(4mbjam LANGUAGES CXX)
 
 include(FetchContent)
+include("${CMAKE_SOURCE_DIR}/cmake/CMakeRC.cmake")
+
+set(SRC_FILES
+  src/main.cpp
+)
+
+set(SHADER_FILES
+  resources/shaders/test.frag
+)
+
+cmrc_add_resource_library(static-resources
+  NAMESPACE resources
+  WHENCE resources
+  ${SHADER_FILES}
+)
+
+source_group(Sources FILES ${SRC_FILES})
+source_group(Shaders FILES ${SHADER_FILES})
 
 # provide default build type release
 set(default_build_type "Release")
@@ -25,5 +43,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(raylib)
 
-add_executable(4mbjam src/main.cpp)
-target_link_libraries(4mbjam raylib)
+add_executable(4mbjam ${SRC_FILES} ${SHADER_FILES})
+target_link_libraries(4mbjam PRIVATE raylib)
+target_link_libraries(4mbjam PRIVATE static-resources)
+
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT 4mbjam)
