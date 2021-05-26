@@ -1,4 +1,8 @@
-#include "raylib.h"
+#include <raylib.h>
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+#include <GLFW/glfw3.h>
 
 #include <cmrc/cmrc.hpp>
 #include <iostream>
@@ -22,8 +26,19 @@ int main()
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(800, 450, "Aart & Aart 4Mb Jam");
 
+    ShowCursor();
+    GetWindowHandle();
+
     SetExitKey(0); // Removes ESC to exit
     SetTargetFPS(60);
+
+    // Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGui::StyleColorsDark();
+    
+    ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)GetGLFWWindowHandle(), true);
+    ImGui_ImplOpenGL3_Init("#version 330");
 
     Camera camera{};
     camera.position = { 0.0f, 1.8f, 6.0f };    // Camera position
@@ -62,6 +77,18 @@ int main()
         DrawGrid(40, 10.0f);
 
         EndMode3D();
+
+        // Start the Dear ImGui frame
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        bool show = true;
+        ImGui::ShowDemoWindow(&show);
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 
         if (isPaused)
         {
