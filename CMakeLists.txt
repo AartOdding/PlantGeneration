@@ -11,6 +11,11 @@ set(SRC_FILES
   src/main.cpp
 )
 
+set(HEADER_FILES
+  src/debug.hpp
+  src/types.hpp
+)
+
 set(SHADER_FILES
   resources/shaders/test.frag
 )
@@ -21,7 +26,7 @@ cmrc_add_resource_library(static-resources
   ${SHADER_FILES}
 )
 
-source_group(Sources FILES ${SRC_FILES})
+source_group(Sources FILES ${SRC_FILES} ${HEADER_FILES})
 source_group(Shaders FILES ${SHADER_FILES})
 
 # provide default build type release
@@ -48,7 +53,7 @@ FetchContent_MakeAvailable(raylib)
 
 find_package(Glm REQUIRED)
 
-add_executable(4mbjam ${SRC_FILES} ${SHADER_FILES})
+add_executable(4mbjam ${SRC_FILES} ${HEADER_FILES} ${SHADER_FILES})
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   target_compile_definitions(4mbjam PRIVATE MB4_PREPROCESSOR_DEBUG)
