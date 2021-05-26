@@ -47,8 +47,8 @@ set(OpenGL_GL_PREFERENCE GLVND)
 # get raylib 
 FetchContent_Declare(
   raylib
-  GIT_REPOSITORY https://github.com/raysan5/raylib.git
-  GIT_TAG        3.7.0
+  GIT_REPOSITORY https://github.com/AartOdding/raylib.git
+  GIT_TAG        4mbjam
 )
 FetchContent_MakeAvailable(raylib)
 
