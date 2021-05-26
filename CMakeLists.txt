@@ -8,6 +8,7 @@ include(FetchContent)
 include("${CMAKE_SOURCE_DIR}/cmake/CMakeRC.cmake")
 
 set(SRC_FILES
+  src/debug.cpp
   src/main.cpp
 )
 
