@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.16)
 project(4mbjam LANGUAGES CXX)
 
+# set location of module finding scrips
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+
 include(FetchContent)
 include("${CMAKE_SOURCE_DIR}/cmake/CMakeRC.cmake")
 
@@ -43,8 +46,11 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(raylib)
 
+find_package(Glm REQUIRED)
+
 add_executable(4mbjam ${SRC_FILES} ${SHADER_FILES})
 target_link_libraries(4mbjam PRIVATE raylib)
 target_link_libraries(4mbjam PRIVATE static-resources)
+target_include_directories(4mbjam PUBLIC ${GLM_INCLUDE_DIR})
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT 4mbjam)
