@@ -47,10 +47,13 @@ set(OpenGL_GL_PREFERENCE GLVND)
 # get raylib 
 FetchContent_Declare(
   raylib
-  GIT_REPOSITORY https://github.com/raysan5/raylib.git
-  GIT_TAG        3.7.0
+  GIT_REPOSITORY https://github.com/AartOdding/raylib.git
+  GIT_TAG        4mbjam
 )
 FetchContent_MakeAvailable(raylib)
+
+# include imgui after raylib! 
+include("${CMAKE_SOURCE_DIR}/cmake/imgui.cmake")
 
 find_package(Glm REQUIRED)
 
@@ -63,6 +66,7 @@ endif()
 set_property(TARGET 4mbjam PROPERTY CXX_STANDARD 20)
 target_link_libraries(4mbjam PRIVATE raylib)
 target_link_libraries(4mbjam PRIVATE static-resources)
+target_link_libraries(4mbjam PRIVATE imgui)
 target_include_directories(4mbjam PUBLIC ${GLM_INCLUDE_DIR})
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT 4mbjam)
