@@ -3,6 +3,7 @@ project(4mbjam LANGUAGES CXX)
 
 # set location of module finding scrips
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 include(FetchContent)
 include("${CMAKE_SOURCE_DIR}/cmake/CMakeRC.cmake")
@@ -73,3 +74,7 @@ target_link_libraries(4mbjam PRIVATE imgui)
 target_include_directories(4mbjam PUBLIC ${GLM_INCLUDE_DIR})
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT 4mbjam)
+set_target_properties(glfw PROPERTIES FOLDER dependencies)
+set_target_properties(glfw_objlib PROPERTIES FOLDER dependencies)
+set_target_properties(raylib PROPERTIES FOLDER dependencies)
+set_target_properties(imgui PROPERTIES FOLDER dependencies)
