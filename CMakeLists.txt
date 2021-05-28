@@ -18,18 +18,7 @@ set(HEADER_FILES
   src/types.hpp
 )
 
-set(SHADER_FILES
-  resources/shaders/test.frag
-)
-
-cmrc_add_resource_library(static-resources
-  NAMESPACE resources
-  WHENCE resources
-  ${SHADER_FILES}
-)
-
 source_group(Sources FILES ${SRC_FILES} ${HEADER_FILES})
-source_group(Shaders FILES ${SHADER_FILES})
 
 # provide default build type release
 set(default_build_type "Release")
@@ -60,8 +49,9 @@ find_package(Glm REQUIRED)
 
 add_subdirectory(Editor)
 add_subdirectory(LSystem)
+add_subdirectory(resources)
 
-add_executable(4mbjam ${SRC_FILES} ${HEADER_FILES} ${SHADER_FILES})
+add_executable(4mbjam ${SRC_FILES} ${HEADER_FILES})
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   target_compile_definitions(4mbjam PRIVATE MB4_PREPROCESSOR_DEBUG)
@@ -69,7 +59,7 @@ endif()
 
 set_property(TARGET 4mbjam PROPERTY CXX_STANDARD 20)
 target_link_libraries(4mbjam PRIVATE raylib)
-target_link_libraries(4mbjam PRIVATE static-resources)
+target_link_libraries(4mbjam PRIVATE resources)
 target_link_libraries(4mbjam PRIVATE imgui)
 target_include_directories(4mbjam PUBLIC ${GLM_INCLUDE_DIR})
 

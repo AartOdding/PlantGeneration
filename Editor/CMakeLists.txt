@@ -17,6 +17,6 @@ add_executable(${PROJECT_NAME} ${SRC_FILES} ${HEADER_FILES})
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
-target_link_libraries(${PROJECT_NAME} PRIVATE static-resources)
+target_link_libraries(${PROJECT_NAME} PRIVATE resources)
 target_link_libraries(${PROJECT_NAME} PRIVATE imgui)
 target_include_directories(${PROJECT_NAME} PUBLIC ${GLM_INCLUDE_DIR})
