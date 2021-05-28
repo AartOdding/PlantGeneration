@@ -3,7 +3,12 @@ project(lsystem LANGUAGES CXX VERSION 0.1)
 
 # Public interface of the library, should only be hpp files in include folder.
 set(PUBLIC_FILES
-    include/LSystem.hpp
+    include/LSystem/LSystem.hpp
+    include/LSystem/Instruction.hpp
+    include/LSystem/BranchInstruction.hpp
+    include/LSystem/MoveInstruction.hpp
+    include/LSystem/RecurseInstruction.hpp
+    include/LSystem/Rule.hpp
 )
 
 # Private files, can be cpp or hpp, should be in src folder
@@ -16,5 +21,7 @@ source_group(Sources FILES ${PRIVATE_FILES})
 
 add_library(${PROJECT_NAME} STATIC ${PUBLIC_FILES} ${PRIVATE_FILES})
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${PUBLIC_FILES})
-target_include_directories(${PROJECT_NAME} PRIVATE ${PRIVATE_FILES})
+target_include_directories(${PROJECT_NAME} PUBLIC include)
+target_include_directories(${PROJECT_NAME} PRIVATE src)
+
+target_include_directories(${PROJECT_NAME} PUBLIC ${GLM_INCLUDE_DIR})
