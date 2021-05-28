@@ -35,9 +35,9 @@ include("${CMAKE_SOURCE_DIR}/cmake/imgui.cmake")
 
 find_package(Glm REQUIRED)
 
-add_subdirectory(Editor)
 add_subdirectory(game)
-add_subdirectory(LSystem)
+add_subdirectory(lsys)
+add_subdirectory(lsys_editor)
 add_subdirectory(resources)
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT 4mbgame)
