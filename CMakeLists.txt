@@ -57,6 +57,8 @@ include("${CMAKE_SOURCE_DIR}/cmake/imgui.cmake")
 
 find_package(Glm REQUIRED)
 
+add_subdirectory(Editor)
+
 add_executable(4mbjam ${SRC_FILES} ${HEADER_FILES} ${SHADER_FILES})
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
