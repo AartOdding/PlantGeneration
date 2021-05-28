@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(4mbgame LANGUAGES CXX)
+project(game LANGUAGES CXX)
 
 
 set(SRC_FILES

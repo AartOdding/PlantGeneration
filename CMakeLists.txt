@@ -35,12 +35,12 @@ include("${CMAKE_SOURCE_DIR}/cmake/imgui.cmake")
 
 find_package(Glm REQUIRED)
 
+add_subdirectory(editor)
 add_subdirectory(game)
-add_subdirectory(lsys)
-add_subdirectory(lsys_editor)
+add_subdirectory(lsystem)
 add_subdirectory(resources)
 
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT 4mbgame)
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT game)
 set_target_properties(glfw PROPERTIES FOLDER dependencies)
 set_target_properties(glfw_objlib PROPERTIES FOLDER dependencies)
 set_target_properties(raylib PROPERTIES FOLDER dependencies)

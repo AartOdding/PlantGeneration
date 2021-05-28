@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(lsys LANGUAGES CXX VERSION 0.1)
+project(lsystem LANGUAGES CXX VERSION 0.1)
 
 # Public interface of the library, should only be hpp files in include folder.
 set(PUBLIC_FILES
