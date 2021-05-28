@@ -9,6 +9,7 @@ set(PUBLIC_FILES
     include/LSystem/MoveInstruction.hpp
     include/LSystem/RecurseInstruction.hpp
     include/LSystem/Rule.hpp
+    include/LSystem/RuleSet.hpp
 )
 
 # Private files, can be cpp or hpp, should be in src folder
@@ -25,3 +26,4 @@ target_include_directories(${PROJECT_NAME} PUBLIC include)
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${GLM_INCLUDE_DIR})
+message(DEBUG ${GLM_INCLUDE_DIR})

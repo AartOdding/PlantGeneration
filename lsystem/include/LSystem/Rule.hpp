@@ -15,7 +15,7 @@ namespace LSystem
 	public:
 
 		std::string id;
-		std::unique_ptr<Instruction> first_instruction;
+		std::unique_ptr<Branch> start;
 
 		virtual ~Rule() = default;
 

@@ -13,7 +13,6 @@ namespace LSystem
 	{
 	public:
 
-		std::vector<std::unique_ptr<Instruction>> branches;
 
 	private:
 

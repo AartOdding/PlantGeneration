@@ -8,11 +8,49 @@
 #include <cmrc/cmrc.hpp>
 #include <iostream>
 
+#include <LSystem/LSystem.hpp>
+
+
+#include <glm/gtc/matrix_transform.hpp>
+
 
 CMRC_DECLARE(resources);
 
+auto up1 = glm::translate(glm::mat4(1), glm::vec3(0, 1, 0));
+auto right1 = glm::translate(glm::mat4(1), glm::vec3(0.5, 0.5, 0));
+auto left1 = glm::translate(glm::mat4(1), glm::vec3(-0.5, 0.5, 0));
+
+
+void CreateTree(LSystem::Branch* prev, int depth, int max_depth)
+{
+    if (depth > max_depth) return;
+
+    auto branch1 = std::make_unique<LSystem::Branch>();
+    branch1->transform = up1;
+    auto branch2 = std::make_unique<LSystem::Branch>();
+    branch2->transform = right1;
+    auto branch3 = std::make_unique<LSystem::Branch>();
+    branch3->transform = left1;
+
+    prev->main_branch = std::move(branch1);
+    prev->side_branches.push_back(std::move(branch2));
+    prev->side_branches.push_back(std::move(branch3));
+
+    CreateTree(prev->main_branch.get(), depth + 1, max_depth);
+    CreateTree(prev->side_branches[0].get(), depth + 1, max_depth);
+    CreateTree(prev->side_branches[1].get(), depth + 1, max_depth);
+}
+
 int main()
 {
+    auto branch1 = std::make_unique<LSystem::Branch>();
+    branch1->transform = up1;
+
+    CreateTree(branch1.get(), 0, 5);
+
+    auto buf = LSystem::Generate(branch1.get());
+
+
     auto fs = cmrc::resources::get_filesystem();
     auto f = fs.open("shaders/test.frag");
 
@@ -52,10 +90,6 @@ int main()
 
     while (!WindowShouldClose())
     {
-        auto w = GetScreenWidth();
-        auto h = GetScreenHeight();
-
-        glViewport(w / 2, 0, w / 2, h);
 
         if (IsMouseButtonReleased(0)) // Only fires on the frame where the button is released
         {
@@ -76,8 +110,14 @@ int main()
 
         BeginMode3D(camera);
 
-        DrawModel(model, { 0, 0, 0 }, 0.5, RED);
+        //DrawModel(model, { 0, 0, 0 }, 0.5, RED);
         DrawGrid(40, 10.0f);
+
+        for (auto& l : buf.lines)
+        {
+            DrawLine3D({ l.point_a.position.x, l.point_a.position.y, l.point_a.position.z }, 
+                       { l.point_b.position.x, l.point_b.position.y, l.point_b.position.z }, RED);
+        }
 
         EndMode3D();
 
@@ -87,7 +127,7 @@ int main()
         ImGui::NewFrame();
 
         bool show = true;
-        ImGui::ShowDemoWindow(&show);
+        //ImGui::ShowDemoWindow(&show);
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
