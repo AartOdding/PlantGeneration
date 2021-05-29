@@ -3,11 +3,15 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 #include <GLFW/glfw3.h>
-
+#include <glm/glm.hpp>
 #include <cmrc/cmrc.hpp>
-#include <iostream>
 
+#include <iostream>
+#include <vector>
+
+#include "types.hpp"
 #include "debug.hpp"
+#include "target.hpp"
 
 CMRC_DECLARE(resources);
 
@@ -15,15 +19,6 @@ int main()
 {
     try
     {
-        /*
-            Like this now. No namespace, :(
-            Mb4_AssertEqual(true, false);
-            Mb4_AssertLarger(1, 1);
-            Mb4_AssertLargerEqual(0, 1);
-            Mb4_AssertSmaller(1, 1);
-            Mb4_AssertSmallerEqual(1, 0);
-        */
-
         auto fs = cmrc::resources::get_filesystem();
         auto f = fs.open("shaders/test.frag");
 
@@ -56,13 +51,33 @@ int main()
         camera.fovy = 45.0f;                       // Camera field-of-view Y
         camera.projection = CAMERA_PERSPECTIVE;    // Camera mode type
 
-        auto mesh = GenMeshCube(1, 1, 1);
+        f32 sphere_radius = 1.0_f32;
+        Mesh mesh = GenMeshSphere(sphere_radius, 20, 20);
         auto model = LoadModelFromMesh(mesh);
+        glm::dvec3 mesh_position(0.0_f32, 0.5_f32, 0.0_f32);
+        glm::dvec3 mesh2_position(5.0_f32, 0.0_f32, 0.0_f32);
 
         bool isPaused = true;
 
         while (!WindowShouldClose())
         {
+            {
+                std::vector<Mb4::Targetable const*> targetables;
+                Mb4::Targetable sphere_targetable(sphere_radius, mesh_position, 123);
+                targetables.emplace_back(&sphere_targetable);
+                Mb4::Targetable sphere_targetable2(sphere_radius, mesh2_position, 666);
+                targetables.emplace_back(&sphere_targetable2);
+                std::optional<u32> target = Mb4::GetTarget(
+                    targetables.begin(),
+                    targetables.end(),
+                    camera.position,
+                    camera.target);
+                if (target.has_value())
+                    Mb4::DebugPrint(std::to_string(target.value()));
+                else
+                    Mb4::DebugPrint("No target");
+            }
+
             if (IsMouseButtonReleased(0)) // Only fires on the frame where the button is released
             {
                 SetCameraMode(camera, CAMERA_FIRST_PERSON);
@@ -82,7 +97,20 @@ int main()
 
             BeginMode3D(camera);
 
-            DrawModel(model, { 0, 0, 0 }, 0.5, RED);
+            {
+                Vector3 model_pos;
+                model_pos.x = mesh_position.x;
+                model_pos.y = mesh_position.y;
+                model_pos.z = mesh_position.z;
+                DrawModel(model, model_pos, 1.0_f32, RED);
+            }
+            {
+                Vector3 model_pos;
+                model_pos.x = mesh2_position.x;
+                model_pos.y = mesh2_position.y;
+                model_pos.z = mesh2_position.z;
+                DrawModel(model, model_pos, 1.0_f32, RED);
+            }
             DrawGrid(40, 10.0f);
 
             EndMode3D();

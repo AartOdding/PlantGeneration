@@ -1,15 +1,17 @@
 cmake_minimum_required(VERSION 3.16)
 project(game LANGUAGES CXX)
 
-
 set(SRC_FILES
   src/debug.cpp
+  src/types.cpp
   src/main.cpp
+  src/target.cpp
 )
 
 set(HEADER_FILES
   src/debug.hpp
   src/types.hpp
+  src/target.hpp
 )
 
 source_group(Sources FILES ${SRC_FILES} ${HEADER_FILES})
