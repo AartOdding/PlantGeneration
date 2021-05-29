@@ -3,7 +3,6 @@ project(game LANGUAGES CXX)
 
 set(SRC_FILES
   src/debug.cpp
-  src/types.cpp
   src/main.cpp
   src/target.cpp
 )
