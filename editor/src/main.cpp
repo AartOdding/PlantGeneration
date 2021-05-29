@@ -1,11 +1,13 @@
 #include <external/glad.h>
 #include <raylib.h>
+#include <raymath.h>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 #include <GLFW/glfw3.h>
 
 #include <cmrc/cmrc.hpp>
+#include <algorithm>
 #include <iostream>
 
 #include <LSystem/LSystem.hpp>
@@ -52,25 +54,14 @@ int main()
     auto buf = LSystem::Generate(branch1.get());
 
 
-    auto fs = cmrc::resources::get_filesystem();
-    auto f = fs.open("shaders/test.frag");
-
-    std::string frag = std::string(f.begin(), f.end());
-    std::cout << frag << std::endl;
-
-    const int screenWidth = 2000;
-    const int screenHeight = 1600;
-
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     SetConfigFlags(FLAG_VSYNC_HINT);
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    InitWindow(screenWidth, screenHeight, "Aart & Aart 4Mb Jam");
+    InitWindow(2000, 1600, "Aart & Aart 4Mb Jam");
 
-    SetExitKey(0); // Removes ESC to exit
     SetTargetFPS(60);
 
     // Setup Dear ImGui context
-    IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
 
@@ -79,31 +70,47 @@ int main()
 
     Camera camera{};
     camera.position = { 0.0f, 1.8f, 6.0f };    // Camera position
-    camera.target = { 0.0f, 0.5f, 0.0f };      // Camera looking at point
+    camera.target = { 0.0f, 0.0f, 0.0f };      // Camera looking at point
     camera.up = { 0.0f, 1.0f, 0.0f };          // Camera up vector (rotation towards target)
     camera.fovy = 45.0f;                       // Camera field-of-view Y
     camera.projection = CAMERA_PERSPECTIVE;    // Camera mode type
 
-    auto mesh = GenMeshCube(1, 1, 1);
-    auto model = LoadModelFromMesh(mesh);
 
-    bool isPaused = false;
+    float camera_distance = 5;
+    float camera_rotation_sideways = 0;
+    float camera_rotation_updown = 0;
+
+    Vector2 previous_mouse_pos{ -1, -1 };
 
     while (!WindowShouldClose())
     {
-
-        if (IsMouseButtonReleased(0)) // Only fires on the frame where the button is released
+        if (GetMouseWheelMove() != 0)
         {
-            SetCameraMode(camera, CAMERA_FIRST_PERSON);
-            isPaused = false;
+            const float desired_distance = camera_distance * std::pow(0.9, GetMouseWheelMove());
+            camera_distance = std::clamp<float>(desired_distance, 0.1, 1000);
         }
-        if (IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_P)) // Only fires on the frame where a key is released
+        if (IsMouseButtonDown(1))
         {
-            SetCameraMode(camera, CAMERA_CUSTOM);
-            isPaused = true;
+            if (previous_mouse_pos.x == -1 && previous_mouse_pos.y == -1)
+            {
+                previous_mouse_pos = GetMousePosition();
+            }
+            auto movement = Vector2Subtract(GetMousePosition(), previous_mouse_pos);
+
+            camera_rotation_sideways += -movement.x / (GetScreenWidth() / 5.0f);
+            camera_rotation_updown += movement.y / (GetScreenHeight() / 5.0f);
         }
 
-        UpdateCamera(&camera);
+        previous_mouse_pos = GetMousePosition();
+
+        const Quaternion sideways_quaternion = QuaternionFromEuler(0, camera_rotation_sideways, 0);
+        const Vector3 pos_xz = Vector3RotateByQuaternion({ 0, 0, camera_distance }, sideways_quaternion);
+        const Vector3 tangent = Vector3RotateByQuaternion(pos_xz, QuaternionFromEuler(0, -glm::half_pi<float>(), 0));
+        const Quaternion updown_quaternion = QuaternionFromAxisAngle(tangent, camera_rotation_updown);
+        const Vector3 camera_position = Vector3RotateByQuaternion(pos_xz, updown_quaternion);
+
+        camera.position = Vector3Add(camera.target, camera_position);
+
 
         BeginDrawing();
 
@@ -111,7 +118,6 @@ int main()
 
         BeginMode3D(camera);
 
-        //DrawModel(model, { 0, 0, 0 }, 0.5, RED);
         DrawGrid(40, 10.0f);
 
         for (auto& l : buf.lines)
@@ -133,15 +139,9 @@ int main()
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-        if (isPaused)
-        {
-            DrawText("Click to start", GetScreenWidth() / 2, GetScreenHeight() / 2, 30, BLACK);
-        }
 
         EndDrawing();
     }
-
-    UnloadModel(model);
 
     CloseWindow();
 
