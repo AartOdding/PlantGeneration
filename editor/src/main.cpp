@@ -12,41 +12,42 @@
 
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/random.hpp>
 
 
 CMRC_DECLARE(resources);
 
-auto up1 = glm::translate(glm::mat4(1), glm::vec3(0, 1, 0));
-auto right1 = glm::translate(glm::mat4(1), glm::vec3(0.5, 0.5, 0));
-auto left1 = glm::translate(glm::mat4(1), glm::vec3(-0.5, 0.5, 0));
 
-
-void CreateTree(LSystem::Branch* prev, int depth, int max_depth)
+void CreateTree(LSystem::Instruction* prev, int depth, int max_depth)
 {
     if (depth > max_depth) return;
 
-    auto branch1 = std::make_unique<LSystem::Branch>();
-    branch1->transform = up1;
-    auto branch2 = std::make_unique<LSystem::Branch>();
-    branch2->transform = right1;
-    auto branch3 = std::make_unique<LSystem::Branch>();
-    branch3->transform = left1;
+    auto branch1 = std::make_unique<LSystem::Instruction>();
+    branch1->transform = glm::rotate(glm::mat4(1), glm::gaussRand(0.0f, 0.5f), glm::vec3(0, 0, 1));
+    branch1->transform = glm::translate(branch1->transform, glm::vec3(0, 1, 0));
 
-    prev->main_branch = std::move(branch1);
-    prev->side_branches.push_back(std::move(branch2));
-    prev->side_branches.push_back(std::move(branch3));
+    auto branch2 = std::make_unique<LSystem::Instruction>();
+    branch2->transform = glm::rotate(glm::mat4(1), glm::gaussRand(0.0f, 0.5f), glm::vec3(0, 0, 1));
+    branch2->transform = glm::translate(branch2->transform, glm::vec3(0, 1, 0));
 
-    CreateTree(prev->main_branch.get(), depth + 1, max_depth);
-    CreateTree(prev->side_branches[0].get(), depth + 1, max_depth);
-    CreateTree(prev->side_branches[1].get(), depth + 1, max_depth);
+    auto branch3 = std::make_unique<LSystem::Instruction>();
+    branch3->transform = glm::rotate(glm::mat4(1), glm::gaussRand(0.0f, 0.5f), glm::vec3(0, 0, 1));
+    branch3->transform = glm::translate(branch3->transform, glm::vec3(0, 1, 0));
+
+    prev->children.push_back(std::move(branch1));
+    prev->children.push_back(std::move(branch2));
+    prev->children.push_back(std::move(branch3));
+
+    CreateTree(prev->children[0].get(), depth + 1, max_depth);
+    CreateTree(prev->children[1].get(), depth + 1, max_depth);
+    CreateTree(prev->children[2].get(), depth + 1, max_depth);
 }
 
 int main()
 {
-    auto branch1 = std::make_unique<LSystem::Branch>();
-    branch1->transform = up1;
+    auto branch1 = std::make_unique<LSystem::Instruction>();
 
-    CreateTree(branch1.get(), 0, 5);
+    CreateTree(branch1.get(), 0, 1);
 
     auto buf = LSystem::Generate(branch1.get());
 
@@ -57,13 +58,13 @@ int main()
     std::string frag = std::string(f.begin(), f.end());
     std::cout << frag << std::endl;
 
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+    const int screenWidth = 2000;
+    const int screenHeight = 1600;
 
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     SetConfigFlags(FLAG_VSYNC_HINT);
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    InitWindow(800, 450, "Aart & Aart 4Mb Jam");
+    InitWindow(screenWidth, screenHeight, "Aart & Aart 4Mb Jam");
 
     SetExitKey(0); // Removes ESC to exit
     SetTargetFPS(60);
@@ -86,7 +87,7 @@ int main()
     auto mesh = GenMeshCube(1, 1, 1);
     auto model = LoadModelFromMesh(mesh);
 
-    bool isPaused = true;
+    bool isPaused = false;
 
     while (!WindowShouldClose())
     {

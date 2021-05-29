@@ -1,6 +1,8 @@
 #pragma once
 
 #include <memory>
+#include <string>
+#include <vector>
 
 #include <glm/glm.hpp>
 
@@ -8,26 +10,14 @@
 namespace LSystem
 {
 
-	struct Branch
+	struct Instruction
 	{
 		glm::mat4 transform{ 1 };
-		std::unique_ptr<Branch> main_branch;
-		std::vector<std::unique_ptr<Branch>> side_branches;
-	};
-
-	class Instruction
-	{
-	public:
-
-		glm::mat4 transform;
-
-		std::unique_ptr<Instruction> next_instruction = nullptr;
-
-
-		virtual ~Instruction() = default;
-
-	private:
-
+		std::vector<std::unique_ptr<Instruction>> children;
+		std::vector<std::string> next_rules;
+		bool visible = true;
+		bool connect_vertices = true;
+		int sides = 1; // 1 or less is line, 2 is plane, 3+ cylinder
 	};
 
 }

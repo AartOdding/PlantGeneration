@@ -1,5 +1,7 @@
 #include <LSystem/LSystem.hpp>
 
+#include <cassert>
+
 
 
 namespace LSystem
@@ -7,53 +9,59 @@ namespace LSystem
 
 	// TODO: optimize identity transform adding lines of size 0
 
-	static void GrowBranch(const Branch* branch, const glm::mat4& origin, RenderBuffer& render_buffer)
+	static void ExecuteInstruction(const Instruction* instruction, const glm::mat4& transform, VertexBuffer& vertex_buffer)
 	{
-		if (!branch)
+		if (!instruction)
 		{
+			assert(false); // fail in debug
 			return;
 		}
 
-		if (branch->main_branch)
+		for (const auto& child : instruction->children)
 		{
-			const glm::mat4 new_origin = origin * branch->main_branch->transform;
+			assert(child); // fail in debug if child is empty
 
-			render_buffer.lines.emplace_back();
-			render_buffer.lines.back().point_a.position = origin * glm::vec4(0, 0, 0, 1);
-			render_buffer.lines.back().point_b.position = new_origin * glm::vec4(0, 0, 0, 1);
+			if (child)
+			{
+				const glm::mat4 new_transform = transform * child->transform;
 
-			GrowBranch(branch->main_branch.get(), new_origin, render_buffer);
-		}
+				if (child->visible)
+				{
+					// depending on connectedness and amount of sides render different
 
-		for (auto& side_branch : branch->side_branches)
-		{
-			const glm::mat4 new_origin = origin * side_branch->transform;
+					vertex_buffer.lines.emplace_back();
+					vertex_buffer.lines.back().point_a.position = transform * glm::vec4(0, 0, 0, 1);
+					vertex_buffer.lines.back().point_b.position = new_transform * glm::vec4(0, 0, 0, 1);
+				}
 
-			GrowBranch(side_branch.get(), new_origin, render_buffer);
+				ExecuteInstruction(child.get(), new_transform, vertex_buffer);
+			}
 		}
 	}
 
-	RenderBuffer Generate(const Branch* branch)
+	VertexBuffer Generate(const Instruction* branch)
 	{
-		RenderBuffer render_buffer;
+		VertexBuffer render_buffer;
 
 		if (branch)
 		{
-			render_buffer.lines.emplace_back();
-			render_buffer.lines.back().point_a.position = glm::vec3(0, 0, 0);
-			auto p = branch->transform * glm::vec4(0, 0, 0, 1);
-			render_buffer.lines.back().point_b.position = p;
+			if (branch->visible)
+			{
+				render_buffer.lines.emplace_back();
+				render_buffer.lines.back().point_a.position = glm::vec3(0, 0, 0);
+				render_buffer.lines.back().point_b.position = branch->transform * glm::vec4(0, 0, 0, 1);
+			}
 
-			GrowBranch(branch, branch->transform, render_buffer);
+			ExecuteInstruction(branch, branch->transform, render_buffer);
 		}
 
 		return render_buffer;
 	}
 
 	/*
-	RenderBuffer LSystem::Generate(float iterations) const
+	VertexBuffer LSystem::Generate(float iterations) const
 	{
-		RenderBuffer render_buffer;
+		VertexBuffer vertex_buffer;
 
 		if (rules.count(starting_rule))
 		{
@@ -61,17 +69,17 @@ namespace LSystem
 
 			if (rule)
 			{
-				const glm::mat4 new_origin = origin * branch->main_branch->transform;
+				const glm::mat4 new_transform = transform * instruction->main_branch->transform;
 
-				render_buffer.lines.emplace_back();
-				render_buffer.lines.back().point_a.position = origin * glm::vec4(0, 0, 0, 1);
-				render_buffer.lines.back().point_b.position = new_origin * glm::vec4(0, 0, 0, 1);
+				vertex_buffer.lines.emplace_back();
+				vertex_buffer.lines.back().point_a.position = transform * glm::vec4(0, 0, 0, 1);
+				vertex_buffer.lines.back().point_b.position = new_transform * glm::vec4(0, 0, 0, 1);
 
-				GrowBranch(rule->start.get(), glm::mat4(), render_buffer);
+				ExecuteInstruction(rule->start.get(), glm::mat4(), vertex_buffer);
 			}
 		}
 
-		return render_buffer;
+		return vertex_buffer;
 	}
 	*/
 }

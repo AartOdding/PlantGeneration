@@ -5,21 +5,14 @@
 #include <unordered_map>
 
 #include <LSystem/Instruction.hpp>
-#include <LSystem/BranchInstruction.hpp>
-#include <LSystem/MoveInstruction.hpp>
-#include <LSystem/RecurseInstruction.hpp>
-
 #include <LSystem/Rule.hpp>
-#include <LSystem/RuleSet.hpp>
-
-#include <LSystem/RenderBuffer.hpp>
-#include <LSystem/TreeModel.hpp>
+#include <LSystem/VertexBuffer.hpp>
 
 
 namespace LSystem
 {
 
-	RenderBuffer Generate(const Branch* branch);
+	VertexBuffer Generate(const Instruction* instruction);
 
 
 	class LSystem
@@ -30,7 +23,7 @@ namespace LSystem
 
 		std::unordered_map<std::string, std::unique_ptr<Rule>> rules;
 
-		RenderBuffer Generate(float iterations) const;
+		//VertexBuffer Generate(float iterations) const;
 
 	private:
 

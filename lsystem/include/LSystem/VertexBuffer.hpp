@@ -28,7 +28,7 @@ namespace LSystem
 		Vertex point_3;
 	};
 
-	class RenderBuffer
+	class VertexBuffer
 	{
 	public:
 

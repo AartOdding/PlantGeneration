@@ -6,7 +6,6 @@
 #include <LSystem/Instruction.hpp>
 
 
-
 namespace LSystem
 {
 
@@ -15,9 +14,7 @@ namespace LSystem
 	public:
 
 		std::string id;
-		std::unique_ptr<Branch> start;
-
-		virtual ~Rule() = default;
+		std::unique_ptr<Instruction> start;
 
 	private:
 
