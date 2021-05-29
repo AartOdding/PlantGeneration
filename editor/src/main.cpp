@@ -8,24 +8,63 @@
 #include <cmrc/cmrc.hpp>
 #include <iostream>
 
+#include <LSystem/LSystem.hpp>
+
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/random.hpp>
+
 
 CMRC_DECLARE(resources);
 
+
+void CreateTree(LSystem::Instruction* prev, int depth, int max_depth)
+{
+    if (depth > max_depth) return;
+
+    auto branch1 = std::make_unique<LSystem::Instruction>();
+    branch1->transform = glm::rotate(glm::mat4(1), glm::gaussRand(0.0f, 0.5f), glm::vec3(0, 0, 1));
+    branch1->transform = glm::translate(branch1->transform, glm::vec3(0, 1, 0));
+
+    auto branch2 = std::make_unique<LSystem::Instruction>();
+    branch2->transform = glm::rotate(glm::mat4(1), glm::gaussRand(0.0f, 0.5f), glm::vec3(0, 0, 1));
+    branch2->transform = glm::translate(branch2->transform, glm::vec3(0, 1, 0));
+
+    auto branch3 = std::make_unique<LSystem::Instruction>();
+    branch3->transform = glm::rotate(glm::mat4(1), glm::gaussRand(0.0f, 0.5f), glm::vec3(0, 0, 1));
+    branch3->transform = glm::translate(branch3->transform, glm::vec3(0, 1, 0));
+
+    prev->children.push_back(std::move(branch1));
+    prev->children.push_back(std::move(branch2));
+    prev->children.push_back(std::move(branch3));
+
+    CreateTree(prev->children[0].get(), depth + 1, max_depth);
+    CreateTree(prev->children[1].get(), depth + 1, max_depth);
+    CreateTree(prev->children[2].get(), depth + 1, max_depth);
+}
+
 int main()
 {
+    auto branch1 = std::make_unique<LSystem::Instruction>();
+
+    CreateTree(branch1.get(), 0, 1);
+
+    auto buf = LSystem::Generate(branch1.get());
+
+
     auto fs = cmrc::resources::get_filesystem();
     auto f = fs.open("shaders/test.frag");
 
     std::string frag = std::string(f.begin(), f.end());
     std::cout << frag << std::endl;
 
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+    const int screenWidth = 2000;
+    const int screenHeight = 1600;
 
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     SetConfigFlags(FLAG_VSYNC_HINT);
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    InitWindow(800, 450, "Aart & Aart 4Mb Jam");
+    InitWindow(screenWidth, screenHeight, "Aart & Aart 4Mb Jam");
 
     SetExitKey(0); // Removes ESC to exit
     SetTargetFPS(60);
@@ -48,14 +87,10 @@ int main()
     auto mesh = GenMeshCube(1, 1, 1);
     auto model = LoadModelFromMesh(mesh);
 
-    bool isPaused = true;
+    bool isPaused = false;
 
     while (!WindowShouldClose())
     {
-        auto w = GetScreenWidth();
-        auto h = GetScreenHeight();
-
-        glViewport(w / 2, 0, w / 2, h);
 
         if (IsMouseButtonReleased(0)) // Only fires on the frame where the button is released
         {
@@ -76,8 +111,14 @@ int main()
 
         BeginMode3D(camera);
 
-        DrawModel(model, { 0, 0, 0 }, 0.5, RED);
+        //DrawModel(model, { 0, 0, 0 }, 0.5, RED);
         DrawGrid(40, 10.0f);
+
+        for (auto& l : buf.lines)
+        {
+            DrawLine3D({ l.point_a.position.x, l.point_a.position.y, l.point_a.position.z }, 
+                       { l.point_b.position.x, l.point_b.position.y, l.point_b.position.z }, RED);
+        }
 
         EndMode3D();
 
@@ -87,7 +128,7 @@ int main()
         ImGui::NewFrame();
 
         bool show = true;
-        ImGui::ShowDemoWindow(&show);
+        //ImGui::ShowDemoWindow(&show);
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
