@@ -4,6 +4,7 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+#include <imguizmo.h>
 #include <GLFW/glfw3.h>
 
 #include <cmrc/cmrc.hpp>
@@ -15,6 +16,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/random.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 
 CMRC_DECLARE(resources);
@@ -76,9 +78,9 @@ int main()
     camera.projection = CAMERA_PERSPECTIVE;    // Camera mode type
 
 
-    float camera_distance = 5;
+    float camera_distance = 7;
     float camera_rotation_sideways = 0;
-    float camera_rotation_updown = 0;
+    float camera_rotation_updown = 0.3;
 
     Vector2 previous_mouse_pos{ -1, -1 };
 
@@ -132,6 +134,19 @@ int main()
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+        ImGuizmo::BeginFrame();
+
+        auto projection_matrix = glm::perspective<float>(camera.fovy, GetScreenHeight() / GetScreenWidth(), 0.1, 1000);
+        auto cam_pos = glm::vec3(camera.position.x, camera.position.y, camera.position.z);
+        auto cam_target = glm::vec3(camera.target.x, camera.target.y, camera.target.z);
+        auto cam_up = glm::vec3(camera.up.x, camera.up.y, camera.up.z);
+        auto view_matrix = glm::lookAt(cam_pos, cam_target, cam_up);
+
+        static glm::mat4 mat{ 1 };
+
+        ImGuizmo::Manipulate(glm::value_ptr(view_matrix), glm::value_ptr(projection_matrix), 
+            ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(mat));
+        //ImGuizmo::Manipulate()
 
         bool show = true;
         //ImGui::ShowDemoWindow(&show);
