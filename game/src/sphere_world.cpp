@@ -125,7 +125,7 @@ f32 SphereWorld::GetHeight(glm::fvec3 const& position) const
 	glm::fvec3 normpos = glm::normalize(position);
 	f32 noise = 0;
 	noise += std::pow(glm::simplex(normpos * 0.9_f32), 3.0_f32) * 0.4_f32;
-	return 1.0_f32 + noise;
+	return (1.0_f32 + noise) * 10.0_f32;
 }
 
 glm::fvec3 SphereWorld::GetNormal(glm::fvec3 const& position) const

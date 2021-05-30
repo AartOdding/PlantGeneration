@@ -63,7 +63,7 @@ int main()
 
         f32 gravity = 2.0f;
 
-        Mb4::SphereWorld world(2);
+        Mb4::SphereWorld world(4);
 
         Mb4::Player player({3.0_f32, 0.0_f32, 0.0_f32}, {0.0_f32, 1.0_f32, 0.0_f32});
 
@@ -123,7 +123,7 @@ int main()
                 player_pos.x = player.position.x;
                 player_pos.y = player.position.y;
                 player_pos.z = player.position.z;
-                DrawCube(player_pos, 0.5_f32, 0.5_f32, 0.5_f32, Color{255, 0, 0, 255});
+                DrawCube(player_pos, 0.5_f32, 0.5_f32, 0.5_f32, Color{0, 0, 255, 255});
                 DrawLine3D(player_pos, Vector3Add(player_pos, {player.forward.x, player.forward.y, player.forward.z}), Color{0, 255, 0, 255});
             }
 
