@@ -5,6 +5,8 @@
 #include <string>
 #include <map>
 
+#include <glm/gtc/noise.hpp>
+
 using namespace Mb4;
 
 SphereWorld::Triangle::Triangle(u32 const index1, u32 const index2, u32 const index3) :
@@ -65,6 +67,14 @@ std::tuple<std::vector<glm::fvec3>, std::vector<SphereWorld::Triangle>> SphereWo
 		auto [new_points, new_triangles] = SubDivide(points, triangles);
 		points = std::move(new_points);
 		triangles = std::move(new_triangles);
+	}
+
+	for (glm::fvec3& point : points)
+	{
+		glm::fvec3 noise({0.0_f32,  0.0_f32, 0.0_f32});
+		noise += point * std::pow(glm::simplex(point * 0.9_f32), 3.0_f32) * 0.4_f32;
+		//noise += point * glm::simplex(point * 1.0_f32) * 0.1_f32;
+		point += noise;
 	}
 
 	return {points, triangles};
