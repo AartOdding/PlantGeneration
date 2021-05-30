@@ -71,23 +71,6 @@ int main()
 
         while (!WindowShouldClose())
         {
-            {
-                std::vector<Mb4::Targetable const*> targetables;
-                Mb4::Targetable sphere_targetable(sphere_radius, mesh_position, 123);
-                targetables.emplace_back(&sphere_targetable);
-                Mb4::Targetable sphere_targetable2(sphere_radius, mesh2_position, 666);
-                targetables.emplace_back(&sphere_targetable2);
-                std::optional<u32> target = Mb4::GetTarget(
-                    targetables.begin(),
-                    targetables.end(),
-                    camera.position,
-                    camera.target);
-                /*if (target.has_value())
-                    Mb4::DebugPrint(std::to_string(target.value()));
-                else
-                    Mb4::DebugPrint("No target");*/
-            }
-
             if (IsMouseButtonReleased(0)) // Only fires on the frame where the button is released
             {
                 SetCameraMode(camera, CAMERA_FIRST_PERSON);
@@ -118,6 +101,7 @@ int main()
                     Vector3{world.points[triangle.index2].x, world.points[triangle.index2].y, world.points[triangle.index2].z},
                     Vector3{world.points[triangle.index3].x, world.points[triangle.index3].y, world.points[triangle.index3].z},
                     Color{255, 0, 0, 255});
+
                 DrawLine3D(
                     Vector3{world.points[triangle.index1].x, world.points[triangle.index1].y, world.points[triangle.index1].z},
                     Vector3{world.points[triangle.index2].x, world.points[triangle.index2].y, world.points[triangle.index2].z},
@@ -132,13 +116,6 @@ int main()
                     Vector3{world.points[triangle.index1].x, world.points[triangle.index1].y, world.points[triangle.index1].z},
                     Vector3{world.points[triangle.index3].x, world.points[triangle.index3].y, world.points[triangle.index3].z},
                     Color{0, 0, 255, 255});
-            }
-            for (glm::fvec3 const& point : world.points)
-            {
-                DrawLine3D(
-                    Vector3{point.x, point.y, point.z},
-                    Vector3{point.x + world.GetNormal(point).x * 0.3_f32, point.y + world.GetNormal(point).y * 0.3_f32, point.z + world.GetNormal(point).z * 0.3_f32},
-                    Color{0, 100, 155, 255});
             }
 
             {

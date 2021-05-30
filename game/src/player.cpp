@@ -17,6 +17,7 @@ Player::Player(glm::fvec3 position, glm::fvec3 forward) :
 
 void Player::Update(f32 deltatime, f32 gravityStrength, SphereWorld const& world)
 {
+	// apply movement acceleration
 	f32 current_height = world.GetHeight(position);
 	if (IsKeyDown(KEY_UP) && glm::distance(current_height, glm::length(position)) < 0.001)
 	{
@@ -38,16 +39,25 @@ void Player::Update(f32 deltatime, f32 gravityStrength, SphereWorld const& world
 		forward = glm::angleAxis(deltatime * -1.0_f32, glm::normalize(position)) * forward;
 	}
 
+	// add gravity
 	velocity += gravityStrength * -glm::normalize(position) * deltatime;
+
+	// air drag
+	velocity *= 0.99;
+
+	// apply velocity
 	glm::fvec3 new_position = position + velocity * deltatime;
-	
+
+	// if collision
 	f32 height = world.GetHeight(new_position);
-	DebugPrint(std::to_string(glm::length(new_position)));
 	glm::fvec3 heightvec = height * glm::normalize(new_position);
 	if (glm::length(new_position) < height)
 	{
+		// handle collision physics
 		new_position = heightvec;
-		velocity = glm::fvec3();
+		glm::fvec3 normal = world.GetNormal(new_position);
+		velocity -= normal * glm::dot(velocity, normal);
+		velocity *= 0.80;
 	}
 
 	glm::fvec3 axisangle = glm::cross(glm::normalize(position), glm::normalize(new_position));
