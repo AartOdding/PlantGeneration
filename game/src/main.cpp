@@ -8,11 +8,13 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 
 #include "types.hpp"
 #include "debug.hpp"
 #include "target.hpp"
 #include "sphere_world.hpp"
+#include "player.hpp"
 
 CMRC_DECLARE(resources);
 
@@ -35,7 +37,8 @@ int main()
         InitWindow(800, 450, "Aart & Aart 4Mb Jam");
 
         SetExitKey(0); // Removes ESC to exit
-        SetTargetFPS(60);
+        constexpr u32 fps = 60;
+        SetTargetFPS(fps);
 
         // Setup Dear ImGui context
         IMGUI_CHECKVERSION();
@@ -58,8 +61,11 @@ int main()
         glm::dvec3 mesh_position(0.0_f32, 0.5_f32, 0.0_f32);
         glm::dvec3 mesh2_position(5.0_f32, 0.0_f32, 0.0_f32);
 
-        Mb4::SphereWorld world(0);
-        Mb4::SphereWorld world2(1);
+        f32 gravity = 2.0f;
+
+        Mb4::SphereWorld world(5);
+
+        Mb4::Player player({3.0_f32, 0.0_f32, 0.0_f32}, {0.0_f32, 1.0_f32, 0.0_f32});
 
         bool isPaused = true;
 
@@ -93,6 +99,10 @@ int main()
                 isPaused = true;
             }
 
+            if (!isPaused)
+            {
+                player.Update(1.0_f32 / fps, gravity);
+            }
             UpdateCamera(&camera);
 
             BeginDrawing();
@@ -101,36 +111,26 @@ int main()
 
             BeginMode3D(camera);
 
-            Mb4::SphereWorld const* activeWorld;
-            if (IsKeyDown(KEY_R))
-            {
-                activeWorld = &world2;
-            }
-            else
-            {
-                activeWorld = &world;
-            }
-
-            for (auto const& triangle : activeWorld->triangles)
+            for (auto const& triangle : world.triangles)
             {
                 DrawTriangle3D(
-                    Vector3{activeWorld->points[triangle.index1].x, activeWorld->points[triangle.index1].y, activeWorld->points[triangle.index1].z},
-                    Vector3{activeWorld->points[triangle.index2].x, activeWorld->points[triangle.index2].y, activeWorld->points[triangle.index2].z},
-                    Vector3{activeWorld->points[triangle.index3].x, activeWorld->points[triangle.index3].y, activeWorld->points[triangle.index3].z},
+                    Vector3{world.points[triangle.index1].x, world.points[triangle.index1].y, world.points[triangle.index1].z},
+                    Vector3{world.points[triangle.index2].x, world.points[triangle.index2].y, world.points[triangle.index2].z},
+                    Vector3{world.points[triangle.index3].x, world.points[triangle.index3].y, world.points[triangle.index3].z},
                     Color{255, 0, 0, 255});
                 DrawLine3D(
-                    Vector3{activeWorld->points[triangle.index1].x, activeWorld->points[triangle.index1].y, activeWorld->points[triangle.index1].z},
-                    Vector3{activeWorld->points[triangle.index2].x, activeWorld->points[triangle.index2].y, activeWorld->points[triangle.index2].z},
+                    Vector3{world.points[triangle.index1].x, world.points[triangle.index1].y, world.points[triangle.index1].z},
+                    Vector3{world.points[triangle.index2].x, world.points[triangle.index2].y, world.points[triangle.index2].z},
                     Color{0, 0, 255, 255});
 
                 DrawLine3D(
-                    Vector3{activeWorld->points[triangle.index2].x, activeWorld->points[triangle.index2].y, activeWorld->points[triangle.index2].z},
-                    Vector3{activeWorld->points[triangle.index3].x, activeWorld->points[triangle.index3].y, activeWorld->points[triangle.index3].z},
+                    Vector3{world.points[triangle.index2].x, world.points[triangle.index2].y, world.points[triangle.index2].z},
+                    Vector3{world.points[triangle.index3].x, world.points[triangle.index3].y, world.points[triangle.index3].z},
                     Color{0, 0, 255, 255});
 
                 DrawLine3D(
-                    Vector3{activeWorld->points[triangle.index1].x, activeWorld->points[triangle.index1].y, activeWorld->points[triangle.index1].z},
-                    Vector3{activeWorld->points[triangle.index3].x, activeWorld->points[triangle.index3].y, activeWorld->points[triangle.index3].z},
+                    Vector3{world.points[triangle.index1].x, world.points[triangle.index1].y, world.points[triangle.index1].z},
+                    Vector3{world.points[triangle.index3].x, world.points[triangle.index3].y, world.points[triangle.index3].z},
                     Color{0, 0, 255, 255});
             }
 
@@ -149,6 +149,16 @@ int main()
                 model_pos.z = mesh2_position.z;
                 DrawModel(model, model_pos, 1.0_f32, RED);
             }*/
+
+            {
+                Vector3 player_pos;
+                player_pos.x = player.position.x;
+                player_pos.y = player.position.y;
+                player_pos.z = player.position.z;
+                DrawCube(player_pos, 0.5_f32, 0.5_f32, 0.5_f32, Color{255, 0, 0, 255});
+                DrawLine3D(player_pos, Vector3Add(player_pos, {player.forward.x, player.forward.y, player.forward.z}), Color{0, 255, 0, 255});
+            }
+
             DrawGrid(40, 10.0f);
 
             EndMode3D();
@@ -158,8 +168,8 @@ int main()
             ImGui_ImplGlfw_NewFrame();
             ImGui::NewFrame();
 
-            bool show = true;
-            ImGui::ShowDemoWindow(&show);
+            std::string message = std::string("x: ") + std::to_string(player.velocity.x) + std::string(" y: ") + std::to_string(player.velocity.y) + std::string(" z: ") + std::to_string(player.velocity.z);
+            ImGui::Text(message.c_str());
 
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
