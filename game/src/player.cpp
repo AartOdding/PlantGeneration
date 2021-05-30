@@ -15,9 +15,9 @@ Player::Player(glm::fvec3 position, glm::fvec3 forward) :
 	forward(forward)
 {}
 
-void Player::Update(f32 deltatime, f32 gravityStrength)
+void Player::Update(f32 deltatime, f32 gravityStrength, SphereWorld const& world)
 {
-	f32 current_height = 1.0_f32 + std::pow(glm::simplex(glm::normalize(position) * 0.9_f32), 3.0_f32) * 0.4_f32;
+	f32 current_height = world.GetHeight(position);
 	if (IsKeyDown(KEY_UP) && glm::distance(current_height, glm::length(position)) < 0.001)
 	{
 		velocity += forward * deltatime * 15.0f;
@@ -40,7 +40,9 @@ void Player::Update(f32 deltatime, f32 gravityStrength)
 
 	velocity += gravityStrength * -glm::normalize(position) * deltatime;
 	glm::fvec3 new_position = position + velocity * deltatime;
-	f32 height = 1.0_f32 + std::pow(glm::simplex(glm::normalize(new_position) * 0.9_f32), 3.0_f32) * 0.4_f32;
+	
+	f32 height = world.GetHeight(new_position);
+	DebugPrint(std::to_string(glm::length(new_position)));
 	glm::fvec3 heightvec = height * glm::normalize(new_position);
 	if (glm::length(new_position) < height)
 	{

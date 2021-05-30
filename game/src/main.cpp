@@ -63,7 +63,7 @@ int main()
 
         f32 gravity = 2.0f;
 
-        Mb4::SphereWorld world(5);
+        Mb4::SphereWorld world(2);
 
         Mb4::Player player({3.0_f32, 0.0_f32, 0.0_f32}, {0.0_f32, 1.0_f32, 0.0_f32});
 
@@ -101,7 +101,7 @@ int main()
 
             if (!isPaused)
             {
-                player.Update(1.0_f32 / fps, gravity);
+                player.Update(1.0_f32 / fps, gravity, world);
             }
             UpdateCamera(&camera);
 
@@ -133,22 +133,13 @@ int main()
                     Vector3{world.points[triangle.index3].x, world.points[triangle.index3].y, world.points[triangle.index3].z},
                     Color{0, 0, 255, 255});
             }
-
-            /*
+            for (glm::fvec3 const& point : world.points)
             {
-                Vector3 model_pos;
-                model_pos.x = mesh_position.x;
-                model_pos.y = mesh_position.y;
-                model_pos.z = mesh_position.z;
-                DrawModel(model, model_pos, 1.0_f32, RED);
+                DrawLine3D(
+                    Vector3{point.x, point.y, point.z},
+                    Vector3{point.x + world.GetNormal(point).x * 0.3_f32, point.y + world.GetNormal(point).y * 0.3_f32, point.z + world.GetNormal(point).z * 0.3_f32},
+                    Color{0, 100, 155, 255});
             }
-            {
-                Vector3 model_pos;
-                model_pos.x = mesh2_position.x;
-                model_pos.y = mesh2_position.y;
-                model_pos.z = mesh2_position.z;
-                DrawModel(model, model_pos, 1.0_f32, RED);
-            }*/
 
             {
                 Vector3 player_pos;

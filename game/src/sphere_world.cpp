@@ -6,6 +6,7 @@
 #include <map>
 
 #include <glm/gtc/noise.hpp>
+#include <glm/glm.hpp>
 
 using namespace Mb4;
 
@@ -26,23 +27,6 @@ SphereWorld::SphereWorld(std::tuple<std::vector<glm::fvec3>, std::vector<SphereW
 
 std::tuple<std::vector<glm::fvec3>, std::vector<SphereWorld::Triangle>> SphereWorld::CreateGeodesicPolyhedron(u32 divisions)
 {
-	/*
-    const f32 coord1 = glm::normalize(glm::fvec2(1.0_f32, 1.0_f32 / std::sqrt(2.0_f32))).x;
-    const f32 coord2 = glm::normalize(glm::fvec2(1.0_f32, 1.0_f32 / std::sqrt(2.0_f32))).y;
-
-	std::vector<glm::fvec3> points = {
-		{coord1, 0.0_f32, -coord2},
-		{-coord1, 0.0_f32, -coord2},
-		{0.0_f32, coord1, coord2},
-		{0.0_f32, -coord1, coord2}
-	};
-	std::vector<SphereWorld::Triangle> triangles = {
-		{0, 2, 1},
-		{0, 1, 3},
-		{0, 3, 2},
-		{1, 2, 3}
-	};*/
-
 	std::vector<glm::fvec3> points = {
 		{1.0_f32, 0.0_f32, 0.0_f32},
 		{-1.0_f32, 0.0_f32, 0.0_f32},
@@ -71,10 +55,7 @@ std::tuple<std::vector<glm::fvec3>, std::vector<SphereWorld::Triangle>> SphereWo
 
 	for (glm::fvec3& point : points)
 	{
-		glm::fvec3 noise({0.0_f32,  0.0_f32, 0.0_f32});
-		noise += point * std::pow(glm::simplex(point * 0.9_f32), 3.0_f32) * 0.4_f32;
-		//noise += point * glm::simplex(point * 1.0_f32) * 0.1_f32;
-		point += noise;
+		point = point * GetHeight(point);
 	}
 
 	return {points, triangles};
@@ -137,4 +118,45 @@ std::tuple<std::vector<glm::fvec3>, std::vector<SphereWorld::Triangle>> SphereWo
 	}
 
 	return {new_points, new_triangles};
+}
+
+f32 SphereWorld::GetHeight(glm::fvec3 const& position) const
+{
+	glm::fvec3 normpos = glm::normalize(position);
+	f32 noise = 0;
+	noise += std::pow(glm::simplex(normpos * 0.9_f32), 3.0_f32) * 0.4_f32;
+	return 1.0_f32 + noise;
+}
+
+glm::fvec3 SphereWorld::GetNormal(glm::fvec3 const& position) const
+{
+	constexpr f32 delta = 0.0001_f32;
+
+	glm::fvec3 normpos = glm::normalize(position);
+
+	// Create two arbitrary orthogonal vectors orthogonal to normpos
+	glm::fvec3 p1;
+	if (normpos.y == 0.0_f32 && normpos.z == 0.0_f32)
+	{
+		p1 = glm::cross(normpos, glm::fvec3(0.0_f32, 1.0_f32, 0.0_f32));
+	}
+	else
+	{
+		p1 = glm::cross(normpos, glm::fvec3(1.0_f32, 0.0_f32, 0.0_f32));
+	}
+	glm::fvec3 p2 = glm::cross(normpos, p1);
+	
+	// make those normalized positions
+	p1 = glm::normalize(normpos + p1 * delta);
+	p2 = glm::normalize(normpos + p2 * delta);
+	
+	// find height of these positions
+	p1 += GetHeight(p1) * p1;
+	p2 += GetHeight(p2) * p2;
+	// height at input position
+	glm::fvec3 posheight = normpos + GetHeight(normpos) * normpos;
+
+	// translate to have posheight at 0
+	// normal is cross product between p1 and p2
+	return glm::normalize(glm::cross(p1 - posheight, p2 - posheight));
 }

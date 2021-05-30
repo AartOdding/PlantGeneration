@@ -35,6 +35,9 @@ public:
 	 * @param divisions start with a tetrahedral and divide triangles this many times.
 	 */
 	SphereWorld(u32 divisions);
+
+	f32 GetHeight(glm::fvec3 const& position) const;
+	glm::fvec3 GetNormal(glm::fvec3 const& position) const;
 };
 
 }
