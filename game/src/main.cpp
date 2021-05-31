@@ -144,9 +144,6 @@ int main()
             ImGui_ImplGlfw_NewFrame();
             ImGui::NewFrame();
 
-            std::string message = std::string("x: ") + std::to_string(player.velocity.x) + std::string(" y: ") + std::to_string(player.velocity.y) + std::string(" z: ") + std::to_string(player.velocity.z);
-            ImGui::Text(message.c_str());
-
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
