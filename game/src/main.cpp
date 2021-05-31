@@ -12,6 +12,7 @@
 #include "types.hpp"
 #include "debug.hpp"
 #include "target.hpp"
+#include "sphere_world.hpp"
 
 CMRC_DECLARE(resources);
 
@@ -57,6 +58,9 @@ int main()
         glm::dvec3 mesh_position(0.0_f32, 0.5_f32, 0.0_f32);
         glm::dvec3 mesh2_position(5.0_f32, 0.0_f32, 0.0_f32);
 
+        Mb4::SphereWorld world(0);
+        Mb4::SphereWorld world2(1);
+
         bool isPaused = true;
 
         while (!WindowShouldClose())
@@ -72,10 +76,10 @@ int main()
                     targetables.end(),
                     camera.position,
                     camera.target);
-                if (target.has_value())
+                /*if (target.has_value())
                     Mb4::DebugPrint(std::to_string(target.value()));
                 else
-                    Mb4::DebugPrint("No target");
+                    Mb4::DebugPrint("No target");*/
             }
 
             if (IsMouseButtonReleased(0)) // Only fires on the frame where the button is released
@@ -97,6 +101,40 @@ int main()
 
             BeginMode3D(camera);
 
+            Mb4::SphereWorld const* activeWorld;
+            if (IsKeyDown(KEY_R))
+            {
+                activeWorld = &world2;
+            }
+            else
+            {
+                activeWorld = &world;
+            }
+
+            for (auto const& triangle : activeWorld->triangles)
+            {
+                DrawTriangle3D(
+                    Vector3{activeWorld->points[triangle.index1].x, activeWorld->points[triangle.index1].y, activeWorld->points[triangle.index1].z},
+                    Vector3{activeWorld->points[triangle.index2].x, activeWorld->points[triangle.index2].y, activeWorld->points[triangle.index2].z},
+                    Vector3{activeWorld->points[triangle.index3].x, activeWorld->points[triangle.index3].y, activeWorld->points[triangle.index3].z},
+                    Color{255, 0, 0, 255});
+                DrawLine3D(
+                    Vector3{activeWorld->points[triangle.index1].x, activeWorld->points[triangle.index1].y, activeWorld->points[triangle.index1].z},
+                    Vector3{activeWorld->points[triangle.index2].x, activeWorld->points[triangle.index2].y, activeWorld->points[triangle.index2].z},
+                    Color{0, 0, 255, 255});
+
+                DrawLine3D(
+                    Vector3{activeWorld->points[triangle.index2].x, activeWorld->points[triangle.index2].y, activeWorld->points[triangle.index2].z},
+                    Vector3{activeWorld->points[triangle.index3].x, activeWorld->points[triangle.index3].y, activeWorld->points[triangle.index3].z},
+                    Color{0, 0, 255, 255});
+
+                DrawLine3D(
+                    Vector3{activeWorld->points[triangle.index1].x, activeWorld->points[triangle.index1].y, activeWorld->points[triangle.index1].z},
+                    Vector3{activeWorld->points[triangle.index3].x, activeWorld->points[triangle.index3].y, activeWorld->points[triangle.index3].z},
+                    Color{0, 0, 255, 255});
+            }
+
+            /*
             {
                 Vector3 model_pos;
                 model_pos.x = mesh_position.x;
@@ -110,7 +148,7 @@ int main()
                 model_pos.y = mesh2_position.y;
                 model_pos.z = mesh2_position.z;
                 DrawModel(model, model_pos, 1.0_f32, RED);
-            }
+            }*/
             DrawGrid(40, 10.0f);
 
             EndMode3D();

@@ -3,15 +3,16 @@ project(game LANGUAGES CXX)
 
 set(SRC_FILES
   src/debug.cpp
-  src/types.cpp
   src/main.cpp
   src/target.cpp
+  src/sphere_world.cpp
 )
 
 set(HEADER_FILES
   src/debug.hpp
   src/types.hpp
   src/target.hpp
+  src/sphere_world.hpp
 )
 
 source_group(Sources FILES ${SRC_FILES} ${HEADER_FILES})
