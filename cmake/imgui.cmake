@@ -15,10 +15,13 @@ add_library(imgui STATIC
     dependencies/imgui/backends/imgui_impl_glfw.h
     dependencies/imgui/backends/imgui_impl_opengl3.cpp
     dependencies/imgui/backends/imgui_impl_opengl3.h
+    dependencies/imguizmo/imguizmo.cpp
+    dependencies/imguizmo/imguizmo.h
 )
 
 target_include_directories(imgui PUBLIC "${CMAKE_SOURCE_DIR}/dependencies/imgui")
 target_include_directories(imgui PUBLIC "${CMAKE_SOURCE_DIR}/dependencies/imgui/backends")
+target_include_directories(imgui PUBLIC "${CMAKE_SOURCE_DIR}/dependencies/imguizmo")
 
 target_compile_definitions(imgui PUBLIC IMGUI_IMPL_OPENGL_LOADER_CUSTOM="external/glad.h")
 target_link_libraries(imgui PRIVATE raylib)
