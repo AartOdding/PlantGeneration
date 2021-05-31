@@ -22,6 +22,10 @@
 CMRC_DECLARE(resources);
 
 
+int fork_count = 5;
+float roll = 0;
+float pitch = glm::quarter_pi<float>();
+
 
 void ContinueTree(std::vector<std::unique_ptr<LSystem::Instruction>>& branches, float life)
 {
@@ -34,7 +38,7 @@ void ContinueTree(std::vector<std::unique_ptr<LSystem::Instruction>>& branches, 
 
     for (auto& child : branches)
     {
-        child->data.children = LSystem::CreateFork(5, life);
+        child->data.children = LSystem::CreateFork(fork_count, life, roll, pitch);
         ContinueTree(child->data.children, life);
     }
 }
@@ -59,7 +63,6 @@ LSystem::LSystem CreateTree()
 int main()
 {
     auto lsystem = CreateTree();
-    LSystemWindow lsystemWindow(&lsystem);
 
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     SetConfigFlags(FLAG_VSYNC_HINT);
@@ -156,6 +159,19 @@ int main()
         ImGuizmo::Manipulate(glm::value_ptr(view_matrix), glm::value_ptr(projection_matrix), 
             ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(mat));
         //ImGuizmo::Manipulate()
+
+        if (ImGui::SliderInt("Divisions", &fork_count, 1, 7))
+        {
+            lsystem = CreateTree();
+        }
+        if (ImGui::SliderFloat("Roll", &roll, 0, glm::two_pi<float>()))
+        {
+            lsystem = CreateTree();
+        }
+        if (ImGui::SliderFloat("Pitch", &pitch, 0, glm::two_pi<float>()))
+        {
+            lsystem = CreateTree();
+        }
 
         bool show = true;
         //ImGui::ShowDemoWindow(&show);
