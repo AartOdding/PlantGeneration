@@ -8,11 +8,13 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 
 #include "types.hpp"
 #include "debug.hpp"
 #include "target.hpp"
 #include "sphere_world.hpp"
+#include "player.hpp"
 
 CMRC_DECLARE(resources);
 
@@ -35,7 +37,8 @@ int main()
         InitWindow(800, 450, "Aart & Aart 4Mb Jam");
 
         SetExitKey(0); // Removes ESC to exit
-        SetTargetFPS(60);
+        constexpr u32 fps = 60;
+        SetTargetFPS(fps);
 
         // Setup Dear ImGui context
         IMGUI_CHECKVERSION();
@@ -44,6 +47,8 @@ int main()
 
         ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)GetGLFWWindowHandle(), true);
         ImGui_ImplOpenGL3_Init("#version 330");
+
+        Vector2 last_mouse_pos = GetMousePosition();
 
         Camera camera{};
         camera.position = { 0.0f, 1.8f, 6.0f };    // Camera position
@@ -58,42 +63,47 @@ int main()
         glm::dvec3 mesh_position(0.0_f32, 0.5_f32, 0.0_f32);
         glm::dvec3 mesh2_position(5.0_f32, 0.0_f32, 0.0_f32);
 
-        Mb4::SphereWorld world(0);
-        Mb4::SphereWorld world2(1);
+        f32 gravity = 2.0f;
+
+        Mb4::SphereWorld world(4);
+
+        Mb4::Player player({3.0_f32, 0.0_f32, 0.0_f32}, {0.0_f32, 1.0_f32, 0.0_f32});
 
         bool isPaused = true;
 
         while (!WindowShouldClose())
         {
+            Vector2 mouse_diff = Vector2Subtract(GetMousePosition(), last_mouse_pos);
+            last_mouse_pos = GetMousePosition();
+
+            if (IsKeyPressed(KEY_ESCAPE))
             {
-                std::vector<Mb4::Targetable const*> targetables;
-                Mb4::Targetable sphere_targetable(sphere_radius, mesh_position, 123);
-                targetables.emplace_back(&sphere_targetable);
-                Mb4::Targetable sphere_targetable2(sphere_radius, mesh2_position, 666);
-                targetables.emplace_back(&sphere_targetable2);
-                std::optional<u32> target = Mb4::GetTarget(
-                    targetables.begin(),
-                    targetables.end(),
-                    camera.position,
-                    camera.target);
-                /*if (target.has_value())
-                    Mb4::DebugPrint(std::to_string(target.value()));
+                if (isPaused)
+                {
+                    isPaused = false;
+                    DisableCursor();
+                    last_mouse_pos = GetMousePosition();
+                }
                 else
-                    Mb4::DebugPrint("No target");*/
+                {
+                    isPaused = true;
+                    EnableCursor();
+                }
             }
 
-            if (IsMouseButtonReleased(0)) // Only fires on the frame where the button is released
+            if (!isPaused)
             {
-                SetCameraMode(camera, CAMERA_FIRST_PERSON);
-                isPaused = false;
-            }
-            if (IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_P)) // Only fires on the frame where a key is released
-            {
-                SetCameraMode(camera, CAMERA_CUSTOM);
-                isPaused = true;
+                player.Update(1.0_f32 / fps, gravity, world, glm::fvec2{mouse_diff.x, mouse_diff.y});
             }
 
-            UpdateCamera(&camera);
+            {
+                glm::fvec3 campos = player.position + glm::normalize(player.position) * 1.0_f32;
+                camera.position = {campos.x, campos.y, campos.z};
+                glm::fvec3 forward = campos + player.GetRotatedForward();
+                camera.target = {forward.x, forward.y, forward.z};
+                glm::fvec3 up = player.position + player.GetRotatedUp();
+                camera.up = {up.x, up.y, up.z};
+            }
 
             BeginDrawing();
 
@@ -101,54 +111,30 @@ int main()
 
             BeginMode3D(camera);
 
-            Mb4::SphereWorld const* activeWorld;
-            if (IsKeyDown(KEY_R))
-            {
-                activeWorld = &world2;
-            }
-            else
-            {
-                activeWorld = &world;
-            }
-
-            for (auto const& triangle : activeWorld->triangles)
+            for (auto const& triangle : world.triangles)
             {
                 DrawTriangle3D(
-                    Vector3{activeWorld->points[triangle.index1].x, activeWorld->points[triangle.index1].y, activeWorld->points[triangle.index1].z},
-                    Vector3{activeWorld->points[triangle.index2].x, activeWorld->points[triangle.index2].y, activeWorld->points[triangle.index2].z},
-                    Vector3{activeWorld->points[triangle.index3].x, activeWorld->points[triangle.index3].y, activeWorld->points[triangle.index3].z},
+                    Vector3{world.points[triangle.index1].x, world.points[triangle.index1].y, world.points[triangle.index1].z},
+                    Vector3{world.points[triangle.index2].x, world.points[triangle.index2].y, world.points[triangle.index2].z},
+                    Vector3{world.points[triangle.index3].x, world.points[triangle.index3].y, world.points[triangle.index3].z},
                     Color{255, 0, 0, 255});
+
                 DrawLine3D(
-                    Vector3{activeWorld->points[triangle.index1].x, activeWorld->points[triangle.index1].y, activeWorld->points[triangle.index1].z},
-                    Vector3{activeWorld->points[triangle.index2].x, activeWorld->points[triangle.index2].y, activeWorld->points[triangle.index2].z},
+                    Vector3{world.points[triangle.index1].x, world.points[triangle.index1].y, world.points[triangle.index1].z},
+                    Vector3{world.points[triangle.index2].x, world.points[triangle.index2].y, world.points[triangle.index2].z},
                     Color{0, 0, 255, 255});
 
                 DrawLine3D(
-                    Vector3{activeWorld->points[triangle.index2].x, activeWorld->points[triangle.index2].y, activeWorld->points[triangle.index2].z},
-                    Vector3{activeWorld->points[triangle.index3].x, activeWorld->points[triangle.index3].y, activeWorld->points[triangle.index3].z},
+                    Vector3{world.points[triangle.index2].x, world.points[triangle.index2].y, world.points[triangle.index2].z},
+                    Vector3{world.points[triangle.index3].x, world.points[triangle.index3].y, world.points[triangle.index3].z},
                     Color{0, 0, 255, 255});
 
                 DrawLine3D(
-                    Vector3{activeWorld->points[triangle.index1].x, activeWorld->points[triangle.index1].y, activeWorld->points[triangle.index1].z},
-                    Vector3{activeWorld->points[triangle.index3].x, activeWorld->points[triangle.index3].y, activeWorld->points[triangle.index3].z},
+                    Vector3{world.points[triangle.index1].x, world.points[triangle.index1].y, world.points[triangle.index1].z},
+                    Vector3{world.points[triangle.index3].x, world.points[triangle.index3].y, world.points[triangle.index3].z},
                     Color{0, 0, 255, 255});
             }
 
-            /*
-            {
-                Vector3 model_pos;
-                model_pos.x = mesh_position.x;
-                model_pos.y = mesh_position.y;
-                model_pos.z = mesh_position.z;
-                DrawModel(model, model_pos, 1.0_f32, RED);
-            }
-            {
-                Vector3 model_pos;
-                model_pos.x = mesh2_position.x;
-                model_pos.y = mesh2_position.y;
-                model_pos.z = mesh2_position.z;
-                DrawModel(model, model_pos, 1.0_f32, RED);
-            }*/
             DrawGrid(40, 10.0f);
 
             EndMode3D();
@@ -158,15 +144,12 @@ int main()
             ImGui_ImplGlfw_NewFrame();
             ImGui::NewFrame();
 
-            bool show = true;
-            ImGui::ShowDemoWindow(&show);
-
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
             if (isPaused)
             {
-                DrawText("Click to start", GetScreenWidth() / 2, GetScreenHeight() / 2, 30, BLACK);
+                DrawText("ESC to start/pause", GetScreenWidth() / 2, GetScreenHeight() / 2, 30, BLACK);
             }
 
             EndDrawing();

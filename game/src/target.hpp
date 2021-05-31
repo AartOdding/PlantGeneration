@@ -5,6 +5,7 @@
 #include <iterator>
 #include <glm/glm.hpp>
 #include <optional>
+#include <tuple>
 
 namespace Mb4
 {

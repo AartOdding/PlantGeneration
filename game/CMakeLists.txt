@@ -6,6 +6,7 @@ set(SRC_FILES
   src/main.cpp
   src/target.cpp
   src/sphere_world.cpp
+  src/player.cpp
 )
 
 set(HEADER_FILES
@@ -13,6 +14,7 @@ set(HEADER_FILES
   src/types.hpp
   src/target.hpp
   src/sphere_world.hpp
+  src/player.hpp
 )
 
 source_group(Sources FILES ${SRC_FILES} ${HEADER_FILES})
