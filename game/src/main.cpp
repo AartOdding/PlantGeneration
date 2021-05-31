@@ -48,6 +48,8 @@ int main()
         ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)GetGLFWWindowHandle(), true);
         ImGui_ImplOpenGL3_Init("#version 330");
 
+        Vector2 last_mouse_pos = GetMousePosition();
+
         Camera camera{};
         camera.position = { 0.0f, 1.8f, 6.0f };    // Camera position
         camera.target = { 0.0f, 0.5f, 0.0f };      // Camera looking at point
@@ -71,22 +73,37 @@ int main()
 
         while (!WindowShouldClose())
         {
-            if (IsMouseButtonReleased(0)) // Only fires on the frame where the button is released
+            Vector2 mouse_diff = Vector2Subtract(GetMousePosition(), last_mouse_pos);
+            last_mouse_pos = GetMousePosition();
+
+            if (IsKeyPressed(KEY_ESCAPE))
             {
-                SetCameraMode(camera, CAMERA_FIRST_PERSON);
-                isPaused = false;
-            }
-            if (IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_P)) // Only fires on the frame where a key is released
-            {
-                SetCameraMode(camera, CAMERA_CUSTOM);
-                isPaused = true;
+                if (isPaused)
+                {
+                    isPaused = false;
+                    DisableCursor();
+                    last_mouse_pos = GetMousePosition();
+                }
+                else
+                {
+                    isPaused = true;
+                    EnableCursor();
+                }
             }
 
             if (!isPaused)
             {
-                player.Update(1.0_f32 / fps, gravity, world);
+                player.Update(1.0_f32 / fps, gravity, world, glm::fvec2{mouse_diff.x, mouse_diff.y});
             }
-            UpdateCamera(&camera);
+
+            {
+                glm::fvec3 campos = player.position + glm::normalize(player.position) * 1.0_f32;
+                camera.position = {campos.x, campos.y, campos.z};
+                glm::fvec3 forward = campos + player.GetRotatedForward();
+                camera.target = {forward.x, forward.y, forward.z};
+                glm::fvec3 up = player.position + player.GetRotatedUp();
+                camera.up = {up.x, up.y, up.z};
+            }
 
             BeginDrawing();
 
@@ -118,15 +135,6 @@ int main()
                     Color{0, 0, 255, 255});
             }
 
-            {
-                Vector3 player_pos;
-                player_pos.x = player.position.x;
-                player_pos.y = player.position.y;
-                player_pos.z = player.position.z;
-                DrawCube(player_pos, 0.5_f32, 0.5_f32, 0.5_f32, Color{0, 0, 255, 255});
-                DrawLine3D(player_pos, Vector3Add(player_pos, {player.forward.x, player.forward.y, player.forward.z}), Color{0, 255, 0, 255});
-            }
-
             DrawGrid(40, 10.0f);
 
             EndMode3D();
@@ -144,7 +152,7 @@ int main()
 
             if (isPaused)
             {
-                DrawText("Click to start", GetScreenWidth() / 2, GetScreenHeight() / 2, 30, BLACK);
+                DrawText("ESC to start/pause", GetScreenWidth() / 2, GetScreenHeight() / 2, 30, BLACK);
             }
 
             EndDrawing();
