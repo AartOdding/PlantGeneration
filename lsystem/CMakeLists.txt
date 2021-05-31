@@ -3,14 +3,15 @@ project(lsystem LANGUAGES CXX VERSION 0.1)
 
 # Public interface of the library, should only be hpp files in include folder.
 set(PUBLIC_FILES
-    include/LSystem/LSystem.hpp
     include/LSystem/Instruction.hpp
+    include/LSystem/LSystem.hpp
     include/LSystem/Rule.hpp
     include/LSystem/VertexBuffer.hpp
 )
 
 # Private files, can be cpp or hpp, should be in src folder
 set(PRIVATE_FILES
+    src/Instruction.cpp
     src/LSystem.cpp
 )
 

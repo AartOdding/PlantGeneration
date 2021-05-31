@@ -58,6 +58,13 @@ namespace LSystem
 		return render_buffer;
 	}
 
+
+	Rule* LSystem::CreateRule(std::string_view id)
+	{
+		auto rule = std::make_unique<Rule>();
+
+	}
+
 	/*
 	VertexBuffer LSystem::Generate(float iterations) const
 	{

@@ -13,48 +13,52 @@
 
 #include <LSystem/LSystem.hpp>
 
-
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/random.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "LSystemWindow.hpp"
 
 CMRC_DECLARE(resources);
 
 
-void CreateTree(LSystem::Instruction* prev, int depth, int max_depth)
+LSystem::LSystem CreateTree(float angle, int side_branches, float branch_length)
 {
-    if (depth > max_depth) return;
+    LSystem::LSystem lsystem;
 
-    auto branch1 = std::make_unique<LSystem::Instruction>();
-    branch1->transform = glm::rotate(glm::mat4(1), glm::gaussRand(0.0f, 0.5f), glm::vec3(0, 0, 1));
-    branch1->transform = glm::translate(branch1->transform, glm::vec3(0, 1, 0));
+    auto rule = std::make_unique<LSystem::Rule>();
+    rule->id = "A";
 
-    auto branch2 = std::make_unique<LSystem::Instruction>();
-    branch2->transform = glm::rotate(glm::mat4(1), glm::gaussRand(0.0f, 0.5f), glm::vec3(0, 0, 1));
-    branch2->transform = glm::translate(branch2->transform, glm::vec3(0, 1, 0));
+    auto i1 = std::make_unique<LSystem::Instruction>();
 
-    auto branch3 = std::make_unique<LSystem::Instruction>();
-    branch3->transform = glm::rotate(glm::mat4(1), glm::gaussRand(0.0f, 0.5f), glm::vec3(0, 0, 1));
-    branch3->transform = glm::translate(branch3->transform, glm::vec3(0, 1, 0));
+    for (int i = 0; i < 5; ++i)
+    {
+        auto i2 = std::make_unique<LSystem::Instruction>();
+        i1->children.push_back(std::move(i2));
+    }
 
-    prev->children.push_back(std::move(branch1));
-    prev->children.push_back(std::move(branch2));
-    prev->children.push_back(std::move(branch3));
+    rule->start = std::move(i1);
+    lsys.starting_rule = rule->id;
+    lsys.rules.emplace(rule->id, std::move(rule));
+}
 
-    CreateTree(prev->children[0].get(), depth + 1, max_depth);
-    CreateTree(prev->children[1].get(), depth + 1, max_depth);
-    CreateTree(prev->children[2].get(), depth + 1, max_depth);
+void ShapeTree(LSystem::LSystem& lsys)
+{
+    auto i1 = lsys.rules.begin()->second->start.get();
+
+    LSystem::InstructionSetTransform(i1, 0, 0, 1);
+
+    for (int i = 0; i < i1->children.size(); ++i)
+    {
+        LSystem::InstructionSetTransform(i1->children[i].get(), i, 0.4, 1);
+    }
 }
 
 int main()
 {
-    auto branch1 = std::make_unique<LSystem::Instruction>();
-
-    CreateTree(branch1.get(), 0, 1);
-
-    auto buf = LSystem::Generate(branch1.get());
-
+    LSystemWindow lsystemWindow(&lsystem);
+    CreateTree(lsystem);
+    ShapeTree(lsystem);
 
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     SetConfigFlags(FLAG_VSYNC_HINT);
@@ -66,6 +70,7 @@ int main()
     // Setup Dear ImGui context
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
+    ImGui::GetIO().FontGlobalScale = 2;
 
     ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)GetGLFWWindowHandle(), true);
     ImGui_ImplOpenGL3_Init("#version 330");
@@ -122,6 +127,8 @@ int main()
 
         DrawGrid(40, 10.0f);
 
+        auto buf = LSystem::Generate(lsystem.rules.begin()->second->start.get());
+
         for (auto& l : buf.lines)
         {
             DrawLine3D({ l.point_a.position.x, l.point_a.position.y, l.point_a.position.z }, 
@@ -150,6 +157,7 @@ int main()
 
         bool show = true;
         //ImGui::ShowDemoWindow(&show);
+        lsystemWindow.Draw();
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

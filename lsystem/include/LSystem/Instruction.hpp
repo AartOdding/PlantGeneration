@@ -20,4 +20,9 @@ namespace LSystem
 		int sides = 1; // 1 or less is line, 2 is plane, 3+ cylinder
 	};
 
+	std::vector<Instruction*> CreateEqualBranches(Instruction& i, int count, float angle, float length);
+
+	Instruction* CreateExtrudingBranch(Instruction& i, float roll, float pitch, float length);
+
+
 }
