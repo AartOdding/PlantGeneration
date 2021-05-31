@@ -13,7 +13,7 @@
 namespace LSystem
 {
 
-	VertexBuffer Generate(const Instruction* instruction);
+	VertexBuffer Generate(const Instruction* data);
 
 
 	class LSystem

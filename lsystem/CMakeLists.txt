@@ -25,3 +25,5 @@ target_include_directories(${PROJECT_NAME} PRIVATE src)
 target_include_directories(${PROJECT_NAME} PUBLIC ${GLM_INCLUDE_DIR})
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC GLM_ENABLE_EXPERIMENTAL)
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)

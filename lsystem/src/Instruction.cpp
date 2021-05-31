@@ -7,31 +7,37 @@
 namespace LSystem
 {
 
-    std::vector<Instruction*> CreateEqualBranches(Instruction& instruction, int count, float pitch, float length)
+    std::vector<std::unique_ptr<Instruction>> CreateFork(int count, float length, float roll, float pitch, float yaw)
     {
-        std::vector<Instruction*> new_branches;
-        new_branches.reserve(count);
-
-        const float angle_increment = glm::two_pi<float>() / count;
-
-        for (int i = 0; i < count; ++i)
+        std::vector<std::unique_ptr<Instruction>> instructions;
+     
+        if (count > 0)
         {
-            new_branches.push_back(CreateExtrudingBranch(instruction, i * angle_increment, pitch, length));
+            instructions.reserve(count);
+
+            const float angle_increment = glm::two_pi<float>() / count;
+
+            for (int i = 0; i < count; ++i)
+            {
+                instructions.push_back(std::move(CreateExtrusion(length, roll + i * angle_increment, pitch, yaw)[0]));
+            }
         }
-        return new_branches;
+
+        return instructions;
     }
 
-    Instruction* CreateExtrudingBranch(Instruction& i, float roll, float pitch, float length)
+    std::vector<std::unique_ptr<Instruction>> CreateExtrusion(float length, float roll, float pitch, float yaw)
     {
-        auto new_instruction = std::make_unique<Instruction>();
+        std::vector<std::unique_ptr<Instruction>> instructions(1);
+        instructions[0] = std::make_unique<Instruction>();
 
-        auto roll_ = glm::rotate(glm::mat4(1), roll, glm::vec3(0, 1, 0));
-        auto pitch_ = glm::rotate(roll_, pitch, glm::vec3(1, 0, 0));
-        new_instruction->transform = glm::translate(pitch_, glm::vec3(0, length, 0));
+        const auto roll_matrix = glm::rotate(glm::mat4(1), roll, glm::vec3(0, 1, 0));
+        const auto pitch_matrix = glm::rotate(roll_matrix, pitch, glm::vec3(1, 0, 0));
+        instructions[0]->transform = pitch_matrix;
+        
+        instructions[0]->data.transform = glm::translate(glm::mat4(1), glm::vec3(0, length, 0));
 
-        auto new_instruction_temp = new_instruction.get();
-        i.children.push_back(std::move(new_instruction));
-        return new_instruction_temp;
+        return instructions;
     }
 
 }

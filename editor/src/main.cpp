@@ -22,43 +22,44 @@
 CMRC_DECLARE(resources);
 
 
-LSystem::LSystem CreateTree(float angle, int side_branches, float branch_length)
+
+void ContinueTree(std::vector<std::unique_ptr<LSystem::Instruction>>& branches, float life)
+{
+    life -= 0.2;
+
+    if (life < 0.1)
+    {
+        return;
+    }
+
+    for (auto& child : branches)
+    {
+        child->data.children = LSystem::CreateFork(5, life);
+        ContinueTree(child->data.children, life);
+    }
+}
+
+LSystem::LSystem CreateTree()
 {
     LSystem::LSystem lsystem;
 
-    auto rule = std::make_unique<LSystem::Rule>();
-    rule->id = "A";
+    auto rule = lsystem.CreateRule("A");
+    lsystem.starting_rule = rule->id;
 
-    auto i1 = std::make_unique<LSystem::Instruction>();
+    auto start = LSystem::CreateExtrusion(2);
 
-    for (int i = 0; i < 5; ++i)
-    {
-        auto i2 = std::make_unique<LSystem::Instruction>();
-        i1->children.push_back(std::move(i2));
-    }
+    ContinueTree(start, 1);
 
-    rule->start = std::move(i1);
-    lsys.starting_rule = rule->id;
-    lsys.rules.emplace(rule->id, std::move(rule));
+    rule->start = std::move(start[0]);
+
+    return lsystem;
 }
 
-void ShapeTree(LSystem::LSystem& lsys)
-{
-    auto i1 = lsys.rules.begin()->second->start.get();
-
-    LSystem::InstructionSetTransform(i1, 0, 0, 1);
-
-    for (int i = 0; i < i1->children.size(); ++i)
-    {
-        LSystem::InstructionSetTransform(i1->children[i].get(), i, 0.4, 1);
-    }
-}
 
 int main()
 {
+    auto lsystem = CreateTree();
     LSystemWindow lsystemWindow(&lsystem);
-    CreateTree(lsystem);
-    ShapeTree(lsystem);
 
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     SetConfigFlags(FLAG_VSYNC_HINT);
@@ -77,7 +78,7 @@ int main()
 
     Camera camera{};
     camera.position = { 0.0f, 1.8f, 6.0f };    // Camera position
-    camera.target = { 0.0f, 0.0f, 0.0f };      // Camera looking at point
+    camera.target = { 0.0f, 1.7f, 0.0f };      // Camera looking at point
     camera.up = { 0.0f, 1.0f, 0.0f };          // Camera up vector (rotation towards target)
     camera.fovy = 45.0f;                       // Camera field-of-view Y
     camera.projection = CAMERA_PERSPECTIVE;    // Camera mode type
@@ -121,18 +122,19 @@ int main()
 
         BeginDrawing();
 
-        ClearBackground(RAYWHITE);
+        ClearBackground(BLACK);
 
         BeginMode3D(camera);
 
-        DrawGrid(40, 10.0f);
+
+        //DrawGrid(40, 10.0f);
 
         auto buf = LSystem::Generate(lsystem.rules.begin()->second->start.get());
 
         for (auto& l : buf.lines)
         {
             DrawLine3D({ l.point_a.position.x, l.point_a.position.y, l.point_a.position.z }, 
-                       { l.point_b.position.x, l.point_b.position.y, l.point_b.position.z }, RED);
+                       { l.point_b.position.x, l.point_b.position.y, l.point_b.position.z }, WHITE);
         }
 
         EndMode3D();
@@ -157,7 +159,7 @@ int main()
 
         bool show = true;
         //ImGui::ShowDemoWindow(&show);
-        lsystemWindow.Draw();
+        //lsystemWindow.Draw();
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
