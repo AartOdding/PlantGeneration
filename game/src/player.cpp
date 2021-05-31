@@ -19,6 +19,7 @@ Player::Player(glm::fvec3 position, glm::fvec3 forward) :
 void Player::Update(f32 deltatime, f32 gravity_strenght, SphereWorld const& world, glm::fvec2 mouse_movement)
 {
 	constexpr f32 mouse_speed = 0.5_f32;
+	constexpr f32 jump_velocity = 1.0_f32;
 
 	// mouse y to move camera up and down
 	updownangle -= mouse_movement.y * mouse_speed * deltatime;
@@ -50,6 +51,12 @@ void Player::Update(f32 deltatime, f32 gravity_strenght, SphereWorld const& worl
 	{
 		acceleration = glm::normalize(acceleration) * deltatime * 15.0f;
 		velocity += acceleration;
+	}
+
+	// jump
+	if (IsKeyDown(KEY_SPACE) && glm::distance(current_height, glm::length(position)) < 0.001 && glm::dot(velocity, world.GetNormal(position)) <= 0.0_f32)
+	{
+		velocity += jump_velocity * world.GetNormal(position);
 	}
 
 	// add gravity
