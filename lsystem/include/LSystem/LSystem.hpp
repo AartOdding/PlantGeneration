@@ -6,7 +6,6 @@
 #include <unordered_map>
 
 #include <LSystem/Instruction.hpp>
-#include <LSystem/Rule.hpp>
 #include <LSystem/VertexBuffer.hpp>
 
 
@@ -22,9 +21,9 @@ namespace LSystem
 
 		std::string starting_rule;
 
-		std::unordered_map<std::string, std::unique_ptr<Rule>> rules;
+		std::unordered_map<std::string, std::shared_ptr<Rule>> rules;
 
-		Rule* CreateRule(std::string_view id);
+		std::shared_ptr<Rule> CreateRule(std::string_view id);
 
 		//VertexBuffer Generate(float iterations) const;
 

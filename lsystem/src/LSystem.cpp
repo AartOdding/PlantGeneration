@@ -48,13 +48,12 @@ namespace LSystem
 	}
 
 
-	Rule* LSystem::CreateRule(std::string_view id)
+	std::shared_ptr<Rule> LSystem::CreateRule(std::string_view id)
 	{
-		auto rule = std::make_unique<Rule>();
+		auto rule = std::make_shared<Rule>();
 		rule->id = id;
-		auto ruleTemp = rule.get();
-		rules.emplace(std::string(id), std::move(rule));
-		return ruleTemp;
+		rules.emplace(std::string(id), rule);
+		return rule;
 	}
 
 }
