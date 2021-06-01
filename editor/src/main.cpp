@@ -55,7 +55,7 @@ LSystem::LSystem CreateTree()
     start[0]->data.children = LSystem::CreateFork(fork_count, 0.5, 0, pitch);
     start[0]->data.next_rules = LSystem::CreateRecursion(rule, roll, 0.1);
 
-    rule->start = std::move(start[0]);
+    rule->data = std::move(start[0]->data);
 
     return lsystem;
 }
@@ -133,7 +133,7 @@ int main()
 
         //DrawGrid(40, 10.0f);
 
-        auto buf = LSystem::Generate(lsystem.rules.begin()->second->start.get(), recurse_count);
+        auto buf = LSystem::Generate(&lsystem.rules.begin()->second->data, recurse_count);
 
         for (auto& l : buf.lines)
         {

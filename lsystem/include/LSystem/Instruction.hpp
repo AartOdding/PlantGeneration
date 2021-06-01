@@ -39,7 +39,7 @@ namespace LSystem
 	struct Rule
 	{
 		std::string id;
-		std::unique_ptr<Instruction> start;
+		InstructionData data;
 	};
 
 	std::vector<std::unique_ptr<Instruction>> CreateFork(int count, float length, float roll = 0, float pitch = glm::quarter_pi<float>(), float yaw = 0);
