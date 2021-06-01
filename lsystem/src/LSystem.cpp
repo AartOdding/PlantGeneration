@@ -9,7 +9,7 @@ namespace LSystem
 
 	// TODO: optimize away lines of size 0
 
-	static void ExecuteInstruction(const Instruction* data, const glm::mat4& world_space, VertexBuffer& vertex_buffer)
+	static void ExecuteInstruction(const Instruction* data, const glm::mat4& world_space, VertexBuffer& vertex_buffer, int remaining_recursions)
 	{
 		if (!data)
 		{
@@ -33,16 +33,36 @@ namespace LSystem
 
 			if (child)
 			{
-				ExecuteInstruction(child.get(), branch_transform, vertex_buffer);
+				ExecuteInstruction(child.get(), branch_transform, vertex_buffer, remaining_recursions);
+			}
+		}
+
+		if (remaining_recursions > 0)
+		{
+			for (const auto& r : data->data.next_rules)
+			{
+				auto rule = r.rule.lock();
+
+				assert(rule); // fail in debug if rule is empty
+
+				if (rule)
+				{
+					assert(rule->start); // fail in debug if instruction is empty
+
+					if (rule->start)
+					{
+						ExecuteInstruction(rule->start.get(), branch_transform, vertex_buffer, remaining_recursions - 1);
+					}
+				}
 			}
 		}
 	}
 
-	VertexBuffer Generate(const Instruction* branch)
+	VertexBuffer Generate(const Instruction* branch, int recursions)
 	{
 		VertexBuffer render_buffer;
 
-		ExecuteInstruction(branch, glm::mat4(1), render_buffer);
+		ExecuteInstruction(branch, glm::mat4(1), render_buffer, recursions);
 
 		return render_buffer;
 	}

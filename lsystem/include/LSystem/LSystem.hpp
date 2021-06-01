@@ -12,7 +12,7 @@
 namespace LSystem
 {
 
-	VertexBuffer Generate(const Instruction* data);
+	VertexBuffer Generate(const Instruction* data, int recursions);
 
 
 	class LSystem
