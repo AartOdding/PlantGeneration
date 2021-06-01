@@ -15,8 +15,8 @@ add_library(imgui STATIC
     dependencies/imgui/backends/imgui_impl_glfw.h
     dependencies/imgui/backends/imgui_impl_opengl3.cpp
     dependencies/imgui/backends/imgui_impl_opengl3.h
-    dependencies/imguizmo/imguizmo.cpp
-    dependencies/imguizmo/imguizmo.h
+    dependencies/imguizmo/ImGuizmo.cpp
+    dependencies/imguizmo/ImGuizmo.h
 )
 
 target_include_directories(imgui PUBLIC "${CMAKE_SOURCE_DIR}/dependencies/imgui")
