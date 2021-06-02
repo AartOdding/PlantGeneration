@@ -21,7 +21,7 @@
 
 CMRC_DECLARE(resources);
 
-
+int recurse_count = 5;
 int fork_count = 5;
 float roll = 0;
 float pitch = glm::quarter_pi<float>();
@@ -50,11 +50,12 @@ LSystem::LSystem CreateTree()
     auto rule = lsystem.CreateRule("A");
     lsystem.starting_rule = rule->id;
 
-    auto start = LSystem::CreateExtrusion(2);
+    auto start = LSystem::CreateExtrusion(0.5);
 
-    ContinueTree(start, 1);
+    start[0]->data.children = LSystem::CreateFork(fork_count, 0.5, 0, pitch);
+    start[0]->data.next_rules = LSystem::CreateRecursion(rule, roll, 0.1);
 
-    rule->start = std::move(start[0]);
+    rule->data = std::move(start[0]->data);
 
     return lsystem;
 }
@@ -132,7 +133,7 @@ int main()
 
         //DrawGrid(40, 10.0f);
 
-        auto buf = LSystem::Generate(lsystem.rules.begin()->second->start.get());
+        auto buf = LSystem::Generate(&lsystem.rules.begin()->second->data, recurse_count);
 
         for (auto& l : buf.lines)
         {
@@ -160,6 +161,10 @@ int main()
             ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(mat));
         //ImGuizmo::Manipulate()
 
+        if (ImGui::SliderInt("Recursions", &recurse_count, 1, 10))
+        {
+            lsystem = CreateTree();
+        }
         if (ImGui::SliderInt("Divisions", &fork_count, 1, 7))
         {
             lsystem = CreateTree();

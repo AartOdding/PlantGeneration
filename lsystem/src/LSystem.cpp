@@ -9,7 +9,7 @@ namespace LSystem
 
 	// TODO: optimize away lines of size 0
 
-	static void ExecuteInstruction(const Instruction* data, const glm::mat4& world_space, VertexBuffer& vertex_buffer)
+	static void ExecuteInstruction(const InstructionData* data, const glm::mat4& local_space, VertexBuffer& vertex_buffer, int remaining_recursions)
 	{
 		if (!data)
 		{
@@ -17,44 +17,57 @@ namespace LSystem
 			return;
 		}
 
-		auto local_origin = world_space * data->transform;
-		auto branch_transform = local_origin * data->data.transform;
+		auto branch_transform = local_space * data->transform;
 
-		if (data->data.visible)
+		if (data->visible)
 		{
 			vertex_buffer.lines.emplace_back();
-			vertex_buffer.lines.back().point_a.position = local_origin * glm::vec4(0, 0, 0, 1);
+			vertex_buffer.lines.back().point_a.position = local_space * glm::vec4(0, 0, 0, 1);
 			vertex_buffer.lines.back().point_b.position = branch_transform * glm::vec4(0, 0, 0, 1);
 		}
 
-		for (const auto& child : data->data.children)
+		for (const auto& child : data->children)
 		{
 			assert(child); // fail in debug if child is empty
 
 			if (child)
 			{
-				ExecuteInstruction(child.get(), branch_transform, vertex_buffer);
+				ExecuteInstruction(&child->data, branch_transform * child->transform, vertex_buffer, remaining_recursions);
+			}
+		}
+
+		if (remaining_recursions > 0)
+		{
+			for (const auto& r : data->next_rules)
+			{
+				auto rule = r.rule.lock();
+
+				assert(rule); // fail in debug if rule is empty
+
+				if (rule)
+				{
+					ExecuteInstruction(&rule->data, branch_transform * r.transform, vertex_buffer, remaining_recursions - 1);
+				}
 			}
 		}
 	}
 
-	VertexBuffer Generate(const Instruction* branch)
+	VertexBuffer Generate(const InstructionData* branch, int recursions)
 	{
 		VertexBuffer render_buffer;
 
-		ExecuteInstruction(branch, glm::mat4(1), render_buffer);
+		ExecuteInstruction(branch, glm::mat4(1), render_buffer, recursions);
 
 		return render_buffer;
 	}
 
 
-	Rule* LSystem::CreateRule(std::string_view id)
+	std::shared_ptr<Rule> LSystem::CreateRule(std::string_view id)
 	{
-		auto rule = std::make_unique<Rule>();
+		auto rule = std::make_shared<Rule>();
 		rule->id = id;
-		auto ruleTemp = rule.get();
-		rules.emplace(std::string(id), std::move(rule));
-		return ruleTemp;
+		rules.emplace(std::string(id), rule);
+		return rule;
 	}
 
 }

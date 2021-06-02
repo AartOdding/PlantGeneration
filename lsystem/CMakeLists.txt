@@ -5,7 +5,6 @@ project(lsystem LANGUAGES CXX VERSION 0.1)
 set(PUBLIC_FILES
     include/LSystem/Instruction.hpp
     include/LSystem/LSystem.hpp
-    include/LSystem/Rule.hpp
     include/LSystem/VertexBuffer.hpp
 )
 

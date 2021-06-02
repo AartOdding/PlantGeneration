@@ -40,4 +40,17 @@ namespace LSystem
         return instructions;
     }
 
+    std::vector<RuleReference> CreateRecursion(const std::shared_ptr<Rule>& rule, float roll, float pitch, float yaw)
+    {
+        std::vector<RuleReference> rule_reference;
+        rule_reference.resize(1);
+
+        const auto roll_matrix = glm::rotate(glm::mat4(1), roll, glm::vec3(0, 1, 0));
+        const auto pitch_matrix = glm::rotate(roll_matrix, pitch, glm::vec3(1, 0, 0));
+        rule_reference[0].transform = pitch_matrix;
+
+        rule_reference[0].rule = rule;
+        return rule_reference;
+    }
+
 }
