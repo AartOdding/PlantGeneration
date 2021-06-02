@@ -40,17 +40,37 @@ namespace LSystem
         return instructions;
     }
 
-    std::vector<RuleReference> CreateRecursion(const std::shared_ptr<Rule>& rule, float roll, float pitch, float yaw)
+    std::vector<RuleReference> CreateRecursion(const std::shared_ptr<Rule>& rule, float scale, float roll, float pitch, float yaw)
     {
         std::vector<RuleReference> rule_reference;
         rule_reference.resize(1);
 
         const auto roll_matrix = glm::rotate(glm::mat4(1), roll, glm::vec3(0, 1, 0));
         const auto pitch_matrix = glm::rotate(roll_matrix, pitch, glm::vec3(1, 0, 0));
-        rule_reference[0].transform = pitch_matrix;
+        const auto scale_matrix = glm::scale(pitch_matrix, glm::vec3(scale, scale, scale));
+        rule_reference[0].transform = scale_matrix;
 
         rule_reference[0].rule = rule;
         return rule_reference;
+    }
+
+    std::vector<RuleReference> CreateRecursingFork(const std::shared_ptr<Rule>& rule, int count, float scale, float roll, float pitch, float yaw)
+    {
+        std::vector<RuleReference> rule_references;
+
+        if (count > 0)
+        {
+            rule_references.reserve(count);
+
+            const float angle_increment = glm::two_pi<float>() / count;
+
+            for (int i = 0; i < count; ++i)
+            {
+                rule_references.push_back(std::move(CreateRecursion(rule, scale, roll + i * angle_increment, pitch, yaw)[0]));
+            }
+        }
+
+        return rule_references;
     }
 
 }

@@ -46,6 +46,8 @@ namespace LSystem
 
 	std::vector<std::unique_ptr<Instruction>> CreateExtrusion(float length, float roll = 0, float pitch = 0, float yaw = 0);
 
-	std::vector<RuleReference> CreateRecursion(const std::shared_ptr<Rule>& rule, float roll = 0, float pitch = 0, float yaw = 0);
+	std::vector<RuleReference> CreateRecursion(const std::shared_ptr<Rule>& rule, float scale = 1, float roll = 0, float pitch = 0, float yaw = 0);
+
+	std::vector<RuleReference> CreateRecursingFork(const std::shared_ptr<Rule>& rule, int count, float scale = 1, float roll = 0, float pitch = glm::quarter_pi<float>(), float yaw = 0);
 
 }
