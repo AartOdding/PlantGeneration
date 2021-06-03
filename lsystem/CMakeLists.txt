@@ -10,7 +10,6 @@ set(PUBLIC_FILES
 
 # Private files, can be cpp or hpp, should be in src folder
 set(PRIVATE_FILES
-    src/Instruction.cpp
     src/LSystem.cpp
 )
 

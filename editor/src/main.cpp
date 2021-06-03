@@ -35,21 +35,22 @@ float camera_speed_updown = 0.3;
 
 LSystem::LSystem CreateDandelion()
 {
-    LSystem::LSystem lsystem;
+    LSystem::LSystem l;
 
-    auto rule = lsystem.CreateRule("A");
-    lsystem.starting_rule = rule->id;
+    auto instructions = l.CreateExtrusion(0.5);
+    l.begin = instructions[0];
 
-    auto start = LSystem::CreateExtrusion(0.5);
+    instructions = l.CreateFork(instructions, fork_count, 0.5, roll, pitch);
 
-    //start[0]->data.children = LSystem::CreateFork(fork_count, 0, 0, pitch);
-    start[0]->data.next_rules = LSystem::CreateRecursingFork(rule, fork_count, scale, roll, pitch);
+    for (int i = 0; i < recurse_count; ++i)
+    {
+        instructions = l.CreateExtrusion(instructions, 0.5);
+        instructions = l.CreateFork(instructions, fork_count, 0.5, roll, pitch);
+    }
 
-    rule->data = std::move(start[0]->data);
-
-    return lsystem;
+    return l;
 }
-
+/*
 LSystem::LSystem CreateTree()
 {
     LSystem::LSystem lsystem;
@@ -65,11 +66,11 @@ LSystem::LSystem CreateTree()
     rule->data = std::move(start[0]->data);
 
     return lsystem;
-}
+}*/
 
 int main()
 {
-    auto lsystem = CreateTree();
+    auto lsystem = CreateDandelion();
 
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     SetConfigFlags(FLAG_VSYNC_HINT);
@@ -167,7 +168,7 @@ int main()
 
         //DrawGrid(40, 10.0f);
 
-        auto buf = LSystem::Generate(&lsystem.rules.begin()->second->data, recurse_count);
+        auto buf = LSystem::Generate(lsystem.begin, recurse_count);
 
         for (auto& l : buf.lines)
         {
@@ -198,27 +199,27 @@ int main()
 
         if (ImGui::SliderInt("Recursions", &recurse_count, 1, 10))
         {
-            lsystem = CreateTree();
+            lsystem = CreateDandelion();
         }
         if (ImGui::SliderInt("Divisions", &fork_count, 1, 20))
         {
-            lsystem = CreateTree();
+            lsystem = CreateDandelion();
         }
         if (ImGui::SliderFloat("Roll", &roll, 0, glm::two_pi<float>()))
         {
-            lsystem = CreateTree();
+            lsystem = CreateDandelion();
         }
         if (ImGui::SliderFloat("Pitch", &pitch, 0, glm::two_pi<float>()))
         {
-            lsystem = CreateTree();
+            lsystem = CreateDandelion();
         }
         if (ImGui::SliderFloat("Scale", &scale, 0, 2))
         {
-            lsystem = CreateTree();
+            lsystem = CreateDandelion();
         }
         if (ImGui::SliderFloat("Spread", &spread, 0, 8))
         {
-            lsystem = CreateTree();
+            lsystem = CreateDandelion();
         }
 
         bool show = true;

@@ -2,7 +2,7 @@
 
 #include <LSystem/LSystem.hpp>
 
-
+/*
 class LSystemWindow
 {
 public:
@@ -21,5 +21,5 @@ private:
 	LSystem::Rule* m_activeRule;
 
 };
-
+*/
 

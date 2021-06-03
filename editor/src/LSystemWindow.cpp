@@ -20,7 +20,7 @@ static std::string gen_random(const int len) {
     return tmp_s;
 }
 
-
+/*
 LSystemWindow::LSystemWindow(LSystem::LSystem* lsystem)
 	: m_lsystem(lsystem)
 	, m_activeRule(nullptr)
@@ -75,3 +75,4 @@ void LSystemWindow::DrawRule(LSystem::Rule* rule)
 	ImGui::CollapsingHeader(rule->id.c_str());
 }
 
+*/
