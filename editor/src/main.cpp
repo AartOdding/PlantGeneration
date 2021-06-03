@@ -26,13 +26,14 @@ int fork_count = 5;
 float roll = 0;
 float pitch = glm::quarter_pi<float>();
 float scale = 0.7;
+float spread = 0.7;
 
-float camera_minmax_y = 0.75;
+float camera_minmax_y = 0.3;
 float camera_speed_sideways = 0.007;
 float camera_speed_updown = 0.3;
 
 
-LSystem::LSystem CreateTree()
+LSystem::LSystem CreateDandelion()
 {
     LSystem::LSystem lsystem;
 
@@ -49,6 +50,22 @@ LSystem::LSystem CreateTree()
     return lsystem;
 }
 
+LSystem::LSystem CreateTree()
+{
+    LSystem::LSystem lsystem;
+
+    auto rule = lsystem.CreateRule("A");
+    lsystem.starting_rule = rule->id;
+
+    auto start = LSystem::CreateExtrusion(0.5);
+
+    start[0]->data.next_rules = LSystem::CreateRecursingFan(rule, fork_count, spread, scale, roll);
+    //start[0]->data.next_rules = LSystem::CreateRecursingFork(rule, fork_count, scale, roll, pitch);
+
+    rule->data = std::move(start[0]->data);
+
+    return lsystem;
+}
 
 int main()
 {
@@ -183,7 +200,7 @@ int main()
         {
             lsystem = CreateTree();
         }
-        if (ImGui::SliderInt("Divisions", &fork_count, 1, 7))
+        if (ImGui::SliderInt("Divisions", &fork_count, 1, 20))
         {
             lsystem = CreateTree();
         }
@@ -196,6 +213,10 @@ int main()
             lsystem = CreateTree();
         }
         if (ImGui::SliderFloat("Scale", &scale, 0, 2))
+        {
+            lsystem = CreateTree();
+        }
+        if (ImGui::SliderFloat("Spread", &spread, 0, 8))
         {
             lsystem = CreateTree();
         }

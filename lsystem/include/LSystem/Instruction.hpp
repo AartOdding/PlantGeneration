@@ -42,12 +42,16 @@ namespace LSystem
 		InstructionData data;
 	};
 
-	std::vector<std::unique_ptr<Instruction>> CreateFork(int count, float length, float roll = 0, float pitch = glm::quarter_pi<float>(), float yaw = 0);
+	std::vector<std::unique_ptr<Instruction>> CreateExtrusion(float length, float roll = 0, float pitch = 0);
 
-	std::vector<std::unique_ptr<Instruction>> CreateExtrusion(float length, float roll = 0, float pitch = 0, float yaw = 0);
+	std::vector<std::unique_ptr<Instruction>> CreateFork(int count, float length, float roll = 0, float pitch = glm::quarter_pi<float>());
 
-	std::vector<RuleReference> CreateRecursion(const std::shared_ptr<Rule>& rule, float scale = 1, float roll = 0, float pitch = 0, float yaw = 0);
+	std::vector<std::unique_ptr<Instruction>> CreateFan(int count, float length, float spread = glm::quarter_pi<float>(), float roll = 0);
 
-	std::vector<RuleReference> CreateRecursingFork(const std::shared_ptr<Rule>& rule, int count, float scale = 1, float roll = 0, float pitch = glm::quarter_pi<float>(), float yaw = 0);
+	std::vector<RuleReference> CreateRecursion(const std::shared_ptr<Rule>& rule, float scale = 1, float roll = 0, float pitch = 0);
+
+	std::vector<RuleReference> CreateRecursingFork(const std::shared_ptr<Rule>& rule, int count, float scale = 1, float roll = 0, float pitch = glm::quarter_pi<float>());
+
+	std::vector<RuleReference> CreateRecursingFan(const std::shared_ptr<Rule>& rule, int count, float spread = glm::quarter_pi<float>(), float scale = 1, float roll = 0);
 
 }
