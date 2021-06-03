@@ -21,14 +21,14 @@ namespace LSystem
 
 		Instruction* begin = nullptr;
 
-		std::vector<Instruction*> CreateExtrusion(float length, float roll = 0, float pitch = 0);
-		std::vector<Instruction*> CreateExtrusion(const std::vector<Instruction*>& onto, float length, float roll = 0, float pitch = 0);
+		std::vector<Instruction*> CreateExtrusion(float length, float roll, float pitch);
+		std::vector<Instruction*> CreateExtrusion(const std::vector<Instruction*>& onto, float length, float roll, float pitch);
 
-		std::vector<Instruction*> CreateFork(int count, float length, float roll = 0, float pitch = glm::quarter_pi<float>());
-		std::vector<Instruction*> CreateFork(const std::vector<Instruction*>& onto, int count, float length, float roll = 0, float pitch = glm::quarter_pi<float>());
+		std::vector<Instruction*> CreateFork(int count, float length, float roll, float pitch);
+		std::vector<Instruction*> CreateFork(const std::vector<Instruction*>& onto, int count, float length, float roll, float pitch);
 
-		std::vector<Instruction*> CreateFan(int count, float length, float spread = glm::quarter_pi<float>(), float roll = 0);
-		std::vector<Instruction*> CreateFan(const std::vector<Instruction*>& onto, int count, float length, float spread = glm::quarter_pi<float>(), float roll = 0);
+		std::vector<Instruction*> CreateFan(int count, float length, float spread, float roll);
+		std::vector<Instruction*> CreateFan(const std::vector<Instruction*>& onto, int count, float length, float spread, float roll);
 
 		/*
 		std::vector<Instruction*> CreateRecursion(Instruction* rule, float scale = 1, float roll = 0, float pitch = 0);

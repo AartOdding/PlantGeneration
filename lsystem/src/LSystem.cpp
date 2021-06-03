@@ -152,7 +152,7 @@ namespace LSystem
             instructions.reserve(count);
 
             const float angle_start = -spread / 2;
-            const float angle_increment = spread / count;
+            const float angle_increment = spread / (count - 1);
 
             for (int i = 0; i < count; ++i)
             {

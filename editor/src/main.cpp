@@ -23,10 +23,17 @@ CMRC_DECLARE(resources);
 
 int recurse_count = 5;
 int fork_count = 5;
+int fan_count = 5;
 float roll = 0;
 float pitch = glm::quarter_pi<float>();
 float scale = 0.7;
 float spread = 0.7;
+
+float base_length = 0.5;
+float fork_length = 0.5;
+float fan_length = 0.5;
+
+float base_roll = 0;
 
 float camera_minmax_y = 0.3;
 float camera_speed_sideways = 0.007;
@@ -37,40 +44,40 @@ LSystem::LSystem CreateDandelion()
 {
     LSystem::LSystem l;
 
-    auto instructions = l.CreateExtrusion(0.5);
+    auto instructions = l.CreateExtrusion(0.5, 0, 0);
     l.begin = instructions[0];
 
     instructions = l.CreateFork(instructions, fork_count, 0.5, roll, pitch);
 
     for (int i = 0; i < recurse_count; ++i)
     {
-        instructions = l.CreateExtrusion(instructions, 0.5);
+        instructions = l.CreateExtrusion(instructions, 0.5, 0, 0);
         instructions = l.CreateFork(instructions, fork_count, 0.5, roll, pitch);
     }
 
     return l;
 }
-/*
-LSystem::LSystem CreateTree()
+
+LSystem::LSystem CreateFanningTree()
 {
-    LSystem::LSystem lsystem;
+    LSystem::LSystem l;
 
-    auto rule = lsystem.CreateRule("A");
-    lsystem.starting_rule = rule->id;
+    auto base = l.CreateExtrusion(base_length, 0, 0);
+    l.begin = base[0];
 
-    auto start = LSystem::CreateExtrusion(0.5);
+    for (int i = 0; i < recurse_count; ++i)
+    {
+        auto branches = l.CreateFork(base, fork_count, fork_length, 0, pitch);
+        l.CreateFan(branches, fan_count, fan_length, spread, roll);
+        base = l.CreateExtrusion(base, base_length, base_roll, 0);
+    }
 
-    start[0]->data.next_rules = LSystem::CreateRecursingFan(rule, fork_count, spread, scale, roll);
-    //start[0]->data.next_rules = LSystem::CreateRecursingFork(rule, fork_count, scale, roll, pitch);
-
-    rule->data = std::move(start[0]->data);
-
-    return lsystem;
-}*/
+    return l;
+}
 
 int main()
 {
-    auto lsystem = CreateDandelion();
+    auto lsystem = CreateFanningTree();
 
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     SetConfigFlags(FLAG_VSYNC_HINT);
@@ -199,28 +206,49 @@ int main()
 
         if (ImGui::SliderInt("Recursions", &recurse_count, 1, 10))
         {
-            lsystem = CreateDandelion();
+            lsystem = CreateFanningTree();
         }
         if (ImGui::SliderInt("Divisions", &fork_count, 1, 20))
         {
-            lsystem = CreateDandelion();
+            lsystem = CreateFanningTree();
         }
         if (ImGui::SliderFloat("Roll", &roll, 0, glm::two_pi<float>()))
         {
-            lsystem = CreateDandelion();
+            lsystem = CreateFanningTree();
         }
         if (ImGui::SliderFloat("Pitch", &pitch, 0, glm::two_pi<float>()))
         {
-            lsystem = CreateDandelion();
+            lsystem = CreateFanningTree();
         }
         if (ImGui::SliderFloat("Scale", &scale, 0, 2))
         {
-            lsystem = CreateDandelion();
+            lsystem = CreateFanningTree();
         }
         if (ImGui::SliderFloat("Spread", &spread, 0, 8))
         {
-            lsystem = CreateDandelion();
+            lsystem = CreateFanningTree();
         }
+        if (ImGui::SliderFloat("base_length", &base_length, 0, glm::two_pi<float>()))
+        {
+            lsystem = CreateFanningTree();
+        }
+        if (ImGui::SliderFloat("fork_length", &fork_length, 0, glm::two_pi<float>()))
+        {
+            lsystem = CreateFanningTree();
+        }
+        if (ImGui::SliderFloat("fan_length", &fan_length, 0, 2))
+        {
+            lsystem = CreateFanningTree();
+        }
+        if (ImGui::SliderFloat("base_roll", &base_roll, 0, 8))
+        {
+            lsystem = CreateFanningTree();
+        }
+        if (ImGui::SliderInt("fan count", &fan_count, 0, 8))
+        {
+            lsystem = CreateFanningTree();
+        }
+
 
         bool show = true;
         //ImGui::ShowDemoWindow(&show);
