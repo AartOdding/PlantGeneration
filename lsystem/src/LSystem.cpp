@@ -182,6 +182,45 @@ namespace LSystem
         return instructions;
     }
 
+    std::vector<Instruction*> LSystem::CreatePhyllotaxis(int count, float length, float spread, float roll)
+    {
+        std::vector<Instruction*> instructions;
+
+        if (count > 0)
+        {
+            instructions.reserve(count);
+
+            constexpr float roll_increment = glm::radians(137.508);
+
+            for (int i = 0; i < count; ++i)
+            {
+                instructions.push_back(CreateExtrusion(length, roll + i * roll_increment, spread * glm::sqrt(static_cast<float>(i)))[0]);
+            }
+        }
+
+        return instructions;
+    }
+
+    std::vector<Instruction*> LSystem::CreatePhyllotaxis(const std::vector<Instruction*>& onto, int count, float length, float spread, float roll)
+    {
+        std::vector<Instruction*> instructions;
+
+        if (count > 0)
+        {
+            instructions.reserve(onto.size() * count);
+
+            for (auto on : onto)
+            {
+                auto new_instructions = CreatePhyllotaxis(count, length, spread, roll);
+                on->data->children.insert(on->data->children.end(), new_instructions.begin(), new_instructions.end());
+                instructions.insert(instructions.end(), new_instructions.begin(), new_instructions.end());
+            }
+        }
+
+        return instructions;
+    }
+
+
     /*
     std::vector<Instruction*> LSystem::CreateRecursion(Instruction* rule, float scale, float roll, float pitch)
     {

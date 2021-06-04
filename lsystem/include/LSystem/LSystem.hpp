@@ -30,6 +30,10 @@ namespace LSystem
 		std::vector<Instruction*> CreateFan(int count, float length, float spread, float roll);
 		std::vector<Instruction*> CreateFan(const std::vector<Instruction*>& onto, int count, float length, float spread, float roll);
 
+		std::vector<Instruction*> CreatePhyllotaxis(int count, float length, float spread, float roll);
+		std::vector<Instruction*> CreatePhyllotaxis(const std::vector<Instruction*>& onto, int count, float length, float spread, float roll);
+
+
 		/*
 		std::vector<Instruction*> CreateRecursion(Instruction* rule, float scale = 1, float roll = 0, float pitch = 0);
 		std::vector<Instruction*> CreateRecursion(const std::vector<Instruction*>& onto, Instruction* rule, float scale = 1, float roll = 0, float pitch = 0);

@@ -75,9 +75,31 @@ LSystem::LSystem CreateFanningTree()
     return l;
 }
 
+
+LSystem::LSystem CreateFlowerHead()
+{
+    LSystem::LSystem l;
+
+    auto base = l.CreateExtrusion(base_length, 0, 0);
+    l.begin = base[0];
+
+    auto branches = l.CreatePhyllotaxis(base, 100, 1, spread, 0);
+    l.CreatePhyllotaxis(base, 100, fan_length, spread, roll);
+
+    l.CreateFork(branches, 5, 0.1, 0, 0.5);
+
+    return l;
+}
+
+LSystem::LSystem CreateTree()
+{
+    return CreateFlowerHead();
+}
+
+
 int main()
 {
-    auto lsystem = CreateFanningTree();
+    auto lsystem = CreateTree();
 
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     SetConfigFlags(FLAG_VSYNC_HINT);
@@ -206,47 +228,47 @@ int main()
 
         if (ImGui::SliderInt("Recursions", &recurse_count, 1, 10))
         {
-            lsystem = CreateFanningTree();
+            lsystem = CreateTree();
         }
         if (ImGui::SliderInt("Divisions", &fork_count, 1, 20))
         {
-            lsystem = CreateFanningTree();
+            lsystem = CreateTree();
         }
         if (ImGui::SliderFloat("Roll", &roll, 0, glm::two_pi<float>()))
         {
-            lsystem = CreateFanningTree();
+            lsystem = CreateTree();
         }
         if (ImGui::SliderFloat("Pitch", &pitch, 0, glm::two_pi<float>()))
         {
-            lsystem = CreateFanningTree();
+            lsystem = CreateTree();
         }
         if (ImGui::SliderFloat("Scale", &scale, 0, 2))
         {
-            lsystem = CreateFanningTree();
+            lsystem = CreateTree();
         }
-        if (ImGui::SliderFloat("Spread", &spread, 0, 8))
+        if (ImGui::SliderFloat("Spread", &spread, 0, 0.5))
         {
-            lsystem = CreateFanningTree();
+            lsystem = CreateTree();
         }
         if (ImGui::SliderFloat("base_length", &base_length, 0, glm::two_pi<float>()))
         {
-            lsystem = CreateFanningTree();
+            lsystem = CreateTree();
         }
         if (ImGui::SliderFloat("fork_length", &fork_length, 0, glm::two_pi<float>()))
         {
-            lsystem = CreateFanningTree();
+            lsystem = CreateTree();
         }
         if (ImGui::SliderFloat("fan_length", &fan_length, 0, 2))
         {
-            lsystem = CreateFanningTree();
+            lsystem = CreateTree();
         }
         if (ImGui::SliderFloat("base_roll", &base_roll, 0, 8))
         {
-            lsystem = CreateFanningTree();
+            lsystem = CreateTree();
         }
         if (ImGui::SliderInt("fan count", &fan_count, 0, 8))
         {
-            lsystem = CreateFanningTree();
+            lsystem = CreateTree();
         }
 
 
