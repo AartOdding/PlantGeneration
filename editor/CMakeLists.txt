@@ -7,10 +7,13 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 set(SRC_FILES
   src/main.cpp
   src/LSystemWindow.cpp
+  src/Tree.cpp
 )
 
 set(HEADER_FILES
   src/LSystemWindow.hpp
+  src/Tree.hpp
+  src/Trees.hpp
 )
 
 source_group(Sources FILES ${SRC_FILES} ${HEADER_FILES})

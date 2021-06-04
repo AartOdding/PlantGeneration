@@ -4,7 +4,6 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
-#include <ImGuizmo.h>
 #include <GLFW/glfw3.h>
 
 #include <cmrc/cmrc.hpp>
@@ -18,88 +17,23 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "LSystemWindow.hpp"
+#include "Tree.hpp"
+#include "Trees.hpp"
+#include "TreeEditWindow.hpp"
+
 
 CMRC_DECLARE(resources);
-
-int recurse_count = 5;
-int fork_count = 5;
-int fan_count = 5;
-float roll = 0;
-float pitch = glm::quarter_pi<float>();
-float scale = 0.7;
-float spread = 0.7;
-
-float base_length = 0.5;
-float fork_length = 0.5;
-float fan_length = 0.5;
-
-float base_roll = 0;
 
 float camera_minmax_y = 0.3;
 float camera_speed_sideways = 0.007;
 float camera_speed_updown = 0.3;
 
 
-LSystem::LSystem CreateDandelion()
-{
-    LSystem::LSystem l;
-
-    auto instructions = l.CreateExtrusion(0.5, 0, 0);
-    l.begin = instructions[0];
-
-    instructions = l.CreateFork(instructions, fork_count, 0.5, roll, pitch);
-
-    for (int i = 0; i < recurse_count; ++i)
-    {
-        instructions = l.CreateExtrusion(instructions, 0.5, 0, 0);
-        instructions = l.CreateFork(instructions, fork_count, 0.5, roll, pitch);
-    }
-
-    return l;
-}
-
-LSystem::LSystem CreateFanningTree()
-{
-    LSystem::LSystem l;
-
-    auto base = l.CreateExtrusion(base_length, 0, 0);
-    l.begin = base[0];
-
-    for (int i = 0; i < recurse_count; ++i)
-    {
-        auto branches = l.CreateFork(base, fork_count, fork_length, 0, pitch);
-        l.CreateFan(branches, fan_count, fan_length, spread, roll);
-        base = l.CreateExtrusion(base, base_length, base_roll, 0);
-    }
-
-    return l;
-}
-
-
-LSystem::LSystem CreateFlowerHead()
-{
-    LSystem::LSystem l;
-
-    auto base = l.CreateExtrusion(base_length, 0, 0);
-    l.begin = base[0];
-
-    auto branches = l.CreatePhyllotaxis(base, 100, 1, spread, 0);
-    l.CreatePhyllotaxis(base, 100, fan_length, spread, roll);
-
-    l.CreateFork(branches, 5, 0.1, 0, 0.5);
-
-    return l;
-}
-
-LSystem::LSystem CreateTree()
-{
-    return CreateFlowerHead();
-}
-
 
 int main()
 {
-    auto lsystem = CreateTree();
+    Dandelion2 current_tree;
+    auto lsystem = current_tree.Generate();
 
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     SetConfigFlags(FLAG_VSYNC_HINT);
@@ -195,9 +129,7 @@ int main()
         BeginMode3D(camera);
 
 
-        //DrawGrid(40, 10.0f);
-
-        auto buf = LSystem::Generate(lsystem.begin, recurse_count);
+        auto buf = LSystem::Generate(lsystem.begin, 5);
 
         for (auto& l : buf.lines)
         {
@@ -211,70 +143,11 @@ int main()
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        ImGuizmo::BeginFrame();
 
-        /*
-        auto projection_matrix = glm::perspective<float>(camera.fovy, GetScreenHeight() / GetScreenWidth(), 0.1, 1000);
-        auto cam_pos = glm::vec3(camera.position.x, camera.position.y, camera.position.z);
-        auto cam_target = glm::vec3(camera.target.x, camera.target.y, camera.target.z);
-        auto cam_up = glm::vec3(camera.up.x, camera.up.y, camera.up.z);
-        auto view_matrix = glm::lookAt(cam_pos, cam_target, cam_up);
-
-        static glm::mat4 mat{ 1 };
-
-        ImGuizmo::Manipulate(glm::value_ptr(view_matrix), glm::value_ptr(projection_matrix), 
-            ImGuizmo::TRANSLATE, ImGuizmo::LOCAL, glm::value_ptr(mat));*/
-        //ImGuizmo::Manipulate()
-
-        if (ImGui::SliderInt("Recursions", &recurse_count, 1, 10))
+        if (DrawTreeParameters(&current_tree, "Tree"))
         {
-            lsystem = CreateTree();
+            lsystem = current_tree.Generate();
         }
-        if (ImGui::SliderInt("Divisions", &fork_count, 1, 20))
-        {
-            lsystem = CreateTree();
-        }
-        if (ImGui::SliderFloat("Roll", &roll, 0, glm::two_pi<float>()))
-        {
-            lsystem = CreateTree();
-        }
-        if (ImGui::SliderFloat("Pitch", &pitch, 0, glm::two_pi<float>()))
-        {
-            lsystem = CreateTree();
-        }
-        if (ImGui::SliderFloat("Scale", &scale, 0, 2))
-        {
-            lsystem = CreateTree();
-        }
-        if (ImGui::SliderFloat("Spread", &spread, 0, 0.5))
-        {
-            lsystem = CreateTree();
-        }
-        if (ImGui::SliderFloat("base_length", &base_length, 0, glm::two_pi<float>()))
-        {
-            lsystem = CreateTree();
-        }
-        if (ImGui::SliderFloat("fork_length", &fork_length, 0, glm::two_pi<float>()))
-        {
-            lsystem = CreateTree();
-        }
-        if (ImGui::SliderFloat("fan_length", &fan_length, 0, 2))
-        {
-            lsystem = CreateTree();
-        }
-        if (ImGui::SliderFloat("base_roll", &base_roll, 0, 8))
-        {
-            lsystem = CreateTree();
-        }
-        if (ImGui::SliderInt("fan count", &fan_count, 0, 8))
-        {
-            lsystem = CreateTree();
-        }
-
-
-        bool show = true;
-        //ImGui::ShowDemoWindow(&show);
-        //lsystemWindow.Draw();
 
         ImGui::Render();
 
