@@ -32,11 +32,24 @@ struct EditorConfig
 
     bool orbit_mode = true;
     bool editing_mode = true;
+    
+    glm::vec3 background_color = glm::vec3(0, 0, 0);
 
     int last_width = 1080;
     int last_height = 1350;
 };
 
+void DrawEditorConfigindow(EditorConfig& editor_config)
+{
+    ImGui::Begin("Editor Config");
+
+    ImGui::SliderFloat("Camera min/max Y", &editor_config.camera_minmax_y, 0, 1.5);
+    ImGui::SliderFloat("Camera rotation speed", &editor_config.camera_speed_sideways, 0, 0.05);
+    ImGui::SliderFloat("Camera up/down speed", &editor_config.camera_speed_updown, 0, 2);
+    ImGui::ColorEdit3("Background color", &editor_config.background_color.x);
+
+    ImGui::End();
+}
 
 struct CameraState
 {
@@ -155,7 +168,9 @@ int main()
 
         BeginDrawing();
 
-        ClearBackground(BLACK);
+        ClearBackground(Color(editor_config.background_color.r * 255, 
+                              editor_config.background_color.g * 255, 
+                              editor_config.background_color.b * 255, 255));
 
         BeginMode3D(camera);
 
@@ -174,6 +189,8 @@ int main()
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+
+        DrawEditorConfigindow(editor_config);
 
         if (DrawTreeParameters(&current_tree, "Tree"))
         {
