@@ -10,8 +10,8 @@ struct Dandelion : Tree
     Int recurse_count{ this, "recurse_count", 1, 10, 5 };
     Float base_length{ this, "base_length", 0, 10, 1 };
     Float length_scaling{ this, "length_scaling", 0, 1, 0.7 };
-    Float roll{ this, "roll", 0, 7, 0 };
-    Float pitch{ this, "pitch", 0, 3.5, 1 };
+    Float roll{ this, "roll", 0, 360, 0 };
+    Float pitch{ this, "pitch", 0, 180, 60 };
 
     LSystem::LSystem Generate() override
     {
@@ -40,10 +40,10 @@ struct FanningTree : Tree
     Float base_length{ this, "base_length", 0, 10, 1 };
     Float fork_length{ this, "fork_length", 0, 10, 1 };
     Float fan_length{ this, "fork_length", 0, 10, 1 };
-    Float roll{ this, "roll", 0, 7, 0 };
-    Float pitch{ this, "pitch", 0, 3.5, 1 };
-    Float spread{ this, "spread", 0, 3.5, 1 };
-    Float base_roll{ this, "base_roll", 0, 3.5, 1 };
+    Float roll{ this, "roll", 0, 360, 0 };
+    Float pitch{ this, "pitch", 0, 180, 60 };
+    Float spread{ this, "spread", 0, 360, 60 };
+    Float base_roll{ this, "base_roll", 0, 360, 25 };
 
     LSystem::LSystem Generate()
     {
@@ -72,12 +72,12 @@ struct Dandelion2 : Tree
     Float phylo_length_a{ this, "phylo_length_a", 0, 10, 1 };
     Float phylo_length_b{ this, "phylo_length_b", 0, 10, 1 };
     Float roll{ this, "roll", 0, 7, 0 };
-    Float spread_a{ this, "spread_a", 0, 3.5, 0.1 };
-    Float spread_b{ this, "spread_b", 0, 3.5, 0.11 };
+    Float spread_a{ this, "spread_a", 0, 360, 120 };
+    Float spread_b{ this, "spread_b", 0, 360, 120 };
 
     Int flower_count{ this, "flower_count", 1, 10, 5 };
     Float flower_length{ this, "flower_length", 0, 2, 0.1 };
-    Float flower_pitch{ this, "flower_pitch", 0, 3.5, 1 };
+    Float flower_pitch{ this, "flower_pitch", 0, 360, 100 };
 
     LSystem::LSystem Generate()
     {

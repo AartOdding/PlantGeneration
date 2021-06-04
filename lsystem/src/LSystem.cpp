@@ -81,8 +81,8 @@ namespace LSystem
         auto instruction_data = AddInstructionData();
         auto instruction = AddInstruction(instruction_data);
 
-        const auto roll_matrix = glm::rotate(glm::mat4(1), roll, glm::vec3(0, 1, 0));
-        const auto pitch_matrix = glm::rotate(roll_matrix, pitch, glm::vec3(1, 0, 0));
+        const auto roll_matrix = glm::rotate(glm::mat4(1), glm::radians(roll), glm::vec3(0, 1, 0));
+        const auto pitch_matrix = glm::rotate(roll_matrix, glm::radians(pitch), glm::vec3(1, 0, 0));
         instruction->transform = pitch_matrix;
 
         instruction_data->transform = glm::translate(glm::mat4(1), glm::vec3(0, length, 0));
@@ -113,7 +113,7 @@ namespace LSystem
         {
             instructions.reserve(count);
 
-            const float angle_increment = glm::two_pi<float>() / count;
+            const float angle_increment = 360.0f / count;
 
             for (int i = 0; i < count; ++i)
             {
@@ -189,12 +189,13 @@ namespace LSystem
         if (count > 0)
         {
             instructions.reserve(count);
-
-            constexpr float roll_increment = glm::radians(137.508);
+            
+            auto pitch_ratio = (spread / 2.0f) / glm::sqrt(static_cast<float>(count));
+            constexpr float golden_angle = 137.508;
 
             for (int i = 0; i < count; ++i)
             {
-                instructions.push_back(CreateExtrusion(length, roll + i * roll_increment, spread * glm::sqrt(static_cast<float>(i)))[0]);
+                instructions.push_back(CreateExtrusion(length, roll + i * golden_angle, pitch_ratio * glm::sqrt(static_cast<float>(i)))[0]);
             }
         }
 
