@@ -16,7 +16,6 @@
 #include <glm/gtc/random.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "LSystemWindow.hpp"
 #include "Tree.hpp"
 #include "Trees.hpp"
 #include "TreeEditWindow.hpp"
