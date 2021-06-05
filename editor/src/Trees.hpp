@@ -35,16 +35,70 @@ struct Plant1 : Tree
 {
     LSystem::PhyllotaxisOperation phylo1{ this, "phylo1" };
     LSystem::PhyllotaxisOperation phylo2{ this, "phylo2" };
+    LSystem::PhyllotaxisOperation phylo3{ this, "phylo3" };
+    LSystem::PhyllotaxisOperation phylo4{ this, "phylo4" };
+    LSystem::ColoringOperation color1{ this, "color1" };
+    LSystem::ColoringOperation color2{ this, "color2" };
+    LSystem::ColoringOperation color3{ this, "color3" };
+    LSystem::ColoringOperation color4{ this, "color4" };
 
-    Float base_length{ this, "base_length", 0, 1, 0.7 };
+    Float base_length{ this, "base_length", 0, 5, 1 };
 
     LSystem::LSystem Generate() override
     {
         LSystem::LSystem l;
 
-        auto instructions = l.CreateBase(base_length);
-        instructions = phylo1.Apply(instructions, l);
-        instructions = phylo2.Apply(instructions, l);
+        auto base = l.CreateBase(base_length);
+        color1.Apply(base, l);
+
+        auto branches = phylo1.Apply(base, l);
+        color1.Apply(branches, l);
+
+        auto branches_empty = phylo2.Apply(base, l);
+        color2.Apply(branches_empty, l);
+
+        auto flowers = phylo3.Apply(branches, l);
+        color3.Apply(flowers, l);
+
+        auto flowers_empty = phylo4.Apply(branches, l);
+        color4.Apply(flowers_empty, l);
+
+        return l;
+    }
+};
+
+struct Flower1 : Tree
+{
+    Float base_length{ this, "base_length", 0, 5, 1 };
+
+    LSystem::ForkOperation base_fork{ this, "base_fork" };
+    LSystem::FanOperation base_split{ this, "base_fan" };
+    LSystem::ExtrudeOperation base_continue{ this, "base_continue" };
+
+    LSystem::ForkOperation flower_fork{ this, "flower_fork" };
+    LSystem::FanOperation flower_split{ this, "flower_split" };
+
+    LSystem::ColoringOperation base_color{ this, "base_color" };
+    LSystem::ColoringOperation flower_color{ this, "flower_color" };
+
+    LSystem::LSystem Generate() override
+    {
+        LSystem::LSystem l;
+
+        auto base = l.CreateBase(base_length);
+        base_color.Apply(base, l);
+        auto f = base_fork.Apply(base, l);
+        base_color.Apply(f, l);
+        f = base_split.Apply(f, l);
+        base_color.Apply(f, l);
+
+        base = base_continue.Apply(base, l);
+        base_color.Apply(base, l);
+
+        auto flowers = flower_fork.Apply(base, l);
+        flower_color.Apply(flowers, l);
+        flowers = flower_split.Apply(flowers, l);
+        flower_color.Apply(flowers, l);
 
         return l;
     }
