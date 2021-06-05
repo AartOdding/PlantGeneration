@@ -78,6 +78,7 @@ struct Dandelion2 : Tree
     Int flower_count{ this, "flower_count", 1, 10, 5 };
     Float flower_length{ this, "flower_length", 0, 2, 0.1 };
     Float flower_pitch{ this, "flower_pitch", 0, 360, 100 };
+    Color flower_color{ this, "flower_color", glm::vec3(0, 0, 1) };
 
     LSystem::LSystem Generate()
     {
@@ -89,7 +90,8 @@ struct Dandelion2 : Tree
         auto branches = l.CreatePhyllotaxis(base, phylo_count_a, phylo_length_a, spread_a, 0);
         l.CreatePhyllotaxis(base, phylo_count_b, phylo_length_b, spread_b, roll);
 
-        l.CreateFork(branches, flower_count, flower_length, 0, flower_pitch);
+        auto flowers = l.CreateFork(branches, flower_count, flower_length, 0, flower_pitch);
+        l.SetColor(flowers, flower_color);
 
         return l;
     }

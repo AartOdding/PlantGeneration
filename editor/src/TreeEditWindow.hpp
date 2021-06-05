@@ -30,6 +30,15 @@ bool DrawTreeParameters(Tree* tree, const char* window_name)
                 parameters_changed = true;
             }
         }
+        else if (dynamic_cast<Tree::Color*>(par) != nullptr)
+        {
+            auto color_par = static_cast<Tree::Color*>(par);
+
+            if (ImGui::ColorEdit3(color_par->name.c_str(), &color_par->value.x))
+            {
+                parameters_changed = true;
+            }
+        }
     }
 
     ImGui::End();

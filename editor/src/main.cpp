@@ -180,7 +180,8 @@ int main()
         for (auto& l : buf.lines)
         {
             DrawLine3D({ l.point_a.position.x, l.point_a.position.y, l.point_a.position.z }, 
-                       { l.point_b.position.x, l.point_b.position.y, l.point_b.position.z }, WHITE);
+                       { l.point_b.position.x, l.point_b.position.y, l.point_b.position.z }, 
+                       Color(l.point_b.color.r * 255, l.point_b.color.g * 255, l.point_b.color.b * 255, 255));
         }
 
         EndMode3D();

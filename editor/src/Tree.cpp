@@ -52,3 +52,10 @@ Tree::Int::Int(Tree* tree, std::string_view name, int _min, int _max, int _value
 
 }
 
+
+Tree::Color::Color(Tree* tree, std::string_view name, glm::vec3 _value)
+	: Tree::IParameter(tree, name)
+	, value(_value)
+{
+
+}

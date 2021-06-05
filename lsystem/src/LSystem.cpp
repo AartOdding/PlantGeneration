@@ -12,7 +12,12 @@ namespace LSystem
 
 	// TODO: optimize away lines of size 0
 
-	static void ExecuteInstruction(const Instruction* instruction, const glm::mat4& parent_space, VertexBuffer& vertex_buffer, int remaining_recursions)
+	static void ExecuteInstruction(
+        const Instruction* instruction, 
+        const glm::mat4& parent_space, 
+        const glm::vec3& parent_color,
+        VertexBuffer& vertex_buffer, 
+        int remaining_recursions)
 	{
 		if (!instruction || !instruction->data)
 		{
@@ -20,14 +25,22 @@ namespace LSystem
 			return;
 		}
 
+        auto color = parent_color;
 		auto local_space = parent_space * instruction->transform;
         auto branch_transform = local_space * instruction->data->transform;
+
+        if (instruction->data->branch_color.has_value())
+        {
+            color = instruction->data->branch_color.value();
+        }
 
 		if (instruction->data->draw_branch)
 		{
 			vertex_buffer.lines.emplace_back();
 			vertex_buffer.lines.back().point_a.position = local_space * glm::vec4(0, 0, 0, 1);
 			vertex_buffer.lines.back().point_b.position = branch_transform * glm::vec4(0, 0, 0, 1);
+            vertex_buffer.lines.back().point_a.color = color;
+            vertex_buffer.lines.back().point_b.color = color;
 		}
 
 		for (const auto& child : instruction->data->children)
@@ -38,11 +51,11 @@ namespace LSystem
 			{
                 if (child->is_recursion)
                 {
-                    ExecuteInstruction(child, branch_transform, vertex_buffer, remaining_recursions - 1);
+                    ExecuteInstruction(child, branch_transform, color, vertex_buffer, remaining_recursions - 1);
                 }
                 else
                 {
-                    ExecuteInstruction(child, branch_transform, vertex_buffer, remaining_recursions);
+                    ExecuteInstruction(child, branch_transform, color, vertex_buffer, remaining_recursions);
                 }
 			}
 		}
@@ -52,7 +65,7 @@ namespace LSystem
 	{
 		VertexBuffer render_buffer;
 
-		ExecuteInstruction(branch, glm::mat4(1), render_buffer, recursions);
+		ExecuteInstruction(branch, glm::mat4(1), glm::vec3(1), render_buffer, recursions);
 
 		return render_buffer;
 	}
@@ -216,6 +229,16 @@ namespace LSystem
                 on->data->children.insert(on->data->children.end(), new_instructions.begin(), new_instructions.end());
                 instructions.insert(instructions.end(), new_instructions.begin(), new_instructions.end());
             }
+        }
+
+        return instructions;
+    }
+
+    std::vector<Instruction*> LSystem::SetColor(const std::vector<Instruction*>& instructions, const glm::vec3& color)
+    {
+        for (auto& i : instructions)
+        {
+            i->data->branch_color = color;
         }
 
         return instructions;

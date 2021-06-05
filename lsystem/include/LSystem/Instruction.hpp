@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -27,6 +28,7 @@ namespace LSystem
 		bool draw_branch = true;
 		bool connect_branch_vertices = true;
 		int branch_sides = 1; // In case of 1, a line will be drawn.
+		std::optional<glm::vec3> branch_color;
 	};
 
 }

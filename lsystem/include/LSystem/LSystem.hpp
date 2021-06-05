@@ -5,6 +5,8 @@
 #include <string_view>
 #include <unordered_map>
 
+#include <glm/glm.hpp>
+
 #include <LSystem/Instruction.hpp>
 #include <LSystem/VertexBuffer.hpp>
 
@@ -33,6 +35,7 @@ namespace LSystem
 		std::vector<Instruction*> CreatePhyllotaxis(int count, float length, float spread, float roll);
 		std::vector<Instruction*> CreatePhyllotaxis(const std::vector<Instruction*>& onto, int count, float length, float spread, float roll);
 
+		std::vector<Instruction*> SetColor(const std::vector<Instruction*>& instructions, const glm::vec3& color);
 
 		/*
 		std::vector<Instruction*> CreateRecursion(Instruction* rule, float scale = 1, float roll = 0, float pitch = 0);

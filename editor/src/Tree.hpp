@@ -50,6 +50,15 @@ struct Tree
 		operator int() const { return value; }
 	};
 
+	struct Color : IParameter
+	{
+		Color(Tree* tree, std::string_view name, glm::vec3 value);
+
+		glm::vec3 value;
+
+		operator glm::vec3() const { return value; }
+	};
+
 	virtual ~Tree() = default;
 
 	virtual LSystem::LSystem Generate() = 0;
