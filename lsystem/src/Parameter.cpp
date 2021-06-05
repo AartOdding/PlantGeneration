@@ -5,7 +5,7 @@
 using namespace LSystem;
 
 
-IParameter::IParameter(ParameterOwner* _owner, std::string_view _name)
+Parameter::Parameter(ParameterOwner* _owner, std::string_view _name)
 	: owner(_owner)
 	, name(_name)
 {
@@ -17,7 +17,7 @@ IParameter::IParameter(ParameterOwner* _owner, std::string_view _name)
 	}
 }
 
-IParameter::~IParameter()
+Parameter::~Parameter()
 {
 	if (owner)
 	{
@@ -27,29 +27,4 @@ IParameter::~IParameter()
 				owner->m_parameters.end(), this),
 			owner->m_parameters.end());
 	}
-}
-
-FloatParameter::FloatParameter(ParameterOwner* owner, std::string_view name, float _min, float _max, float _value)
-	: IParameter(owner, name)
-	, min(_min)
-	, max(_max)
-	, value(_value)
-{
-
-}
-
-IntParameter::IntParameter(ParameterOwner* owner, std::string_view name, int _min, int _max, int _value)
-	: IParameter(owner, name)
-	, min(_min)
-	, max(_max)
-	, value(_value)
-{
-
-}
-
-ColorParameter::ColorParameter(ParameterOwner* owner, std::string_view name, glm::vec3 _value)
-	: IParameter(owner, name)
-	, value(_value)
-{
-
 }

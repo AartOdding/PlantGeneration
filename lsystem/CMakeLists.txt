@@ -8,6 +8,9 @@ set(PUBLIC_FILES
     include/LSystem/Parameter.hpp
     include/LSystem/ParameterOwner.hpp
     include/LSystem/VertexBuffer.hpp
+    include/LSystem/Parameters/ColorParameter.hpp
+    include/LSystem/Parameters/FloatParameter.hpp
+    include/LSystem/Parameters/IntParameter.hpp
 )
 
 # Private files, can be cpp or hpp, should be in src folder
@@ -15,10 +18,13 @@ set(PRIVATE_FILES
     src/LSystem.cpp
     src/Parameter.cpp
     src/ParameterOwner.cpp
+    src/Parameters/ColorParameter.cpp
+    src/Parameters/FloatParameter.cpp
+    src/Parameters/IntParameter.cpp
 )
 
-source_group(Interface FILES ${PUBLIC_FILES})
-source_group(Sources FILES ${PRIVATE_FILES})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/include PREFIX Interface FILES ${PUBLIC_FILES})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src PREFIX Sources FILES ${PRIVATE_FILES})
 
 add_library(${PROJECT_NAME} STATIC ${PUBLIC_FILES} ${PRIVATE_FILES})
 

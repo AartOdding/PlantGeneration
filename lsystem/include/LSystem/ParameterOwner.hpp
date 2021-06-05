@@ -3,21 +3,24 @@
 #include <vector>
 
 
+
 namespace LSystem
 {
-    struct IParameter;
+
+    struct Parameter;
 
     struct ParameterOwner
     {
         virtual ~ParameterOwner() = default;
 
-        const std::vector<IParameter*>& Parameters();
+        const std::vector<Parameter*>& Parameters();
 
     private:
 
-        friend class IParameter;
+        friend class Parameter;
 
-        std::vector<IParameter*> m_parameters;
+        std::vector<Parameter*> m_parameters;
 
     };
+
 }

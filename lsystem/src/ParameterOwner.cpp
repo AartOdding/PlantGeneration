@@ -3,7 +3,7 @@
 using namespace LSystem;
 
 
-const std::vector<IParameter*>& ParameterOwner::Parameters()
+const std::vector<Parameter*>& ParameterOwner::Parameters()
 {
 	return m_parameters;
 }

@@ -12,6 +12,11 @@
 #include <LSystem/ParameterOwner.hpp>
 #include <LSystem/VertexBuffer.hpp>
 
+#include <LSystem/Parameters/ColorParameter.hpp>
+#include <LSystem/Parameters/FloatParameter.hpp>
+#include <LSystem/Parameters/IntParameter.hpp>
+
+
 
 namespace LSystem
 {
