@@ -109,17 +109,6 @@ namespace LSystem
         return { begin };
     }
 
-    std::vector<Instruction*> LSystem::SetColor(const std::vector<Instruction*>& instructions, const glm::vec3& color)
-    {
-        for (auto& i : instructions)
-        {
-            i->data->branch_color = color;
-        }
-
-        return instructions;
-    }
-
-
     /*
     std::vector<Instruction*> LSystem::CreateRecursion(Instruction* rule, float scale, float roll, float pitch)
     {

@@ -14,6 +14,7 @@
 #include <LSystem/ParameterOwner.hpp>
 #include <LSystem/VertexBuffer.hpp>
 
+#include <LSystem/Operations/ColoringOperation.hpp>
 #include <LSystem/Operations/ExtrudeOperation.hpp>
 #include <LSystem/Operations/FanOperation.hpp>
 #include <LSystem/Operations/ForkOperation.hpp>
@@ -38,8 +39,6 @@ namespace LSystem
 		Instruction* CreateExtrusion(float length, float roll, float pitch);
 
 		std::vector<Instruction*> CreateBase(float length);
-
-		std::vector<Instruction*> SetColor(const std::vector<Instruction*>& instructions, const glm::vec3& color);
 
 		/*
 		std::vector<Instruction*> CreateRecursion(Instruction* rule, float scale = 1, float roll = 0, float pitch = 0);
