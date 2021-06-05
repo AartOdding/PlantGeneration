@@ -8,6 +8,8 @@
 #include <glm/glm.hpp>
 
 #include <LSystem/Instruction.hpp>
+#include <LSystem/Parameter.hpp>
+#include <LSystem/ParameterOwner.hpp>
 #include <LSystem/VertexBuffer.hpp>
 
 

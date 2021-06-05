@@ -5,12 +5,16 @@ project(lsystem LANGUAGES CXX VERSION 0.1)
 set(PUBLIC_FILES
     include/LSystem/Instruction.hpp
     include/LSystem/LSystem.hpp
+    include/LSystem/Parameter.hpp
+    include/LSystem/ParameterOwner.hpp
     include/LSystem/VertexBuffer.hpp
 )
 
 # Private files, can be cpp or hpp, should be in src folder
 set(PRIVATE_FILES
     src/LSystem.cpp
+    src/Parameter.cpp
+    src/ParameterOwner.cpp
 )
 
 source_group(Interface FILES ${PUBLIC_FILES})

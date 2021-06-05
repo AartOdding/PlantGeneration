@@ -6,7 +6,6 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
 set(SRC_FILES
   src/main.cpp
-  src/Tree.cpp
 )
 
 set(HEADER_FILES
