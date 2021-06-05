@@ -117,7 +117,7 @@ namespace LSystem
 
         return instructions;
     }
-
+    /*
     std::vector<Instruction*> LSystem::CreateFork(int count, float length, float roll, float pitch)
     {
         std::vector<Instruction*> instructions;
@@ -193,7 +193,7 @@ namespace LSystem
         }
 
         return instructions;
-    }
+    }*/
 
     std::vector<Instruction*> LSystem::CreatePhyllotaxis(int count, float length, float spread, float roll)
     {

@@ -115,7 +115,7 @@ int main()
     EditorConfig editor_config;
     CameraState camera_state;
 
-    Dandelion2 current_tree;
+    Dandelion current_tree;
     auto lsystem = current_tree.Generate();
 
     SetConfigFlags(FLAG_MSAA_4X_HINT);

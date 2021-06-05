@@ -9,6 +9,7 @@
 
 
 struct Tree : LSystem::ParameterOwner
+	        , LSystem::OperationOwner
 {
 
 	using Int = LSystem::IntParameter;

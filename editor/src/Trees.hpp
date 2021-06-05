@@ -6,32 +6,32 @@
 
 struct Dandelion : Tree
 {
-    Int fork_count{ this, "fork_count", 2, 20, 5 };
+    LSystem::ForkOperation fork{ this, "fork" };
+
     Int recurse_count{ this, "recurse_count", 1, 10, 5 };
-    Float base_length{ this, "base_length", 0, 10, 1 };
     Float length_scaling{ this, "length_scaling", 0, 1, 0.7 };
-    Float roll{ this, "roll", 0, 360, 0 };
-    Float pitch{ this, "pitch", 0, 180, 60 };
 
     LSystem::LSystem Generate() override
     {
         LSystem::LSystem l;
 
-        auto instructions = l.CreateExtrusion(base_length, 0, 0);
-        l.begin = instructions[0];
+        fork.fork_length.value = 1;
 
-        instructions = l.CreateFork(instructions, fork_count, base_length * length_scaling, roll, pitch);
+        auto instructions = l.CreateExtrusion(fork.fork_length, 0, 0);
+        l.begin = instructions[0];
 
         for (int i = 0; i < recurse_count; ++i)
         {
-            auto length = base_length * std::pow(length_scaling, i + 2);
-            instructions = l.CreateFork(instructions, fork_count, length, roll, pitch);
+            fork.fork_length.value = fork.fork_length * length_scaling;
+            
+            instructions = fork.Apply(instructions, l);
         }
 
         return l;
     }
 };
 
+/*
 struct FanningTree : Tree
 {
     Int recurse_count{ this, "recurse_count", 1, 10, 5 };
@@ -61,7 +61,7 @@ struct FanningTree : Tree
 
         return l;
     }
-};
+};*/
 
 
 struct Dandelion2 : Tree
@@ -90,7 +90,9 @@ struct Dandelion2 : Tree
         auto branches = l.CreatePhyllotaxis(base, phylo_count_a, phylo_length_a, spread_a, 0);
         l.CreatePhyllotaxis(base, phylo_count_b, phylo_length_b, spread_b, roll);
 
-        auto flowers = l.CreateFork(branches, flower_count, flower_length, 0, flower_pitch);
+        LSystem::ForkOperation fork{ this, "Flower" };
+        auto flowers = fork.Apply(branches, l);
+        // = l.CreateFork(branches, flower_count, flower_length, 0, flower_pitch);
         l.SetColor(flowers, flower_color);
 
         return l;
