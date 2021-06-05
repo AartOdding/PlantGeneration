@@ -15,14 +15,14 @@ struct Dandelion : Tree
     {
         LSystem::LSystem l;
 
-        fork.fork_length.value = 1;
+        fork.branch_length.value = 1;
 
-        auto instructions = l.CreateExtrusion(fork.fork_length, 0, 0);
+        auto instructions = l.CreateExtrusion(fork.branch_length, 0, 0);
         l.begin = instructions[0];
 
         for (int i = 0; i < recurse_count; ++i)
         {
-            fork.fork_length.value = fork.fork_length * length_scaling;
+            fork.branch_length.value = fork.branch_length * length_scaling;
             
             instructions = fork.Apply(instructions, l);
         }
@@ -63,7 +63,7 @@ struct FanningTree : Tree
     }
 };*/
 
-
+/*
 struct Dandelion2 : Tree
 {
     Float base_length{ this, "base_length", 0, 10, 1 };
@@ -98,3 +98,4 @@ struct Dandelion2 : Tree
         return l;
     }
 };
+*/

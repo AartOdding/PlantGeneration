@@ -35,13 +35,13 @@ namespace LSystem
     {
         std::vector<Instruction*> instructions;
 
-        if (fork_count > 0)
+        if (branch_count > 0)
         {
-            instructions.reserve(apply_to.size() * fork_count);
+            instructions.reserve(apply_to.size() * branch_count);
 
             for (auto onto : apply_to)
             {
-                auto new_instructions = CreateFan(lsystem, fork_count, fork_length, spread, roll);
+                auto new_instructions = CreateFan(lsystem, branch_count, branch_length, spread, roll);
                 onto->data->children.insert(onto->data->children.end(), new_instructions.begin(), new_instructions.end());
                 instructions.insert(instructions.end(), new_instructions.begin(), new_instructions.end());
             }

@@ -24,6 +24,7 @@ bool DrawParameter(LSystem::Parameter* par)
         auto color_par = static_cast<LSystem::ColorParameter*>(par);
         return ImGui::ColorEdit3(color_par->name.c_str(), &color_par->value.x);
     }
+    return false;
 }
 
 bool DrawParameterOwner(LSystem::ParameterOwner* owner, const char* name)
@@ -32,10 +33,14 @@ bool DrawParameterOwner(LSystem::ParameterOwner* owner, const char* name)
 
     if (ImGui::CollapsingHeader(name))
     {
+        ImGui::PushID(owner);
+
         for (auto par : owner->Parameters())
         {
             parameters_changed |= DrawParameter(par);
         }
+
+        ImGui::PopID();
     }
 
     return parameters_changed;
