@@ -15,17 +15,17 @@ struct Dandelion : Tree
     {
         LSystem::LSystem l;
 
-        auto starting_length = fork.branch_length.value;
+        float starting_length = fork.branch_length;
 
         auto instructions = l.CreateBase(fork.branch_length);
 
         for (int i = 0; i < recurse_count; ++i)
         {
-            fork.branch_length.value = fork.branch_length * length_scaling;
+            fork.branch_length = fork.branch_length * length_scaling;
             instructions = fork.Apply(instructions, l);
         }
 
-        fork.branch_length.value = starting_length;
+        fork.branch_length = starting_length;
 
         return l;
     }

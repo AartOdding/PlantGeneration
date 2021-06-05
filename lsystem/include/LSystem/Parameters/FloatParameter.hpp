@@ -3,6 +3,7 @@
 #include <LSystem/Parameter.hpp>
 
 
+
 namespace LSystem
 {
 
@@ -14,7 +15,9 @@ namespace LSystem
 		float max;
 		float value;
 
-		operator float() const { return value; }
+		operator float() const;
+
+		FloatParameter& operator=(float value);
 	};
 
 }

@@ -3,6 +3,7 @@
 #include <LSystem/Parameter.hpp>
 
 
+
 namespace LSystem
 {
 
@@ -14,7 +15,9 @@ namespace LSystem
 		int max;
 		int value;
 
-		operator int() const { return value; }
+		operator int() const;
+
+		IntParameter& operator=(int value);
 	};
 
 }

@@ -15,7 +15,9 @@ namespace LSystem
 
 		glm::vec3 value;
 
-		operator glm::vec3() const { return value; }
+		operator glm::vec3() const;
+		
+		ColorParameter& operator=(const glm::vec3& value);
 	};
 
 }
