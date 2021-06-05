@@ -19,10 +19,8 @@ namespace LSystem
 	VertexBuffer Generate(const Instruction* data, int recursions);
 
 
-	class LSystem
+	struct LSystem
 	{
-	public:
-
 		Instruction* begin = nullptr;
 
 		std::vector<Instruction*> CreateExtrusion(float length, float roll, float pitch);

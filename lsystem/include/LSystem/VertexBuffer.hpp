@@ -28,12 +28,9 @@ namespace LSystem
 		Vertex point_3;
 	};
 
-	class VertexBuffer
+	struct VertexBuffer
 	{
-	public:
-
 		std::vector<Line> lines;
 		std::vector<Triangle> triangles;
-
 	};
 }
