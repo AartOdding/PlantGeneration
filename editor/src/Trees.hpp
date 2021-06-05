@@ -31,6 +31,27 @@ struct Dandelion : Tree
     }
 };
 
+struct Plant1 : Tree
+{
+    LSystem::PhyllotaxisOperation phylo1{ this, "phylo1" };
+    LSystem::PhyllotaxisOperation phylo2{ this, "phylo2" };
+
+    Float base_length{ this, "base_length", 0, 1, 0.7 };
+
+    LSystem::LSystem Generate() override
+    {
+        LSystem::LSystem l;
+
+        auto instructions = l.CreateExtrusion(base_length, 0, 0);
+        l.begin = instructions[0];
+
+        instructions = phylo1.Apply(instructions, l);
+        phylo2.Apply(instructions, l);
+
+        return l;
+    }
+};
+
 /*
 struct FanningTree : Tree
 {

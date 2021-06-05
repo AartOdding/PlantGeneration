@@ -37,15 +37,6 @@ namespace LSystem
 
 		std::vector<Instruction*> CreateExtrusion(float length, float roll, float pitch);
 		std::vector<Instruction*> CreateExtrusion(const std::vector<Instruction*>& onto, float length, float roll, float pitch);
-		/*
-		std::vector<Instruction*> CreateFork(int count, float length, float roll, float pitch);
-		std::vector<Instruction*> CreateFork(const std::vector<Instruction*>& onto, int count, float length, float roll, float pitch);
-
-		std::vector<Instruction*> CreateFan(int count, float length, float spread, float roll);
-		std::vector<Instruction*> CreateFan(const std::vector<Instruction*>& onto, int count, float length, float spread, float roll);
-		*/
-		std::vector<Instruction*> CreatePhyllotaxis(int count, float length, float spread, float roll);
-		std::vector<Instruction*> CreatePhyllotaxis(const std::vector<Instruction*>& onto, int count, float length, float spread, float roll);
 
 		std::vector<Instruction*> SetColor(const std::vector<Instruction*>& instructions, const glm::vec3& color);
 
