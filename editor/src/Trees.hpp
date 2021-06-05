@@ -15,17 +15,17 @@ struct Dandelion : Tree
     {
         LSystem::LSystem l;
 
-        fork.branch_length.value = 1;
+        auto starting_length = fork.branch_length.value;
 
-        auto instructions = l.CreateExtrusion(fork.branch_length, 0, 0);
-        l.begin = instructions[0];
+        auto instructions = l.CreateBase(fork.branch_length);
 
         for (int i = 0; i < recurse_count; ++i)
         {
             fork.branch_length.value = fork.branch_length * length_scaling;
-            
             instructions = fork.Apply(instructions, l);
         }
+
+        fork.branch_length.value = starting_length;
 
         return l;
     }
@@ -42,11 +42,9 @@ struct Plant1 : Tree
     {
         LSystem::LSystem l;
 
-        auto instructions = l.CreateExtrusion(base_length, 0, 0);
-        l.begin = instructions[0];
-
+        auto instructions = l.CreateBase(base_length);
         instructions = phylo1.Apply(instructions, l);
-        phylo2.Apply(instructions, l);
+        instructions = phylo2.Apply(instructions, l);
 
         return l;
     }

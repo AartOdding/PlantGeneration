@@ -89,7 +89,7 @@ namespace LSystem
         return m_instructions.back().get();
     }
 
-    std::vector<Instruction*> LSystem::CreateExtrusion(float length, float roll, float pitch)
+    Instruction* LSystem::CreateExtrusion(float length, float roll, float pitch)
     {
         auto instruction_data = AddInstructionData();
         auto instruction = AddInstruction(instruction_data);
@@ -100,22 +100,13 @@ namespace LSystem
 
         instruction_data->transform = glm::translate(glm::mat4(1), glm::vec3(0, length, 0));
 
-        return { instruction };
+        return instruction;
     }
 
-    std::vector<Instruction*> LSystem::CreateExtrusion(const std::vector<Instruction*>& onto, float length, float roll, float pitch)
+    std::vector<Instruction*> LSystem::CreateBase(float length)
     {
-        std::vector<Instruction*> instructions;
-        instructions.reserve(onto.size());
-
-        for (auto on : onto)
-        {
-            auto new_instructions = CreateExtrusion(length, roll, pitch);
-            on->data->children.insert(on->data->children.end(), new_instructions.begin(), new_instructions.end());
-            instructions.insert(instructions.end(), new_instructions.begin(), new_instructions.end());
-        }
-
-        return instructions;
+        begin = CreateExtrusion(length, 0, 0);
+        return { begin };
     }
 
     std::vector<Instruction*> LSystem::SetColor(const std::vector<Instruction*>& instructions, const glm::vec3& color)

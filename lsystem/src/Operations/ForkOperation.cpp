@@ -17,7 +17,7 @@ namespace LSystem
 
             for (int i = 0; i < count; ++i)
             {
-                instructions.push_back(lsystem.CreateExtrusion(length, roll + i * angle_increment, spread / 2)[0]);
+                instructions.push_back(lsystem.CreateExtrusion(length, roll + i * angle_increment, spread / 2));
             }
         }
 

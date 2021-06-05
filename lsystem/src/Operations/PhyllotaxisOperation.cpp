@@ -18,7 +18,7 @@ namespace LSystem
 
             for (int i = 0; i < count; ++i)
             {
-                instructions.push_back(lsystem.CreateExtrusion(length, roll + i * golden_angle, pitch_ratio * glm::sqrt(static_cast<float>(i)))[0]);
+                instructions.push_back(lsystem.CreateExtrusion(length, roll + i * golden_angle, pitch_ratio * glm::sqrt(static_cast<float>(i))));
             }
         }
 

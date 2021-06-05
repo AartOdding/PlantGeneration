@@ -35,8 +35,9 @@ namespace LSystem
 	{
 		Instruction* begin = nullptr;
 
-		std::vector<Instruction*> CreateExtrusion(float length, float roll, float pitch);
-		std::vector<Instruction*> CreateExtrusion(const std::vector<Instruction*>& onto, float length, float roll, float pitch);
+		Instruction* CreateExtrusion(float length, float roll, float pitch);
+
+		std::vector<Instruction*> CreateBase(float length);
 
 		std::vector<Instruction*> SetColor(const std::vector<Instruction*>& instructions, const glm::vec3& color);
 
