@@ -11,7 +11,7 @@ void OperationDatabase::Update(LSystem::Plant* plant)
 {
 	/////////   Operations:      ///////////////
 
-	std::unordered_set<const LSystem::Operation*> operations{ plant->Operations().begin(), plant->Operations().end() };
+	std::unordered_set<LSystem::Operation*> operations{ plant->Operations().begin(), plant->Operations().end() };
 
 	// Delete all operations that no longer exist:
 
@@ -19,7 +19,7 @@ void OperationDatabase::Update(LSystem::Plant* plant)
 
 	for (auto& [op, ids] : m_operations)
 	{
-		if (operations.count(op) == 0)
+		if (operations.count(ids.operation) == 0)
 		{
 			operations_to_delete.push_back(op);
 		}

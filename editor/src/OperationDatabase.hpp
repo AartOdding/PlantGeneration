@@ -13,7 +13,7 @@ public:
 
 	struct OperationIDs
 	{
-		const LSystem::Operation* operation;
+		LSystem::Operation* const operation;
 		const std::uint64_t node_id;
 		const std::uint64_t input_id;
 		const std::uint64_t output_id;

@@ -18,6 +18,7 @@
 #include <LSystem/Operations/FanOperation.hpp>
 #include <LSystem/Operations/ForkOperation.hpp>
 #include <LSystem/Operations/PhyllotaxisOperation.hpp>
+#include <LSystem/Operations/StartOperation.hpp>
 
 #include <LSystem/Parameters/ColorParameter.hpp>
 #include <LSystem/Parameters/FloatParameter.hpp>

@@ -313,7 +313,7 @@ int main()
         BeginMode3D(camera);
 
 
-        auto buf = LSystem::Generate(lsystem.begin, 5);
+        auto buf = plant.Generate();
 
         for (auto& l : buf.lines)
         {
