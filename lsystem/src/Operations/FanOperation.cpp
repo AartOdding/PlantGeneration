@@ -50,4 +50,10 @@ namespace LSystem
         return instructions;
     }
 
+    const std::string& FanOperation::Description() const
+    {
+        static const std::string type_name_friendly = "Create Fan";
+        return type_name_friendly;
+    }
+
 }

@@ -20,4 +20,10 @@ namespace LSystem
 		return {};
 	}
 
+	const std::string& ColoringOperation::Description() const
+	{
+		static const std::string type_name_friendly = "Apply Color";
+		return type_name_friendly;
+	}
+
 }

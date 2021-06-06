@@ -112,7 +112,7 @@ void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
         auto ids = op_db->Get(op);
 
         ed::BeginNode(ids.node_id);
-        ImGui::Text(op->name.c_str());
+        ImGui::Text(op->Description().c_str());
 
         ed::BeginPin(ids.input_id, ed::PinKind::Input);
         ImGui::Text("->");
@@ -123,6 +123,11 @@ void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
         ed::BeginPin(ids.output_id, ed::PinKind::Output);
         ImGui::Text("->");
         ed::EndPin();
+
+        for (auto par : op->Parameters())
+        {
+            DrawParameter(par);
+        }
 
         ed::EndNode();
     }
@@ -243,11 +248,8 @@ int main()
     EditorConfig editor_config;
     CameraState camera_state;
 
-    Flower1 current_tree;
     LSystem::Plant plant;
     OperationDatabase operation_database;
-
-    auto lsystem = current_tree.Generate();
 
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
@@ -330,11 +332,6 @@ int main()
         ImGui::NewFrame();
 
         DrawEditorConfigWindow(editor_config);
-
-        if (DrawTreeParameters(&current_tree, "Tree"))
-        {
-            lsystem = current_tree.Generate();
-        }
 
         DrawCreateOperationWindow(&plant);
         DrawNodeEditorWindow(&plant, &operation_database, node_editor_context);
