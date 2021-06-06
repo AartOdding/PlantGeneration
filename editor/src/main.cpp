@@ -106,6 +106,7 @@ void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
     ed::SetCurrentEditor(context);
     ed::Begin("Node Editor", ImVec2(0.0, 0.0f));
 
+    // Draw nodes:
     for (auto op : plant->Operations())
     {
         auto ids = op_db->Get(op);
@@ -125,6 +126,53 @@ void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
 
         ed::EndNode();
     }
+
+    // Draw links
+
+    for (auto con : plant->Connections())
+    {
+        auto link_id = op_db->Get(con).connection_id;
+        auto output_id = op_db->Get(con.output).output_id;
+        auto input_id = op_db->Get(con.input).input_id;
+
+        ed::Link(link_id, output_id, input_id);
+    }
+
+    // create and delete links
+
+    if (ed::BeginCreate())
+    {
+        ed::PinId dragged_from, dragged_to;
+
+        if (ed::QueryNewLink(&dragged_from, &dragged_to))
+        {
+            // QueryNewLink returns true if editor want to create new link between pins.
+            
+            // If either on is valid but not both, link drag was started, but released above the background.
+            if (dragged_from && dragged_to) // If both are valid link was dragged from and to a pin
+            {
+                // ed::AcceptNewItem() return true when user release mouse button.
+                if (ed::AcceptNewItem())
+                {
+                    // imgui-node-editor gived the output as the place where the drag is started, for us the start and end
+                    // doesnt matter only the in and output
+                    if (op_db->IsValidInputID(dragged_from.Get()) && op_db->IsValidOutputID(dragged_to.Get()))
+                    {
+                        auto output_op = op_db->FindOutputID(dragged_to.Get()).operation;
+                        auto input_op = op_db->FindInputID(dragged_from.Get()).operation;
+                        plant->CreateConnection(output_op, input_op);
+                    }
+                    else if (op_db->IsValidInputID(dragged_to.Get()) && op_db->IsValidOutputID(dragged_from.Get()))
+                    {
+                        auto output_op = op_db->FindOutputID(dragged_from.Get()).operation;
+                        auto input_op = op_db->FindInputID(dragged_to.Get()).operation;
+                        plant->CreateConnection(output_op, input_op);
+                    }
+                }
+            }
+        }
+    }
+    ed::EndCreate();
 
     ed::End();
     ed::SetCurrentEditor(nullptr);
