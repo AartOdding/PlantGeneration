@@ -4,6 +4,7 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+#include <imgui_node_editor.h>
 #include <GLFW/glfw3.h>
 
 #include <cmrc/cmrc.hpp>
@@ -22,6 +23,8 @@
 
 
 CMRC_DECLARE(resources);
+
+namespace ed = ax::NodeEditor;
 
 
 struct EditorConfig
@@ -134,6 +137,11 @@ int main()
     ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)GetGLFWWindowHandle(), true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
+
+    ed::Config config;
+    config.SettingsFile = "node_editor.json";
+    auto node_editor_context = ed::CreateEditor(&config);
+
     Camera camera{};
     camera.position = { 0.0f, 1.8f, 6.0f };    // Camera position
     camera.target = { 0.0f, 1.7f, 0.0f };      // Camera looking at point
@@ -198,6 +206,27 @@ int main()
             lsystem = current_tree.Generate();
         }
 
+        ImGui::Begin("Node Editor");
+
+        ed::SetCurrentEditor(node_editor_context);
+        ed::Begin("My Editor", ImVec2(0.0, 0.0f));
+        int uniqueId = 1;
+        // Start drawing nodes.
+        ed::BeginNode(uniqueId++);
+        ImGui::Text("Node A");
+        ed::BeginPin(uniqueId++, ed::PinKind::Input);
+        ImGui::Text("-> In");
+        ed::EndPin();
+        ImGui::SameLine();
+        ed::BeginPin(uniqueId++, ed::PinKind::Output);
+        ImGui::Text("Out ->");
+        ed::EndPin();
+        ed::EndNode();
+        ed::End();
+        ed::SetCurrentEditor(nullptr);
+
+        ImGui::End();
+
         ImGui::Render();
 
         if (editor_config.editing_mode)
@@ -207,6 +236,8 @@ int main()
 
         EndDrawing();
     }
+
+    ed::DestroyEditor(node_editor_context);
 
     CloseWindow();
 
