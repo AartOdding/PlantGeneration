@@ -17,6 +17,7 @@
 #include <glm/gtc/random.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "OperationDatabase.hpp"
 #include "Tree.hpp"
 #include "Trees.hpp"
 #include "TreeEditWindow.hpp"
@@ -25,6 +26,23 @@
 CMRC_DECLARE(resources);
 
 namespace ed = ax::NodeEditor;
+
+static std::string random_name(const int len) {
+
+    std::string tmp_s;
+
+    static const char alphanum[] =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
+
+    tmp_s.reserve(len);
+
+    for (int i = 0; i < len; ++i)
+        tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
+
+    return tmp_s;
+}
 
 
 struct EditorConfig
@@ -42,7 +60,7 @@ struct EditorConfig
     int last_height = 1350;
 };
 
-void DrawEditorConfigindow(EditorConfig& editor_config)
+void DrawEditorConfigWindow(EditorConfig& editor_config)
 {
     ImGui::Begin("Editor Config");
 
@@ -51,6 +69,65 @@ void DrawEditorConfigindow(EditorConfig& editor_config)
     ImGui::SliderFloat("Camera up/down speed", &editor_config.camera_speed_updown, 0, 2);
     ImGui::ColorEdit3("Background color", &editor_config.background_color.x);
 
+    ImGui::End();
+}
+
+void DrawCreateOperationWindow(LSystem::Plant* plant)
+{
+    ImGui::Begin("Create Operation");
+
+    if (ImGui::Button("Extrude"))
+    {
+        plant->CreateExtrudeOperation(random_name(8));
+    }
+    if (ImGui::Button("Fork"))
+    {
+        plant->CreateForkOperation(random_name(8));
+    }
+    if (ImGui::Button("Fan"))
+    {
+        plant->CreateFanOperation(random_name(8));
+    }
+    if (ImGui::Button("Phyllotaxis"))
+    {
+        plant->CreatePhyllotaxisOperation(random_name(8));
+    }
+    if (ImGui::Button("Color"))
+    {
+        plant->CreateColoringOperation(random_name(8));
+    }
+
+    ImGui::End();
+}
+
+void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::EditorContext* context)
+{
+    ImGui::Begin("Node Editor");
+    ed::SetCurrentEditor(context);
+    ed::Begin("Node Editor", ImVec2(0.0, 0.0f));
+
+    for (auto op : plant->Operations())
+    {
+        auto ids = op_db->Get(op);
+
+        ed::BeginNode(ids.node_id);
+        ImGui::Text(op->name.c_str());
+
+        ed::BeginPin(ids.input_id, ed::PinKind::Input);
+        ImGui::Text("->");
+        ed::EndPin();
+
+        ImGui::SameLine();
+
+        ed::BeginPin(ids.output_id, ed::PinKind::Output);
+        ImGui::Text("->");
+        ed::EndPin();
+
+        ed::EndNode();
+    }
+
+    ed::End();
+    ed::SetCurrentEditor(nullptr);
     ImGui::End();
 }
 
@@ -119,6 +196,9 @@ int main()
     CameraState camera_state;
 
     Flower1 current_tree;
+    LSystem::Plant plant;
+    OperationDatabase operation_database;
+
     auto lsystem = current_tree.Generate();
 
     SetConfigFlags(FLAG_MSAA_4X_HINT);
@@ -152,6 +232,8 @@ int main()
 
     while (!WindowShouldClose())
     {
+        operation_database.Update(&plant);
+
         UpdateCameraState(camera, camera_state, editor_config);
 
         if (IsKeyPressed(KEY_E))
@@ -199,33 +281,15 @@ int main()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        DrawEditorConfigindow(editor_config);
+        DrawEditorConfigWindow(editor_config);
 
         if (DrawTreeParameters(&current_tree, "Tree"))
         {
             lsystem = current_tree.Generate();
         }
 
-        ImGui::Begin("Node Editor");
-
-        ed::SetCurrentEditor(node_editor_context);
-        ed::Begin("My Editor", ImVec2(0.0, 0.0f));
-        int uniqueId = 1;
-        // Start drawing nodes.
-        ed::BeginNode(uniqueId++);
-        ImGui::Text("Node A");
-        ed::BeginPin(uniqueId++, ed::PinKind::Input);
-        ImGui::Text("-> In");
-        ed::EndPin();
-        ImGui::SameLine();
-        ed::BeginPin(uniqueId++, ed::PinKind::Output);
-        ImGui::Text("Out ->");
-        ed::EndPin();
-        ed::EndNode();
-        ed::End();
-        ed::SetCurrentEditor(nullptr);
-
-        ImGui::End();
+        DrawCreateOperationWindow(&plant);
+        DrawNodeEditorWindow(&plant, &operation_database, node_editor_context);
 
         ImGui::Render();
 
