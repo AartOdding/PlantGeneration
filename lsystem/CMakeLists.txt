@@ -10,6 +10,7 @@ set(PUBLIC_FILES
     include/LSystem/OperationOwner.hpp
     include/LSystem/Parameter.hpp
     include/LSystem/ParameterOwner.hpp
+    include/LSystem/Plant.hpp
     include/LSystem/VertexBuffer.hpp
     include/LSystem/Operations/ColoringOperation.hpp
     include/LSystem/Operations/ExtrudeOperation.hpp
@@ -28,6 +29,7 @@ set(PRIVATE_FILES
     src/OperationOwner.cpp
     src/Parameter.cpp
     src/ParameterOwner.cpp
+    src/Plant.cpp
     src/Operations/ColoringOperation.cpp
     src/Operations/ExtrudeOperation.cpp
     src/Operations/FanOperation.cpp
