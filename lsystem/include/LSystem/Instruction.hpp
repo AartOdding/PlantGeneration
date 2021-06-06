@@ -1,18 +1,16 @@
 #pragma once
 
-#include <memory>
 #include <optional>
-#include <string>
 #include <vector>
 
 #include <glm/glm.hpp>
-#include <glm/gtc/constants.hpp>
+
+#include <LSystem/Forward.hpp>
+
 
 
 namespace LSystem
 {
-
-	struct InstructionData;
 
 	struct Instruction
 	{

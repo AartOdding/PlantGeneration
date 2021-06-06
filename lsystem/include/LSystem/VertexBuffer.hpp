@@ -5,8 +5,10 @@
 #include <glm/glm.hpp>
 
 
+
 namespace LSystem
 {
+
 	struct Vertex
 	{
 		glm::vec3 position;
@@ -33,4 +35,5 @@ namespace LSystem
 		std::vector<Line> lines;
 		std::vector<Triangle> triangles;
 	};
+
 }

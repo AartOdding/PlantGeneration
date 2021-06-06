@@ -2,12 +2,12 @@
 
 #include <vector>
 
+#include <LSystem/Forward.hpp>
+
 
 
 namespace LSystem
 {
-
-    struct Operation;
 
     struct OperationOwner
     {

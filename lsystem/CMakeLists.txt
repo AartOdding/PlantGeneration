@@ -3,6 +3,7 @@ project(lsystem LANGUAGES CXX VERSION 0.1)
 
 # Public interface of the library, should only be hpp files in include folder.
 set(PUBLIC_FILES
+    include/LSystem/Forward.hpp
     include/LSystem/Instruction.hpp
     include/LSystem/LSystem.hpp
     include/LSystem/Operation.hpp

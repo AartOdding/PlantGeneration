@@ -1,9 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <string>
-#include <string_view>
-#include <unordered_map>
+#include <vector>
 
 #include <glm/glm.hpp>
 
@@ -12,6 +10,7 @@
 #include <LSystem/OperationOwner.hpp>
 #include <LSystem/Parameter.hpp>
 #include <LSystem/ParameterOwner.hpp>
+#include <LSystem/Plant.hpp>
 #include <LSystem/VertexBuffer.hpp>
 
 #include <LSystem/Operations/ColoringOperation.hpp>

@@ -3,12 +3,12 @@
 #include <string>
 #include <string_view>
 
+#include <LSystem/Forward.hpp>
+
 
 
 namespace LSystem
 {
-
-	struct ParameterOwner;
 
 	struct Parameter
 	{

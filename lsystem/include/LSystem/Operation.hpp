@@ -1,7 +1,12 @@
 #pragma once
 
-#include <LSystem/Instruction.hpp>
+#include <string>
+#include <string_view>
+#include <vector>
+
+#include <LSystem/Forward.hpp>
 #include <LSystem/ParameterOwner.hpp>
+
 #include <LSystem/Parameters/ColorParameter.hpp>
 #include <LSystem/Parameters/FloatParameter.hpp>
 #include <LSystem/Parameters/IntParameter.hpp>
@@ -10,8 +15,6 @@
 
 namespace LSystem
 {
-	struct LSystem;
-	struct OperationOwner;
 
 	struct Operation : ParameterOwner
 	{

@@ -7,7 +7,7 @@
 namespace LSystem
 {
 
-	struct ColoringOperation: Operation
+	struct ColoringOperation : Operation
 	{
 		ColoringOperation(OperationOwner* owner, std::string_view name);
 
