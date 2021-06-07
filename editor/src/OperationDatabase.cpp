@@ -90,6 +90,18 @@ OperationDatabase::ConnectionIDs OperationDatabase::Get(const LSystem::Connectio
 	return {};
 }
 
+OperationDatabase::OperationIDs OperationDatabase::FindNodeID(std::uint64_t node_id) const
+{
+	for (auto& [op, ids] : m_operations)
+	{
+		if (ids.node_id == node_id)
+		{
+			return ids;
+		}
+	}
+	return {};
+}
+
 OperationDatabase::OperationIDs OperationDatabase::FindOutputID(std::uint64_t output_id) const
 {
 	for (auto& [op, ids] : m_operations)
@@ -107,6 +119,18 @@ OperationDatabase::OperationIDs OperationDatabase::FindInputID(std::uint64_t inp
 	for (auto& [op, ids] : m_operations)
 	{
 		if (ids.input_id == input_id)
+		{
+			return ids;
+		}
+	}
+	return {};
+}
+
+OperationDatabase::ConnectionIDs OperationDatabase::FindConnectionID(std::uint64_t connection_id) const
+{
+	for (auto& [con, ids] : m_connections)
+	{
+		if (ids.connection_id == connection_id)
 		{
 			return ids;
 		}

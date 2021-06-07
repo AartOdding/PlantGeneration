@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include <LSystem/LSystem.hpp>
 
 
@@ -41,11 +43,35 @@ namespace LSystem
 		return static_cast<ForkOperation*>(m_operations_owned.back().get());
 	}
 
+	bool Plant::DeleteOperation(Operation* operation)
+	{
+		const auto size_begin = m_operations_owned.size();
+
+		m_operations_owned.erase(
+			std::remove_if(
+				m_operations_owned.begin(), 
+				m_operations_owned.end(), 
+				[operation](const auto& op) { return op.get() == operation; }), 
+			m_operations_owned.end());
+
+		return m_operations_owned.size() < size_begin;
+	}
+
 	bool Plant::CreateConnection(Operation* output, Operation* input)
 	{
 		if (m_connections.count(Connection{ output, input }) == 0)
 		{
 			m_connections.emplace(Connection{ output, input });
+			return true;
+		}
+		return false;
+	}
+
+	bool Plant::DeleteConnection(Operation* output, Operation* input)
+	{
+		if (m_connections.count(Connection{ output, input }) > 0)
+		{
+			m_connections.erase(Connection{ output, input });
 			return true;
 		}
 		return false;

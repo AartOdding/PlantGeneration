@@ -143,7 +143,7 @@ void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
         ed::Link(link_id, output_id, input_id);
     }
 
-    // create and delete links
+    // create links
 
     if (ed::BeginCreate())
     {
@@ -178,6 +178,34 @@ void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
         }
     }
     ed::EndCreate();
+
+    // delete links and nodes
+
+    if (ed::BeginDelete())
+    {
+        ed::NodeId node_id;
+        while (ed::QueryDeletedNode(&node_id))
+        {
+            if (ed::AcceptDeletedItem())
+            {
+                auto op = op_db->FindNodeID(node_id.Get());
+                plant->DeleteOperation(op.operation);
+            }
+        }
+
+        // There may be many links marked for deletion, let's loop over them.
+        ed::LinkId connection_id;
+        while (ed::QueryDeletedLink(&connection_id))
+        {
+            // If you agree that link can be deleted, accept deletion.
+            if (ed::AcceptDeletedItem())
+            {
+                auto connection = op_db->FindConnectionID(connection_id.Get()).connection;
+                plant->DeleteConnection(connection.output, connection.input);
+            }
+        }
+    }
+    ed::EndDelete(); // Wrap up deletion action
 
     ed::End();
     ed::SetCurrentEditor(nullptr);

@@ -57,7 +57,10 @@ namespace LSystem
 		PhyllotaxisOperation* CreatePhyllotaxisOperation(std::string_view name);
 		ForkOperation* CreateForkOperation(std::string_view name);
 
+		bool DeleteOperation(Operation* operation);
+
 		bool CreateConnection(Operation* output, Operation* input);
+		bool DeleteConnection(Operation* output, Operation* input);
 		bool AreConnected(Operation* output, Operation* input) const;
 		const std::unordered_set<Connection>& Connections() const;
 
