@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <LSystem/Forward.hpp>
 
@@ -21,7 +22,13 @@ namespace LSystem
 
 	struct InstructionData
 	{
-		glm::mat4 transform{ 1 };
+		float length = 0;
+
+		glm::mat4 transform() const
+		{
+			return glm::translate(glm::mat4(1), glm::vec3(0, length, 0));
+		}
+
 		std::vector<Instruction*> children;
 		bool draw_branch = true;
 		bool connect_branch_vertices = true;

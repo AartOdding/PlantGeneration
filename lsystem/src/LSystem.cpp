@@ -27,7 +27,7 @@ namespace LSystem
 
         auto color = parent_color;
 		auto local_space = parent_space * instruction->transform;
-        auto branch_transform = local_space * instruction->data->transform;
+        auto branch_transform = local_space * instruction->data->transform();
 
         if (instruction->data->branch_color.has_value())
         {
@@ -98,7 +98,7 @@ namespace LSystem
         const auto pitch_matrix = glm::rotate(roll_matrix, glm::radians(pitch), glm::vec3(1, 0, 0));
         instruction->transform = pitch_matrix;
 
-        instruction_data->transform = glm::translate(glm::mat4(1), glm::vec3(0, length, 0));
+        instruction_data->length = length;
 
         return instruction;
     }
