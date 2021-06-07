@@ -56,6 +56,7 @@ namespace LSystem
 		FanOperation* CreateFanOperation(std::string_view name);
 		PhyllotaxisOperation* CreatePhyllotaxisOperation(std::string_view name);
 		ForkOperation* CreateForkOperation(std::string_view name);
+		RandomLengthOperation* CreateRandomLengthOperation(std::string_view name);
 
 		bool DeleteOperation(Operation* operation);
 

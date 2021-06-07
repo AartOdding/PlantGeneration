@@ -17,6 +17,7 @@ set(PUBLIC_FILES
     include/LSystem/Operations/FanOperation.hpp
     include/LSystem/Operations/ForkOperation.hpp
     include/LSystem/Operations/PhyllotaxisOperation.hpp
+    include/LSystem/Operations/RandomLengthOperation.hpp
     include/LSystem/Operations/StartOperation.hpp
     include/LSystem/Parameters/ColorParameter.hpp
     include/LSystem/Parameters/FloatParameter.hpp
@@ -36,6 +37,7 @@ set(PRIVATE_FILES
     src/Operations/FanOperation.cpp
     src/Operations/ForkOperation.cpp
     src/Operations/PhyllotaxisOperation.cpp
+    src/Operations/RandomLengthOperation.cpp
     src/Operations/StartOperation.cpp
     src/Parameters/ColorParameter.cpp
     src/Parameters/FloatParameter.cpp

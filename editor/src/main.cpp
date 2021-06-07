@@ -97,6 +97,10 @@ void DrawCreateOperationWindow(LSystem::Plant* plant)
     {
         plant->CreateColoringOperation(random_name(8));
     }
+    if (ImGui::Button("Random Length"))
+    {
+        plant->CreateRandomLengthOperation(random_name(8));
+    }
 
     ImGui::End();
 }

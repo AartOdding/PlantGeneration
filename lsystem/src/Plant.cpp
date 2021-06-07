@@ -43,6 +43,12 @@ namespace LSystem
 		return static_cast<ForkOperation*>(m_operations_owned.back().get());
 	}
 
+	RandomLengthOperation* Plant::CreateRandomLengthOperation(std::string_view name)
+	{
+		m_operations_owned.push_back(std::make_unique<RandomLengthOperation>(this, name));
+		return static_cast<RandomLengthOperation*>(m_operations_owned.back().get());
+	}
+
 	bool Plant::DeleteOperation(Operation* operation)
 	{
 		const auto size_begin = m_operations_owned.size();
