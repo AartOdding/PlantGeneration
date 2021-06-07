@@ -17,7 +17,7 @@ namespace LSystem
         int branch_sides = 5;
     };
 
-    std::vector<glm::vec4> GetCircle(int sides, float radius)
+    std::vector<glm::vec4> MakeCircle(int sides, float radius)
     {
         std::vector<glm::vec4> circle;
 
@@ -39,6 +39,20 @@ namespace LSystem
 
         return circle;
     }
+
+    std::vector<glm::vec4> TransformCircle(const std::vector<glm::vec4>& circle, const glm::mat4& transform)
+    {
+        std::vector<glm::vec4> transformed_circle;
+        transformed_circle.reserve(circle.size());
+
+        for (auto& pt : circle)
+        {
+            transformed_circle.push_back(transform * pt);
+        }
+
+        return transformed_circle;
+    }
+
 
 	// TODO: optimize away lines of size 0
 
@@ -75,11 +89,33 @@ namespace LSystem
 
 		if (instruction->data->draw_branch)
 		{
-			vertex_buffer.lines.emplace_back();
-			vertex_buffer.lines.back().point_a.position = local_space * glm::vec4(0, 0, 0, 1);
-			vertex_buffer.lines.back().point_b.position = branch_transform * glm::vec4(0, 0, 0, 1);
-            vertex_buffer.lines.back().point_a.color = color;
-            vertex_buffer.lines.back().point_b.color = color;
+            if (cascading_state.branch_sides == 1)
+            {
+                vertex_buffer.lines.emplace_back();
+                vertex_buffer.lines.back().point_a.position = local_space * glm::vec4(0, 0, 0, 1);
+                vertex_buffer.lines.back().point_b.position = branch_transform * glm::vec4(0, 0, 0, 1);
+                vertex_buffer.lines.back().point_a.color = cascading_state.branch_color;
+                vertex_buffer.lines.back().point_b.color = cascading_state.branch_color;
+            }
+            else if (cascading_state.branch_sides > 1)
+            {
+                auto circle = MakeCircle(cascading_state.branch_sides, cascading_state.branch_radius);
+                auto circle_a = TransformCircle(circle, local_space);
+                auto circle_b = TransformCircle(circle, branch_transform);
+
+                for (int i = 0; i < cascading_state.branch_sides; ++i)
+                {
+                    int j = i + 1 == cascading_state.branch_sides ? 0 : i + 1; // Take next index or 0 if were at end
+
+                    // Create triangle with two vertices from circle_a and one from circle_b.
+                    auto& tri_1 = vertex_buffer.AddTriangle(circle_a[i], circle_a[j], circle_b[i]);
+                    tri_1.point_3.color = cascading_state.branch_color;
+
+                    // Create triangle with two vertices from circle_b and one from circle_a, together making a square.
+                    auto& tri_2 = vertex_buffer.AddTriangle(circle_a[j], circle_b[i], circle_b[j]);
+                    tri_2.point_3.color = cascading_state.branch_color;
+                }
+            }
 		}
 
 		for (const auto& child : instruction->data->children)
