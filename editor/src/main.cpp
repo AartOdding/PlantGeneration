@@ -67,6 +67,7 @@ void DrawEditorConfigWindow(EditorConfig& editor_config)
     ImGui::SliderFloat("Camera min/max Y", &editor_config.camera_minmax_y, 0, 1.5);
     ImGui::SliderFloat("Camera rotation speed", &editor_config.camera_speed_sideways, 0, 0.05);
     ImGui::SliderFloat("Camera up/down speed", &editor_config.camera_speed_updown, 0, 2);
+    ImGui::Checkbox("Orbiting", &editor_config.orbit_mode);
     ImGui::ColorEdit3("Background color", &editor_config.background_color.x);
 
     ImGui::End();
