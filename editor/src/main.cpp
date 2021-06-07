@@ -279,6 +279,21 @@ void UpdateCameraState(Camera& camera, CameraState& camera_state, EditorConfig& 
     camera_state.previous_mouse_pos = GetMousePosition();
 }
 
+Vector3 ToVec3(const glm::vec3& vec)
+{
+    return { vec.x, vec.y, vec.z };
+}
+
+Color ToColor(const glm::vec3& rgb)
+{
+    Color col;
+    col.r = rgb.r * 255;
+    col.g = rgb.g * 255;
+    col.b = rgb.b * 255;
+    col.a = 255;
+    return col;
+}
+
 
 int main()
 {
@@ -295,6 +310,7 @@ int main()
     InitWindow(1080, 1350, "Aart & Aart 4Mb Jam");
 
     SetTargetFPS(30);
+    glDisable(GL_CULL_FACE);
 
     // Setup Dear ImGui context
     ImGui::CreateContext();
@@ -356,9 +372,12 @@ int main()
 
         for (auto& l : buf.lines)
         {
-            DrawLine3D({ l.point_a.position.x, l.point_a.position.y, l.point_a.position.z }, 
-                       { l.point_b.position.x, l.point_b.position.y, l.point_b.position.z }, 
-                       Color(l.point_b.color.r * 255, l.point_b.color.g * 255, l.point_b.color.b * 255, 255));
+            DrawLine3D(ToVec3(l.point_a.position), ToVec3(l.point_b.position), ToColor(l.point_b.color));
+        }
+
+        for (auto& t : buf.triangles)
+        {
+            DrawTriangle3D(ToVec3(t.point_1.position), ToVec3(t.point_2.position), ToVec3(t.point_3.position), ToColor(t.point_3.color));
         }
 
         EndMode3D();

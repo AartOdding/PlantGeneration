@@ -10,12 +10,42 @@
 namespace LSystem
 {
 
+    struct CascadingState
+    {
+        glm::vec3 branch_color = glm::vec3(102.0 / 255, 51.0 / 255, 0);
+        float branch_radius = 0.1;
+        int branch_sides = 5;
+    };
+
+    std::vector<glm::vec4> GetCircle(int sides, float radius)
+    {
+        std::vector<glm::vec4> circle;
+
+        if (sides > 0)
+        {
+            circle.resize(sides, glm::vec4(0, 0, 0, 1));
+
+            if (sides > 1)
+            {
+                const auto angle_increment = glm::two_pi<float>() / sides;
+
+                for (int i = 0; i < sides; ++i)
+                {
+                    circle[i].x = radius * glm::cos(i * angle_increment);
+                    circle[i].z = radius * glm::sin(i * angle_increment);
+                }
+            }
+        }
+
+        return circle;
+    }
+
 	// TODO: optimize away lines of size 0
 
 	static void ExecuteInstruction(
         const Instruction* instruction, 
         const glm::mat4& parent_space, 
-        const glm::vec3& parent_color,
+        CascadingState& cascading_state,
         VertexBuffer& vertex_buffer, 
         int remaining_recursions)
 	{
@@ -25,14 +55,23 @@ namespace LSystem
 			return;
 		}
 
-        auto color = parent_color;
-		auto local_space = parent_space * instruction->transform;
-        auto branch_transform = local_space * instruction->data->transform();
+        // Update cascading state:
 
         if (instruction->data->branch_color.has_value())
         {
-            color = instruction->data->branch_color.value();
+            cascading_state.branch_color = instruction->data->branch_color.value();
         }
+        if (instruction->data->branch_radius.has_value())
+        {
+            cascading_state.branch_radius = instruction->data->branch_radius.value();
+        }
+        if (instruction->data->branch_radius.has_value())
+        {
+            cascading_state.branch_radius = instruction->data->branch_radius.value();
+        }
+
+		auto local_space = parent_space * instruction->transform;
+        auto branch_transform = local_space * instruction->data->transform();
 
 		if (instruction->data->draw_branch)
 		{
@@ -51,11 +90,11 @@ namespace LSystem
 			{
                 if (child->is_recursion)
                 {
-                    ExecuteInstruction(child, branch_transform, color, vertex_buffer, remaining_recursions - 1);
+                    ExecuteInstruction(child, branch_transform, cascading_state, vertex_buffer, remaining_recursions - 1);
                 }
                 else
                 {
-                    ExecuteInstruction(child, branch_transform, color, vertex_buffer, remaining_recursions);
+                    ExecuteInstruction(child, branch_transform, cascading_state, vertex_buffer, remaining_recursions);
                 }
 			}
 		}
@@ -64,8 +103,9 @@ namespace LSystem
 	VertexBuffer Generate(const Instruction* branch, int recursions)
 	{
 		VertexBuffer render_buffer;
+        CascadingState cascading_state;
 
-		ExecuteInstruction(branch, glm::mat4(1), glm::vec3(1), render_buffer, recursions);
+        ExecuteInstruction(branch, glm::mat4(1), cascading_state, render_buffer, recursions);
 
 		return render_buffer;
 	}

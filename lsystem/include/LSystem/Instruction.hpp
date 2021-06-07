@@ -32,7 +32,9 @@ namespace LSystem
 		std::vector<Instruction*> children;
 		bool draw_branch = true;
 		bool connect_branch_vertices = true;
-		int branch_sides = 1; // In case of 1, a line will be drawn.
+
+		std::optional<int> branch_sides; // In case of 1, a line will be drawn.
+		std::optional<float> branch_radius;
 		std::optional<glm::vec3> branch_color;
 	};
 
