@@ -43,6 +43,12 @@ namespace LSystem
 		return static_cast<ForkOperation*>(m_operations_owned.back().get());
 	}
 
+	RandomColorOperation* Plant::CreateRandomColorOperation(std::string_view name)
+	{
+		m_operations_owned.push_back(std::make_unique<RandomColorOperation>(this, name));
+		return static_cast<RandomColorOperation*>(m_operations_owned.back().get());
+	}
+
 	RandomLengthOperation* Plant::CreateRandomLengthOperation(std::string_view name)
 	{
 		m_operations_owned.push_back(std::make_unique<RandomLengthOperation>(this, name));

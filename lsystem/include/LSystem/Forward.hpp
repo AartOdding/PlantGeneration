@@ -26,6 +26,7 @@ namespace LSystem
 	struct FanOperation;
 	struct ForkOperation;
 	struct PhyllotaxisOperation;
+	struct RandomColorOperation;
 	struct RandomLengthOperation;
 	struct StartOperation;
 }
