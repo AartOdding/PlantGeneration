@@ -5,8 +5,8 @@
 namespace LSystem
 {
 
-	ColoringOperation::ColoringOperation(OperationOwner* owner, std::string_view name)
-		: Operation(owner, name)
+	ColoringOperation::ColoringOperation(Plant* plant)
+		: Operation(plant)
 	{
 
 	}
@@ -18,12 +18,6 @@ namespace LSystem
 			i->data->branch_color = color;
 		}
 		return {};
-	}
-
-	const std::string& ColoringOperation::Description() const
-	{
-		static const std::string type_name_friendly = "Apply Color";
-		return type_name_friendly;
 	}
 
 }

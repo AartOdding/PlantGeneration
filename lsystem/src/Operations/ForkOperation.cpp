@@ -25,8 +25,8 @@ namespace LSystem
     }
 
 
-    ForkOperation::ForkOperation(OperationOwner* owner, std::string_view name)
-        : Operation(owner, name)
+    ForkOperation::ForkOperation(Plant* plant)
+        : Operation(plant)
     {
 
     }
@@ -48,12 +48,6 @@ namespace LSystem
         }
 
         return instructions;
-    }
-
-    const std::string& ForkOperation::Description() const
-    {
-        static const std::string type_name_friendly = "Create Fork";
-        return type_name_friendly;
     }
 
 }

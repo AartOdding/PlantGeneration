@@ -9,7 +9,7 @@ namespace LSystem
 
 	struct PhyllotaxisOperation : Operation
 	{
-		PhyllotaxisOperation(OperationOwner* owner, std::string_view name);
+		PhyllotaxisOperation(Plant* plant);
 
 		IntParameter branch_count{ this, "Count", 0, 255, 9 };
 		FloatParameter branch_length{ this, "Length", 0, 10, 0.5 };
@@ -17,7 +17,11 @@ namespace LSystem
 		FloatParameter roll{ this, "Roll", 0, 360, 0 };
 
 		std::vector<Instruction*> Apply(const std::vector<Instruction*>& apply_to, LSystem& lsystem) override;
-		const std::string& Description() const override;
+
+		OperationInfo GetInfo() const override
+		{
+			return { 1, 1, "Create Phyllotaxis" };
+		}
 	};
 
 }

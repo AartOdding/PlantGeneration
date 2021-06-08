@@ -8,28 +8,32 @@
 namespace LSystem
 {
 
-	Operation::Operation(OperationOwner* _owner, std::string_view _name)
-		: owner(_owner)
-		, name(_name)
+	Operation::Operation(Plant* plant)
+		: m_plant(plant)
 	{
-		assert(owner);
+		assert(m_plant);
 
-		if (owner)
+		if (m_plant)
 		{
-			owner->m_operations.push_back(this);
+			m_plant->m_operations.push_back(this);
 		}
 	}
 
 	Operation::~Operation()
 	{
-		if (owner)
+		if (m_plant)
 		{
-			owner->m_operations.erase(
+			m_plant->m_operations.erase(
 				std::remove(
-					owner->m_operations.begin(),
-					owner->m_operations.end(), this),
-				owner->m_operations.end());
+					m_plant->m_operations.begin(),
+					m_plant->m_operations.end(), this),
+				m_plant->m_operations.end());
 		}
+	}
+
+	void Operation::ActivateOutput(int output_index, const std::vector<Instruction*>& output_values)
+	{
+		// call back into plant, so plant can call connected inputs.
 	}
 
 }

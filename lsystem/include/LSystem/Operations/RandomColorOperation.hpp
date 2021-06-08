@@ -9,7 +9,7 @@ namespace LSystem
 
 	struct RandomColorOperation : Operation
 	{
-		RandomColorOperation(OperationOwner* owner, std::string_view name);
+		RandomColorOperation(Plant* plant);
 
 		ColorParameter color{ this, "Color", glm::vec3(1, 1, 1)};
 		IntParameter random_seed{ this, "Random Seed", 0, 10000, 0 };
@@ -18,7 +18,11 @@ namespace LSystem
 		FloatParameter val_deviation{ this, "Val Deviation", 0, 0.5, 0.1 };
 
 		std::vector<Instruction*> Apply(const std::vector<Instruction*>& apply_to, LSystem& lsystem) override;
-		const std::string& Description() const override;
+
+		OperationInfo GetInfo() const override
+		{
+			return { 1, 1, "Random Color" };
+		}
 	};
 
 }

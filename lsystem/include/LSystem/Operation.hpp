@@ -16,9 +16,16 @@
 namespace LSystem
 {
 
+	struct OperationInfo
+	{
+		int input_count;
+		int output_count;
+		std::string description;
+	};
+
 	struct Operation : ParameterOwner
 	{
-		Operation(OperationOwner* owner, std::string_view name);
+		Operation(Plant* plant);
 
 		virtual ~Operation();
 
@@ -28,14 +35,22 @@ namespace LSystem
 		Operation& operator=(const Operation&) = delete;
 		Operation& operator=(Operation&&) = delete;
 
-		const std::string name;
+		// OperationInfo is not allowed to change between calls.
+		virtual OperationInfo GetInfo() const = 0;
+
+		// Called by plant, when executing "Return" output using ActivateOutput function.
+		virtual void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem) { };
 
 		virtual std::vector<Instruction*> Apply(const std::vector<Instruction*>& apply_to, LSystem& lsystem) = 0;
-		virtual const std::string& Description() const = 0;
+
+	protected:
+
+		// Can call back into plant
+		void ActivateOutput(int output_index, const std::vector<Instruction*>& output_values);
 
 	private:
 
-		OperationOwner* owner;
+		Plant* m_plant;
 
 	};
 

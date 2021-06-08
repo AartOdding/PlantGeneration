@@ -12,8 +12,8 @@
 namespace LSystem
 {
 
-	RandomColorOperation::RandomColorOperation(OperationOwner* owner, std::string_view name)
-		: Operation(owner, name)
+	RandomColorOperation::RandomColorOperation(Plant* plant)
+		: Operation(plant)
 	{
 
 	}
@@ -37,12 +37,6 @@ namespace LSystem
 			}
 		}
 		return {};
-	}
-
-	const std::string& RandomColorOperation::Description() const
-	{
-		static const std::string type_name_friendly = "Random Color";
-		return type_name_friendly;
 	}
 
 }

@@ -25,8 +25,8 @@ namespace LSystem
         return instructions;
     }
 
-    FanOperation::FanOperation(OperationOwner* owner, std::string_view name)
-        : Operation(owner, name)
+    FanOperation::FanOperation(Plant* plant)
+        : Operation(plant)
     {
 
     }
@@ -48,12 +48,6 @@ namespace LSystem
         }
 
         return instructions;
-    }
-
-    const std::string& FanOperation::Description() const
-    {
-        static const std::string type_name_friendly = "Create Fan";
-        return type_name_friendly;
     }
 
 }

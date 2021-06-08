@@ -11,8 +11,8 @@
 namespace LSystem
 {
 
-	RandomLengthOperation::RandomLengthOperation(OperationOwner* owner, std::string_view name)
-		: Operation(owner, name)
+	RandomLengthOperation::RandomLengthOperation(Plant* plant)
+		: Operation(plant)
 	{
 
 	}
@@ -26,12 +26,6 @@ namespace LSystem
 			i->data->length = glm::linearRand<float>(min, max);
 		}
 		return {};
-	}
-
-	const std::string& RandomLengthOperation::Description() const
-	{
-		static const std::string type_name_friendly = "Random Length";
-		return type_name_friendly;
 	}
 
 }
