@@ -19,15 +19,23 @@ namespace LSystem
 	{
 		Operation* const output;
 		Operation* const input;
+		const int output_index;
+		const int input_index;
 
 		bool operator==(const Connection& other) const
 		{
-			return output == other.output && input == other.input;
+			return output == other.output && input == other.input
+				&& output_index == other.output_index && input_index == other.input_index;
 		}
 	};
 
 }
 
+template <typename SizeT>
+inline void hash_combine_impl(SizeT& seed, SizeT value)
+{
+	seed ^= value + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+}
 
 namespace std
 {
@@ -38,7 +46,14 @@ namespace std
 		{
 			auto h1 = std::hash<LSystem::Operation*>()(c.output);
 			auto h2 = std::hash<LSystem::Operation*>()(c.input);
-			return h1 ^ (h2 << 1);
+			auto h3 = std::hash<int>()(c.output_index);
+			auto h4 = std::hash<int>()(c.input_index);
+			size_t result = 0;
+			hash_combine_impl(result, h1);
+			hash_combine_impl(result, h2);
+			hash_combine_impl(result, h3);
+			hash_combine_impl(result, h4);
+			return result;
 		}
 	};
 }
@@ -51,19 +66,12 @@ namespace LSystem
 	{
 		Plant();
 
-		ColoringOperation* CreateColoringOperation(std::string_view name);
-		ExtrudeOperation* CreateExtrudeOperation(std::string_view name);
-		FanOperation* CreateFanOperation(std::string_view name);
-		PhyllotaxisOperation* CreatePhyllotaxisOperation(std::string_view name);
-		ForkOperation* CreateForkOperation(std::string_view name);
-		RandomColorOperation* CreateRandomColorOperation(std::string_view name);
-		RandomLengthOperation* CreateRandomLengthOperation(std::string_view name);
-
+		Operation* AddOperation(std::unique_ptr<Operation>&& operation);
 		bool DeleteOperation(Operation* operation);
 
-		bool CreateConnection(Operation* output, Operation* input);
-		bool DeleteConnection(Operation* output, Operation* input);
-		bool AreConnected(Operation* output, Operation* input) const;
+		bool CreateConnection(Operation* output, int output_index, Operation* input, int input_index);
+		bool DeleteConnection(Operation* output, int output_index, Operation* input, int input_index);
+		bool AreConnected(Operation* output, int output_index, Operation* input, int input_index) const;
 		const std::unordered_set<Connection>& Connections() const;
 
 		VertexBuffer Generate();

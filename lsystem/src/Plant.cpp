@@ -9,50 +9,14 @@ namespace LSystem
 
 	Plant::Plant()
 	{
-		m_operations_owned.push_back(std::make_unique<StartOperation>(this, "Start"));
+		m_operations_owned.push_back(std::make_unique<StartOperation>(this));
 		m_start_operation = m_operations_owned.back().get();
 	}
 
-	ColoringOperation* Plant::CreateColoringOperation(std::string_view name)
+	Operation* Plant::AddOperation(std::unique_ptr<Operation>&& operation)
 	{
-		m_operations_owned.push_back(std::make_unique<ColoringOperation>(this, name));
-		return static_cast<ColoringOperation*>(m_operations_owned.back().get());
-	}
-
-	ExtrudeOperation* Plant::CreateExtrudeOperation(std::string_view name)
-	{
-		m_operations_owned.push_back(std::make_unique<ExtrudeOperation>(this, name));
-		return static_cast<ExtrudeOperation*>(m_operations_owned.back().get());
-	}
-
-	FanOperation* Plant::CreateFanOperation(std::string_view name)
-	{
-		m_operations_owned.push_back(std::make_unique<FanOperation>(this, name));
-		return static_cast<FanOperation*>(m_operations_owned.back().get());
-	}
-
-	PhyllotaxisOperation* Plant::CreatePhyllotaxisOperation(std::string_view name)
-	{
-		m_operations_owned.push_back(std::make_unique<PhyllotaxisOperation>(this, name));
-		return static_cast<PhyllotaxisOperation*>(m_operations_owned.back().get());
-	}
-
-	ForkOperation* Plant::CreateForkOperation(std::string_view name)
-	{
-		m_operations_owned.push_back(std::make_unique<ForkOperation>(this, name));
-		return static_cast<ForkOperation*>(m_operations_owned.back().get());
-	}
-
-	RandomColorOperation* Plant::CreateRandomColorOperation(std::string_view name)
-	{
-		m_operations_owned.push_back(std::make_unique<RandomColorOperation>(this, name));
-		return static_cast<RandomColorOperation*>(m_operations_owned.back().get());
-	}
-
-	RandomLengthOperation* Plant::CreateRandomLengthOperation(std::string_view name)
-	{
-		m_operations_owned.push_back(std::make_unique<RandomLengthOperation>(this, name));
-		return static_cast<RandomLengthOperation*>(m_operations_owned.back().get());
+		m_operations_owned.push_back(std::move(operation));
+		return m_operations_owned.back().get();
 	}
 
 	bool Plant::DeleteOperation(Operation* operation)
@@ -69,29 +33,29 @@ namespace LSystem
 		return m_operations_owned.size() < size_begin;
 	}
 
-	bool Plant::CreateConnection(Operation* output, Operation* input)
+	bool Plant::CreateConnection(Operation* output, int output_index, Operation* input, int input_index)
 	{
-		if (m_connections.count(Connection{ output, input }) == 0)
+		if (m_connections.count(Connection{ output, input, output_index, input_index }) == 0)
 		{
-			m_connections.emplace(Connection{ output, input });
+			m_connections.emplace(Connection{ output, input, output_index, input_index });
 			return true;
 		}
 		return false;
 	}
 
-	bool Plant::DeleteConnection(Operation* output, Operation* input)
+	bool Plant::DeleteConnection(Operation* output, int output_index, Operation* input, int input_index)
 	{
-		if (m_connections.count(Connection{ output, input }) > 0)
+		if (m_connections.count(Connection{ output, input, output_index, input_index }) > 0)
 		{
-			m_connections.erase(Connection{ output, input });
+			m_connections.erase(Connection{ output, input, output_index, input_index });
 			return true;
 		}
 		return false;
 	}
 
-	bool Plant::AreConnected(Operation* output, Operation* input) const
+	bool Plant::AreConnected(Operation* output, int output_index, Operation* input, int input_index) const
 	{
-		return m_connections.count(Connection{ output, input });
+		return m_connections.count(Connection{ output, input, output_index, input_index });
 	}
 
 	const std::unordered_set<Connection>& Plant::Connections() const

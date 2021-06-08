@@ -36,7 +36,13 @@ void OperationDatabase::Update(LSystem::Plant* plant)
 	{
 		if (m_operations.count(op) == 0)
 		{
-			m_operations.emplace(op, OperationIDs{ op, ++unique_id, ++unique_id, ++unique_id });
+			std::uint64_t node_id = ++unique_id;
+			std::vector<std::uint64_t> input_ids;
+			for (int i = 0; i < op->GetInfo().input_count; ++i) input_ids.push_back(++unique_id);
+			std::vector<std::uint64_t> output_ids;
+			for (int i = 0; i < op->GetInfo().output_count; ++i) output_ids.push_back(++unique_id);
+
+			m_operations.emplace(op, OperationIDs{ op, node_id, input_ids, output_ids });
 		}
 	}
 
@@ -106,9 +112,12 @@ OperationDatabase::OperationIDs OperationDatabase::FindOutputID(std::uint64_t ou
 {
 	for (auto& [op, ids] : m_operations)
 	{
-		if (ids.output_id == output_id)
+		for (auto id : ids.output_ids)
 		{
-			return ids;
+			if (id == output_id)
+			{
+				return ids;
+			}
 		}
 	}
 	return {};
@@ -118,9 +127,12 @@ OperationDatabase::OperationIDs OperationDatabase::FindInputID(std::uint64_t inp
 {
 	for (auto& [op, ids] : m_operations)
 	{
-		if (ids.input_id == input_id)
+		for (auto id : ids.input_ids)
 		{
-			return ids;
+			if (id == input_id)
+			{
+				return ids;
+			}
 		}
 	}
 	return {};
@@ -142,9 +154,12 @@ bool OperationDatabase::IsValidOutputID(std::uint64_t output_id) const
 {
 	for (auto& [op, ids] : m_operations)
 	{
-		if (ids.output_id == output_id)
+		for (auto id : ids.output_ids)
 		{
-			return true;
+			if (id == output_id)
+			{
+				return true;
+			}
 		}
 	}
 	return false;
@@ -154,9 +169,12 @@ bool OperationDatabase::IsValidInputID(std::uint64_t input_id) const
 {
 	for (auto& [op, ids] : m_operations)
 	{
-		if (ids.input_id == input_id)
+		for (auto id : ids.input_ids)
 		{
-			return true;
+			if (id == input_id)
+			{
+				return true;
+			}
 		}
 	}
 	return false;

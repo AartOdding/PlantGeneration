@@ -15,8 +15,8 @@ public:
 	{
 		LSystem::Operation* const operation;
 		const std::uint64_t node_id;
-		const std::uint64_t input_id;
-		const std::uint64_t output_id;
+		const std::vector<std::uint64_t> input_ids;
+		const std::vector<std::uint64_t> output_ids;
 	};
 
 	struct ConnectionIDs

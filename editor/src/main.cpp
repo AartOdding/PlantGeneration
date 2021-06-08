@@ -79,31 +79,31 @@ void DrawCreateOperationWindow(LSystem::Plant* plant)
 
     if (ImGui::Button("Extrude"))
     {
-        plant->CreateExtrudeOperation(random_name(8));
+        plant->AddOperation(std::make_unique<LSystem::ExtrudeOperation>(plant));
     }
     if (ImGui::Button("Fork"))
     {
-        plant->CreateForkOperation(random_name(8));
+        plant->AddOperation(std::make_unique<LSystem::ForkOperation>(plant));
     }
     if (ImGui::Button("Fan"))
     {
-        plant->CreateFanOperation(random_name(8));
+        plant->AddOperation(std::make_unique<LSystem::FanOperation>(plant));
     }
     if (ImGui::Button("Phyllotaxis"))
     {
-        plant->CreatePhyllotaxisOperation(random_name(8));
+        plant->AddOperation(std::make_unique<LSystem::PhyllotaxisOperation>(plant));
     }
     if (ImGui::Button("Color"))
     {
-        plant->CreateColoringOperation(random_name(8));
+        plant->AddOperation(std::make_unique<LSystem::ColoringOperation>(plant));
     }
     if (ImGui::Button("Random Length"))
     {
-        plant->CreateRandomLengthOperation(random_name(8));
+        plant->AddOperation(std::make_unique<LSystem::RandomLengthOperation>(plant));
     }
     if (ImGui::Button("Random Color"))
     {
-        plant->CreateRandomColorOperation(random_name(8));
+        plant->AddOperation(std::make_unique<LSystem::RandomColorOperation>(plant));
     }
 
     ImGui::End();
