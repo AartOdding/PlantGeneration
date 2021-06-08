@@ -11,15 +11,15 @@ namespace LSystem
 
     }
 
-    std::vector<Instruction*> ExtrudeOperation::Apply(const std::vector<Instruction*>& apply_to, LSystem& lsystem)
+    void ExtrudeOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem)
     {
         std::vector<Instruction*> instructions;
 
-        if (apply_to.size() > 0)
+        if (active_input_values.size() > 0)
         {
-            instructions.reserve(apply_to.size());
+            instructions.reserve(active_input_values.size());
 
-            for (auto onto : apply_to)
+            for (auto onto : active_input_values)
             {
                 auto new_instruction = lsystem.CreateExtrusion(branch_length, roll, pitch);
                 onto->data->children.push_back(new_instruction);
@@ -27,7 +27,7 @@ namespace LSystem
             }
         }
 
-        return instructions;
+        ActivateOutput(0, instructions, lsystem);
     }
 
 }

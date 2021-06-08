@@ -63,41 +63,39 @@ namespace LSystem
 		return m_connections;
 	}
 
-	std::vector<Instruction*> Plant::ExecuteOperation(Operation* operation, const std::vector<Instruction*>& instructions, LSystem& lsystem)
-	{
-		auto new_instructions = operation->Apply(instructions, lsystem);
-		auto next_ops = GetNextOperations(operation);
-
-		for (auto op : next_ops)
-		{
-			ExecuteOperation(op, new_instructions, lsystem);
-		}
-
-		return new_instructions;
-	}
-
 	VertexBuffer Plant::Generate()
 	{
 		LSystem lsystem;
 
-		auto start = ExecuteOperation(m_start_operation, {}, lsystem);
+		m_start_operation->Execute(0, {}, lsystem);
 
-		return ::LSystem::Generate(start[0], 1);
+		//auto start = ExecuteOperation(m_start_operation, {}, lsystem);
+
+		return lsystem.Generate(1);
 	}
 
-
-	std::vector<Operation*> Plant::GetNextOperations(Operation* operation)
+	void Plant::ActivateOutput(Operation* output, int output_index, const std::vector<Instruction*>& output_values, LSystem& lsystem)
 	{
-		std::vector<Operation*> next_operations;
+		auto next = GetConnectionsTo(output, output_index);
+
+		for (auto& n : next)
+		{
+			n.input->Execute(n.input_index, output_values, lsystem);
+		}
+	}
+
+	std::vector<Connection> Plant::GetConnectionsTo(Operation* output, int output_index)
+	{
+		std::vector<Connection> connections;
 
 		for (auto& c : m_connections)
 		{
-			if (c.output == operation)
+			if (c.output == output && c.output_index == output_index)
 			{
-				next_operations.push_back(c.input);
+				connections.push_back(c);
 			}
 		}
 
-		return next_operations;
+		return connections;
 	}
 }

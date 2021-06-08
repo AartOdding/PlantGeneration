@@ -76,10 +76,11 @@ namespace LSystem
 
 		VertexBuffer Generate();
 
+		void ActivateOutput(Operation* output, int output_index, const std::vector<Instruction*>& output_values, LSystem& lsystem);
+
 	private:
 
-		std::vector<Instruction*> ExecuteOperation(Operation* operation, const std::vector<Instruction*>& instructions, LSystem& lsystem);
-		std::vector<Operation*> GetNextOperations(Operation* operation);
+		std::vector<Connection> GetConnectionsTo(Operation* output, int output_index);
 
 		std::unordered_set<Connection> m_connections;
 		std::vector<std::unique_ptr<Operation>> m_operations_owned;

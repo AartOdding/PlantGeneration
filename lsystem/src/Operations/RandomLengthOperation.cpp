@@ -17,15 +17,16 @@ namespace LSystem
 
 	}
 
-	std::vector<Instruction*> RandomLengthOperation::Apply(const std::vector<Instruction*>& apply_to, LSystem& lsystem)
+	void RandomLengthOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem)
 	{
 		std::srand(0);
 
-		for (auto& i : apply_to)
+		for (auto& i : active_input_values)
 		{
 			i->data->length = glm::linearRand<float>(min, max);
 		}
-		return {};
+
+		ActivateOutput(0, active_input_values, lsystem);
 	}
 
 }

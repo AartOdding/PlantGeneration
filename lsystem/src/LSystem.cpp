@@ -136,16 +136,6 @@ namespace LSystem
 		}
 	}
 
-	VertexBuffer Generate(const Instruction* branch, int recursions)
-	{
-		VertexBuffer render_buffer;
-        CascadingState cascading_state;
-
-        ExecuteInstruction(branch, glm::mat4(1), cascading_state, render_buffer, recursions);
-
-		return render_buffer;
-	}
-
 }
 
 
@@ -179,64 +169,17 @@ namespace LSystem
         return instruction;
     }
 
-    std::vector<Instruction*> LSystem::CreateBase(float length)
+    VertexBuffer LSystem::Generate(int recursions)
     {
-        begin = CreateExtrusion(length, 0, 0);
-        return { begin };
-    }
+        VertexBuffer render_buffer;
+        CascadingState cascading_state;
 
-    /*
-    std::vector<Instruction*> LSystem::CreateRecursion(Instruction* rule, float scale, float roll, float pitch)
-    {
-        std::vector<RuleReference> rule_reference;
-        rule_reference.resize(1);
-
-        const auto roll_matrix = glm::rotate(glm::mat4(1), roll, glm::vec3(0, 1, 0));
-        const auto pitch_matrix = glm::rotate(roll_matrix, pitch, glm::vec3(1, 0, 0));
-        const auto scale_matrix = glm::scale(pitch_matrix, glm::vec3(scale, scale, scale));
-        rule_reference[0].transform = scale_matrix;
-
-        rule_reference[0].rule = rule;
-        return rule_reference;
-    }
-
-    std::vector<Instruction*> LSystem::CreateRecursingFork(Instruction* rule, int count, float scale, float roll, float pitch)
-    {
-        std::vector<RuleReference> rule_references;
-
-        if (count > 0)
+        if (first_instruction)
         {
-            rule_references.reserve(count);
-
-            const float angle_increment = glm::two_pi<float>() / count;
-
-            for (int i = 0; i < count; ++i)
-            {
-                rule_references.push_back(std::move(CreateRecursion(rule, scale, roll + i * angle_increment, pitch)[0]));
-            }
+            ExecuteInstruction(first_instruction, glm::mat4(1), cascading_state, render_buffer, recursions);
         }
 
-        return rule_references;
+        return render_buffer;
     }
 
-    std::vector<Instruction*> LSystem::CreateRecursingFan(Instruction* rule, int count, float spread, float scale, float roll)
-    {
-        std::vector<RuleReference> rule_references;
-
-        if (count > 0)
-        {
-            rule_references.reserve(count);
-
-            const float angle_start = -spread / 2;
-            const float angle_increment = spread / count;
-
-            for (int i = 0; i < count; ++i)
-            {
-                rule_references.push_back(std::move(CreateRecursion(rule, scale, roll, angle_start + i * angle_increment)[0]));
-            }
-        }
-
-        return rule_references;
-    }
-    */
 }

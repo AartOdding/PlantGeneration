@@ -13,7 +13,7 @@ namespace LSystem
 
 		ColorParameter color{ this, "Color", glm::vec3(1, 1, 1) };
 
-		std::vector<Instruction*> Apply(const std::vector<Instruction*>& apply_to, LSystem& lsystem) override;
+		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem) override;
 
 		OperationInfo GetInfo() const override
 		{

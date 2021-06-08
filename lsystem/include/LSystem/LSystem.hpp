@@ -31,27 +31,14 @@
 namespace LSystem
 {
 
-	VertexBuffer Generate(const Instruction* data, int recursions);
-
-
 	struct LSystem
 	{
-		Instruction* begin = nullptr;
+		Instruction* first_instruction = nullptr;
 
 		Instruction* CreateExtrusion(float length, float roll, float pitch);
 
-		std::vector<Instruction*> CreateBase(float length);
+		VertexBuffer Generate(int recursions); // Start from first_instruction
 
-		/*
-		std::vector<Instruction*> CreateRecursion(Instruction* rule, float scale = 1, float roll = 0, float pitch = 0);
-		std::vector<Instruction*> CreateRecursion(const std::vector<Instruction*>& onto, Instruction* rule, float scale = 1, float roll = 0, float pitch = 0);
-
-		std::vector<Instruction*> CreateRecursingFork(Instruction* rule, int count, float scale = 1, float roll = 0, float pitch = glm::quarter_pi<float>());
-		std::vector<Instruction*> CreateRecursingFork(const std::vector<Instruction*>& onto, Instruction* rule, int count, float scale = 1, float roll = 0, float pitch = glm::quarter_pi<float>());
-
-		std::vector<Instruction*> CreateRecursingFan(Instruction* rule, int count, float spread = glm::quarter_pi<float>(), float scale = 1, float roll = 0);
-		std::vector<Instruction*> CreateRecursingFan(const std::vector<Instruction*>& onto, Instruction* rule, int count, float spread = glm::quarter_pi<float>(), float scale = 1, float roll = 0);
-		*/
 	private:
 
 		InstructionData* AddInstructionData();

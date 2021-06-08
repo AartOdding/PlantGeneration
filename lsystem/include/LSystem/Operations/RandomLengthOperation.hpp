@@ -14,7 +14,7 @@ namespace LSystem
 		FloatParameter min{ this, "Min", -10, 10, 0.5 };
 		FloatParameter max{ this, "Max", -10, 10, 1 };
 
-		std::vector<Instruction*> Apply(const std::vector<Instruction*>& apply_to, LSystem& lsystem) override;
+		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem) override;
 
 		OperationInfo GetInfo() const override
 		{

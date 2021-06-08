@@ -11,9 +11,10 @@ namespace LSystem
 
 	}
 
-	std::vector<Instruction*> StartOperation::Apply(const std::vector<Instruction*>& apply_to, LSystem& lsystem)
+	void StartOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem)
 	{
-		return { lsystem.CreateExtrusion(0, 0, 0) };
+		lsystem.first_instruction = lsystem.CreateExtrusion(0, 0, 0);
+		ActivateOutput(0, { lsystem.first_instruction }, lsystem);
 	}
 
 }

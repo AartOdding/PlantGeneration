@@ -18,7 +18,7 @@ namespace LSystem
 
 	}
 
-	std::vector<Instruction*> RandomColorOperation::Apply(const std::vector<Instruction*>& apply_to, LSystem& lsystem)
+	void RandomColorOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem)
 	{
 		std::srand(random_seed.value);
 
@@ -30,13 +30,14 @@ namespace LSystem
 
 		if (!is_nan.x && !is_nan.y && !is_nan.z)
 		{
-			for (auto& i : apply_to)
+			for (auto& i : active_input_values)
 			{
 				auto new_hsv = glm::clamp(glm::gaussRand(hsv, deviation), { 0.0f, 0.0f, 0.0f }, { 360.0f, 1.0f, 1.0f });
 				i->data->branch_color = glm::rgbColor(new_hsv);
 			}
 		}
-		return {};
+
+		ActivateOutput(0, active_input_values, lsystem);
 	}
 
 }

@@ -31,9 +31,9 @@ namespace LSystem
 		}
 	}
 
-	void Operation::ActivateOutput(int output_index, const std::vector<Instruction*>& output_values)
+	void Operation::ActivateOutput(int output_index, const std::vector<Instruction*>& output_values, LSystem& lsystem)
 	{
-		// call back into plant, so plant can call connected inputs.
+		m_plant->ActivateOutput(this, output_index, output_values, lsystem);
 	}
 
 }

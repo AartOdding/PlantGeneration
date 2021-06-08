@@ -11,13 +11,13 @@ namespace LSystem
 
 	}
 
-	std::vector<Instruction*> ColoringOperation::Apply(const std::vector<Instruction*>& apply_to, LSystem& lsystem)
+	void ColoringOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem)
 	{
-		for (auto& i : apply_to)
+		for (auto& i : active_input_values)
 		{
 			i->data->branch_color = color;
 		}
-		return {};
+		ActivateOutput(0, active_input_values, lsystem);
 	}
 
 }

@@ -39,14 +39,12 @@ namespace LSystem
 		virtual OperationInfo GetInfo() const = 0;
 
 		// Called by plant, when executing "Return" output using ActivateOutput function.
-		virtual void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem) { };
-
-		virtual std::vector<Instruction*> Apply(const std::vector<Instruction*>& apply_to, LSystem& lsystem) = 0;
+		virtual void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem) = 0;
 
 	protected:
 
 		// Can call back into plant
-		void ActivateOutput(int output_index, const std::vector<Instruction*>& output_values);
+		void ActivateOutput(int output_index, const std::vector<Instruction*>& output_values, LSystem& lsystem);
 
 	private:
 

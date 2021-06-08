@@ -11,7 +11,7 @@ namespace LSystem
 	{
 		StartOperation(Plant* plant);
 
-		std::vector<Instruction*> Apply(const std::vector<Instruction*>& apply_to, LSystem& lsystem) override;
+		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem) override;
 
 		OperationInfo GetInfo() const override
 		{
