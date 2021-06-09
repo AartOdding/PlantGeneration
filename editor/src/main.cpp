@@ -109,6 +109,10 @@ void DrawCreateOperationWindow(LSystem::Plant* plant)
     {
         plant->AddOperation(std::make_unique<LSystem::LoopOperation>(plant));
     }
+    if (ImGui::Button("Scale"))
+    {
+        plant->AddOperation(std::make_unique<LSystem::ScaleOperation>(plant));
+    }
 
     ImGui::End();
 }

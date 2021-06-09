@@ -24,14 +24,18 @@ namespace LSystem
 	{
 		float length = 0;
 
-		glm::mat4 transform() const
+		glm::mat4 transform(float scale) const
 		{
-			return glm::translate(glm::mat4(1), glm::vec3(0, length, 0));
+			const auto scale_matrix = glm::scale(glm::mat4(1), glm::vec3(scale));
+			return glm::translate(scale_matrix, glm::vec3(0, length, 0));
 		}
 
 		std::vector<Instruction*> children;
 		bool draw_branch = true;
 		bool connect_branch_vertices = true;
+
+		std::optional<float> scale;
+		std::optional<float> scale_change;
 
 		std::optional<int> branch_sides; // In case of 1, a line will be drawn.
 		std::optional<float> branch_radius;

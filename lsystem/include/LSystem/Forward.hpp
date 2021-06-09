@@ -29,5 +29,6 @@ namespace LSystem
 	struct PhyllotaxisOperation;
 	struct RandomColorOperation;
 	struct RandomLengthOperation;
+	struct ScaleOperation;
 	struct StartOperation;
 }

@@ -21,6 +21,7 @@
 #include <LSystem/Operations/PhyllotaxisOperation.hpp>
 #include <LSystem/Operations/RandomColorOperation.hpp>
 #include <LSystem/Operations/RandomLengthOperation.hpp>
+#include <LSystem/Operations/ScaleOperation.hpp>
 #include <LSystem/Operations/StartOperation.hpp>
 
 #include <LSystem/Parameters/ColorParameter.hpp>

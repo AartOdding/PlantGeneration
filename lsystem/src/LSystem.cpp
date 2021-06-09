@@ -15,6 +15,8 @@ namespace LSystem
         glm::vec3 branch_color = glm::vec3(102.0 / 255, 51.0 / 255, 0);
         float branch_radius = 0.1;
         int branch_sides = 1;
+        float scale = 1;
+        float scale_change = 1;
     };
 
     std::vector<glm::vec4> MakeCircle(int sides, float radius)
@@ -59,7 +61,7 @@ namespace LSystem
 	static void ExecuteInstruction(
         const Instruction* instruction, 
         const glm::mat4& parent_space, 
-        CascadingState& cascading_state,
+        CascadingState cascading_state,
         VertexBuffer& vertex_buffer, 
         int remaining_recursions)
 	{
@@ -83,9 +85,21 @@ namespace LSystem
         {
             cascading_state.branch_radius = instruction->data->branch_radius.value();
         }
+        if (instruction->data->scale_change.has_value())
+        {
+            cascading_state.scale_change = instruction->data->scale_change.value();
+        }
+        if (instruction->data->scale.has_value())
+        {
+            cascading_state.scale = instruction->data->scale.value();
+        }
+        else
+        {
+            cascading_state.scale *= cascading_state.scale_change;
+        }
 
 		auto local_space = parent_space * instruction->transform;
-        auto branch_transform = local_space * instruction->data->transform();
+        auto branch_transform = local_space * instruction->data->transform(cascading_state.scale);
 
 		if (instruction->data->draw_branch)
 		{

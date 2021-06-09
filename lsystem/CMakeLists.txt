@@ -20,6 +20,7 @@ set(PUBLIC_FILES
     include/LSystem/Operations/PhyllotaxisOperation.hpp
     include/LSystem/Operations/RandomColorOperation.hpp
     include/LSystem/Operations/RandomLengthOperation.hpp
+    include/LSystem/Operations/ScaleOperation.hpp
     include/LSystem/Operations/StartOperation.hpp
     include/LSystem/Parameters/ColorParameter.hpp
     include/LSystem/Parameters/FloatParameter.hpp
@@ -42,6 +43,7 @@ set(PRIVATE_FILES
     src/Operations/PhyllotaxisOperation.cpp
     src/Operations/RandomColorOperation.cpp
     src/Operations/RandomLengthOperation.cpp
+    src/Operations/ScaleOperation.cpp
     src/Operations/StartOperation.cpp
     src/Parameters/ColorParameter.cpp
     src/Parameters/FloatParameter.cpp
