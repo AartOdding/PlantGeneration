@@ -67,6 +67,11 @@ namespace LSystem
 	{
 		LSystem lsystem;
 
+		for (auto& op : m_operations_owned)
+		{
+			op->ResetState();
+		}
+
 		m_start_operation->Execute(0, {}, lsystem);
 
 		//auto start = ExecuteOperation(m_start_operation, {}, lsystem);

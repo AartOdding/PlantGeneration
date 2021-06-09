@@ -19,12 +19,15 @@ namespace LSystem
 
 	void RandomLengthOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem)
 	{
-		std::srand(0);
-
 		for (auto& i : active_input_values)
 		{
 			i->data->length = glm::linearRand<float>(min, max);
 		}
+	}
+
+	void RandomLengthOperation::ResetState()
+	{
+		std::srand(random_seed.value);
 	}
 
 }

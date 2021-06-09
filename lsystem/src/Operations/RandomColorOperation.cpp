@@ -20,8 +20,6 @@ namespace LSystem
 
 	void RandomColorOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem)
 	{
-		std::srand(random_seed.value);
-
 		auto hsv = glm::hsvColor(color.value);
 		auto deviation = glm::vec3(hue_deviation.value * 360, sat_deviation.value, val_deviation.value);
 
@@ -36,6 +34,11 @@ namespace LSystem
 				i->data->branch_color = glm::rgbColor(new_hsv);
 			}
 		}
+	}
+
+	void RandomColorOperation::ResetState()
+	{
+		std::srand(random_seed.value);
 	}
 
 }

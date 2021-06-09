@@ -51,7 +51,7 @@ struct EditorConfig
     float camera_speed_sideways = 0.007;
     float camera_speed_updown = 0.3;
 
-    bool orbit_mode = true;
+    bool orbit_mode = false;
     bool editing_mode = true;
     
     glm::vec3 background_color = glm::vec3(0, 0, 0);
@@ -126,6 +126,8 @@ void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
             max_text_width = std::max(max_text_width, ImGui::CalcTextSize(par->name.c_str()).x);
         }
 
+        float total_width = max_text_width + parameter_width;
+
         const auto ids = op_db->Get(op);
         const auto info = op->GetInfo();
 
@@ -141,14 +143,15 @@ void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
                 ed::BeginPin(ids.input_ids[i], ed::PinKind::Input);
                 ImGui::Text("->");
                 ed::EndPin();
-
-                if (i < info.output_count)
-                {
-                    ImGui::SameLine(parameter_width + max_text_width - ImGui::CalcTextSize("->").x);
-                }
+            }
+            else
+            {
+                ImGui::Text(" ");
             }
             if (i < info.output_count)
             {
+                ImGui::SameLine(total_width - ImGui::CalcTextSize("->").x);
+
                 ed::BeginPin(ids.output_ids[i], ed::PinKind::Output);
                 ImGui::Text("->");
                 ed::EndPin();
@@ -231,8 +234,8 @@ void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
             // If you agree that link can be deleted, accept deletion.
             if (ed::AcceptDeletedItem())
             {
-                auto connection = op_db->FindConnectionID(connection_id.Get()).connection;
-                plant->DeleteConnection(connection.output, 0, connection.input, 0);
+                auto c = op_db->FindConnectionID(connection_id.Get()).connection;
+                plant->DeleteConnection(c.output, c.output_index, c.input, c.input_index);
             }
         }
     }
@@ -364,6 +367,7 @@ int main()
         if (IsKeyPressed(KEY_E))
         {
             editor_config.editing_mode = !editor_config.editing_mode;
+            editor_config.orbit_mode = !editor_config.editing_mode;
 
             if (editor_config.editing_mode)
             {

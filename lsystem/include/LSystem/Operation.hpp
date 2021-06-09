@@ -41,6 +41,8 @@ namespace LSystem
 		// Called by plant, when executing "Return" output using ActivateOutput function.
 		virtual void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem) = 0;
 
+		virtual void ResetState() { }
+
 	protected:
 
 		// Can call back into plant
