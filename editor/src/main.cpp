@@ -118,15 +118,23 @@ void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
     // Draw nodes:
     for (auto op : plant->Operations())
     {
-        auto ids = op_db->Get(op);
-        auto info = op->GetInfo();
+        constexpr static float parameter_width = 250;
+        float max_text_width = 0;
 
-        const int rows = std::max(info.input_count, info.output_count);
+        for (auto par : op->Parameters())
+        {
+            max_text_width = std::max(max_text_width, ImGui::CalcTextSize(par->name.c_str()).x);
+        }
+
+        const auto ids = op_db->Get(op);
+        const auto info = op->GetInfo();
+
+        const int row_count = std::max(info.input_count, info.output_count);
 
         ed::BeginNode(ids.node_id);
         ImGui::Text(info.description.c_str());
 
-        for (int i = 0; i < rows; ++i)
+        for (int i = 0; i < row_count; ++i)
         {
             if (i < info.input_count)
             {
@@ -136,7 +144,7 @@ void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
 
                 if (i < info.output_count)
                 {
-                    ImGui::SameLine();
+                    ImGui::SameLine(parameter_width + max_text_width - ImGui::CalcTextSize("->").x);
                 }
             }
             if (i < info.output_count)
@@ -149,7 +157,7 @@ void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
 
         for (auto par : op->Parameters())
         {
-            DrawParameter(par);
+            DrawParameter(par, parameter_width);
         }
 
         ed::EndNode();
