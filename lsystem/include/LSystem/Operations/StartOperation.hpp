@@ -15,7 +15,7 @@ namespace LSystem
 
 		OperationInfo GetInfo() const override
 		{
-			return { 1, 1, "Start" };
+			return { 0, 1, "Start" };
 		}
 	};
 

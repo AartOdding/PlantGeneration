@@ -17,7 +17,7 @@ namespace LSystem
 
 		OperationInfo GetInfo() const override
 		{
-			return { 1, 1, "Apply Color" };
+			return { 1, 0, "Apply Color" };
 		}
 	};
 

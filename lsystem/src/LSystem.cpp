@@ -14,7 +14,7 @@ namespace LSystem
     {
         glm::vec3 branch_color = glm::vec3(102.0 / 255, 51.0 / 255, 0);
         float branch_radius = 0.1;
-        int branch_sides = 5;
+        int branch_sides = 1;
     };
 
     std::vector<glm::vec4> MakeCircle(int sides, float radius)

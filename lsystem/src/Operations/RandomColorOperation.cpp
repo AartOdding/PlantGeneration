@@ -36,8 +36,6 @@ namespace LSystem
 				i->data->branch_color = glm::rgbColor(new_hsv);
 			}
 		}
-
-		ActivateOutput(0, active_input_values, lsystem);
 	}
 
 }

@@ -21,7 +21,7 @@ namespace LSystem
 
 		OperationInfo GetInfo() const override
 		{
-			return { 1, 1, "Random Color" };
+			return { 1, 0, "Random Color" };
 		}
 	};
 

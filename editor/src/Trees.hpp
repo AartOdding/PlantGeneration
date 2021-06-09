@@ -3,7 +3,7 @@
 #include "Tree.hpp"
 
 
-
+/*
 struct Dandelion : Tree
 {
     LSystem::ForkOperation fork{ this, "fork" };
@@ -102,7 +102,7 @@ struct Flower1 : Tree
 
         return l;
     }
-};
+};*/
 
 /*
 struct FanningTree : Tree

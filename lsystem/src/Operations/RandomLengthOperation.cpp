@@ -25,8 +25,6 @@ namespace LSystem
 		{
 			i->data->length = glm::linearRand<float>(min, max);
 		}
-
-		ActivateOutput(0, active_input_values, lsystem);
 	}
 
 }

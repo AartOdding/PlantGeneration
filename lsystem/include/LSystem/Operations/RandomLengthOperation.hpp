@@ -18,7 +18,7 @@ namespace LSystem
 
 		OperationInfo GetInfo() const override
 		{
-			return { 1, 1, "Random Length" };
+			return { 1, 0, "Random Length" };
 		}
 	};
 

@@ -119,19 +119,33 @@ void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
     for (auto op : plant->Operations())
     {
         auto ids = op_db->Get(op);
+        auto info = op->GetInfo();
+
+        const int rows = std::max(info.input_count, info.output_count);
 
         ed::BeginNode(ids.node_id);
-        ImGui::Text(op->Description().c_str());
+        ImGui::Text(info.description.c_str());
 
-        ed::BeginPin(ids.input_id, ed::PinKind::Input);
-        ImGui::Text("->");
-        ed::EndPin();
+        for (int i = 0; i < rows; ++i)
+        {
+            if (i < info.input_count)
+            {
+                ed::BeginPin(ids.input_ids[i], ed::PinKind::Input);
+                ImGui::Text("->");
+                ed::EndPin();
 
-        ImGui::SameLine();
-
-        ed::BeginPin(ids.output_id, ed::PinKind::Output);
-        ImGui::Text("->");
-        ed::EndPin();
+                if (i < info.output_count)
+                {
+                    ImGui::SameLine();
+                }
+            }
+            if (i < info.output_count)
+            {
+                ed::BeginPin(ids.output_ids[i], ed::PinKind::Output);
+                ImGui::Text("->");
+                ed::EndPin();
+            }
+        }
 
         for (auto par : op->Parameters())
         {
@@ -146,8 +160,8 @@ void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
     for (auto con : plant->Connections())
     {
         auto link_id = op_db->Get(con).connection_id;
-        auto output_id = op_db->Get(con.output).output_id;
-        auto input_id = op_db->Get(con.input).input_id;
+        auto output_id = op_db->Get(con.output).output_ids[con.output_index];
+        auto input_id = op_db->Get(con.input).input_ids[con.input_index];
 
         ed::Link(link_id, output_id, input_id);
     }
@@ -172,15 +186,15 @@ void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
                     // doesnt matter only the in and output
                     if (op_db->IsValidInputID(dragged_from.Get()) && op_db->IsValidOutputID(dragged_to.Get()))
                     {
-                        auto output_op = op_db->FindOutputID(dragged_to.Get()).operation;
-                        auto input_op = op_db->FindInputID(dragged_from.Get()).operation;
-                        plant->CreateConnection(output_op, input_op);
+                        auto [output_op, output_index] = op_db->FindOutputID(dragged_to.Get());
+                        auto [input_op, input_index] = op_db->FindInputID(dragged_from.Get());
+                        plant->CreateConnection(output_op, output_index, input_op, input_index);
                     }
                     else if (op_db->IsValidInputID(dragged_to.Get()) && op_db->IsValidOutputID(dragged_from.Get()))
                     {
-                        auto output_op = op_db->FindOutputID(dragged_from.Get()).operation;
-                        auto input_op = op_db->FindInputID(dragged_to.Get()).operation;
-                        plant->CreateConnection(output_op, input_op);
+                        auto [output_op, output_index] = op_db->FindOutputID(dragged_from.Get());
+                        auto [input_op, input_index] = op_db->FindInputID(dragged_to.Get());
+                        plant->CreateConnection(output_op, output_index, input_op, input_index);
                     }
                 }
             }
@@ -210,7 +224,7 @@ void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
             if (ed::AcceptDeletedItem())
             {
                 auto connection = op_db->FindConnectionID(connection_id.Get()).connection;
-                plant->DeleteConnection(connection.output, connection.input);
+                plant->DeleteConnection(connection.output, 0, connection.input, 0);
             }
         }
     }
@@ -390,6 +404,8 @@ int main()
         DrawEditorConfigWindow(editor_config);
 
         DrawCreateOperationWindow(&plant);
+        operation_database.Update(&plant);
+
         DrawNodeEditorWindow(&plant, &operation_database, node_editor_context);
 
         ImGui::Render();

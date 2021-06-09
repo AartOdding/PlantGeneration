@@ -15,7 +15,7 @@ void OperationDatabase::Update(LSystem::Plant* plant)
 
 	// Delete all operations that no longer exist:
 
-	std::vector<const LSystem::Operation*> operations_to_delete;
+	std::vector<LSystem::Operation*> operations_to_delete;
 
 	for (auto& [op, ids] : m_operations)
 	{
@@ -78,7 +78,7 @@ void OperationDatabase::Update(LSystem::Plant* plant)
 	}
 }
 
-OperationDatabase::OperationIDs OperationDatabase::Get(const LSystem::Operation* op) const
+OperationDatabase::OperationIDs OperationDatabase::Get(LSystem::Operation* op) const
 {
 	if (m_operations.count(op))
 	{
@@ -87,7 +87,7 @@ OperationDatabase::OperationIDs OperationDatabase::Get(const LSystem::Operation*
 	return {};
 }
 
-OperationDatabase::ConnectionIDs OperationDatabase::Get(const LSystem::Connection& con) const
+OperationDatabase::ConnectionIDs OperationDatabase::Get(LSystem::Connection& con) const
 {
 	if (m_connections.count(con))
 	{
@@ -108,34 +108,34 @@ OperationDatabase::OperationIDs OperationDatabase::FindNodeID(std::uint64_t node
 	return {};
 }
 
-OperationDatabase::OperationIDs OperationDatabase::FindOutputID(std::uint64_t output_id) const
+std::pair<LSystem::Operation*, int> OperationDatabase::FindOutputID(std::uint64_t output_id) const
 {
 	for (auto& [op, ids] : m_operations)
 	{
-		for (auto id : ids.output_ids)
+		for (int i = 0; i < ids.output_ids.size(); ++i)
 		{
-			if (id == output_id)
+			if (ids.output_ids[i] == output_id)
 			{
-				return ids;
+				return { op, i };
 			}
 		}
 	}
-	return {};
+	return { nullptr, -1 };
 }
 
-OperationDatabase::OperationIDs OperationDatabase::FindInputID(std::uint64_t input_id) const
+std::pair<LSystem::Operation*, int> OperationDatabase::FindInputID(std::uint64_t input_id) const
 {
 	for (auto& [op, ids] : m_operations)
 	{
-		for (auto id : ids.input_ids)
+		for (int i = 0; i < ids.input_ids.size(); ++i)
 		{
-			if (id == input_id)
+			if (ids.input_ids[i] == input_id)
 			{
-				return ids;
+				return { op, i };
 			}
 		}
 	}
-	return {};
+	return { nullptr, -1 };
 }
 
 OperationDatabase::ConnectionIDs OperationDatabase::FindConnectionID(std::uint64_t connection_id) const

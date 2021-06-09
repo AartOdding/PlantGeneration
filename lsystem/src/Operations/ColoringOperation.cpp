@@ -17,7 +17,6 @@ namespace LSystem
 		{
 			i->data->branch_color = color;
 		}
-		ActivateOutput(0, active_input_values, lsystem);
 	}
 
 }
