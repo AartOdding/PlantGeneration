@@ -105,6 +105,10 @@ void DrawCreateOperationWindow(LSystem::Plant* plant)
     {
         plant->AddOperation(std::make_unique<LSystem::RandomColorOperation>(plant));
     }
+    if (ImGui::Button("Loop"))
+    {
+        plant->AddOperation(std::make_unique<LSystem::LoopOperation>(plant));
+    }
 
     ImGui::End();
 }

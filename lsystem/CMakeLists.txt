@@ -16,6 +16,7 @@ set(PUBLIC_FILES
     include/LSystem/Operations/ExtrudeOperation.hpp
     include/LSystem/Operations/FanOperation.hpp
     include/LSystem/Operations/ForkOperation.hpp
+    include/LSystem/Operations/LoopOperation.hpp
     include/LSystem/Operations/PhyllotaxisOperation.hpp
     include/LSystem/Operations/RandomColorOperation.hpp
     include/LSystem/Operations/RandomLengthOperation.hpp
@@ -37,6 +38,7 @@ set(PRIVATE_FILES
     src/Operations/ExtrudeOperation.cpp
     src/Operations/FanOperation.cpp
     src/Operations/ForkOperation.cpp
+    src/Operations/LoopOperation.cpp
     src/Operations/PhyllotaxisOperation.cpp
     src/Operations/RandomColorOperation.cpp
     src/Operations/RandomLengthOperation.cpp

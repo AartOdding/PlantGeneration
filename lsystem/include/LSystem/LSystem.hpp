@@ -17,6 +17,7 @@
 #include <LSystem/Operations/ExtrudeOperation.hpp>
 #include <LSystem/Operations/FanOperation.hpp>
 #include <LSystem/Operations/ForkOperation.hpp>
+#include <LSystem/Operations/LoopOperation.hpp>
 #include <LSystem/Operations/PhyllotaxisOperation.hpp>
 #include <LSystem/Operations/RandomColorOperation.hpp>
 #include <LSystem/Operations/RandomLengthOperation.hpp>

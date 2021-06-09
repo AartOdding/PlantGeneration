@@ -25,6 +25,7 @@ namespace LSystem
 	struct ExtrudeOperation;
 	struct FanOperation;
 	struct ForkOperation;
+	struct LoopOperation;
 	struct PhyllotaxisOperation;
 	struct RandomColorOperation;
 	struct RandomLengthOperation;
