@@ -28,6 +28,7 @@ namespace LSystem
 	struct ForkOperation;
 	struct LoopOperation;
 	struct PhyllotaxisOperation;
+	struct RadiusOperation;
 	struct RandomColorOperation;
 	struct RandomLengthOperation;
 	struct ScaleOperation;

@@ -113,6 +113,10 @@ void DrawCreateOperationWindow(LSystem::Plant* plant)
     {
         plant->AddOperation(std::make_unique<LSystem::ScaleOperation>(plant));
     }
+    if (ImGui::Button("Radius"))
+    {
+        plant->AddOperation(std::make_unique<LSystem::RadiusOperation>(plant));
+    }
 
     ImGui::End();
 }
@@ -408,6 +412,8 @@ int main()
         {
             DrawLine3D(ToVec3(l.point_a.position), ToVec3(l.point_b.position), ToColor(l.point_b.color));
         }
+
+        std::cout << buf.triangles.size() << std::endl;
 
         for (auto& t : buf.triangles)
         {

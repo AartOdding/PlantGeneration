@@ -19,6 +19,7 @@
 #include <LSystem/Operations/ForkOperation.hpp>
 #include <LSystem/Operations/LoopOperation.hpp>
 #include <LSystem/Operations/PhyllotaxisOperation.hpp>
+#include <LSystem/Operations/RadiusOperation.hpp>
 #include <LSystem/Operations/RandomColorOperation.hpp>
 #include <LSystem/Operations/RandomLengthOperation.hpp>
 #include <LSystem/Operations/ScaleOperation.hpp>

@@ -13,11 +13,55 @@ namespace LSystem
     struct CascadingState
     {
         glm::vec3 branch_color = glm::vec3(102.0 / 255, 51.0 / 255, 0);
-        float branch_radius = 0.1;
         int branch_sides = 1;
+        float branch_radius = 0.05;
+        float branch_radius_change = 1;
         float scale = 1;
         float scale_change = 1;
     };
+
+    void UpdateCascadingState(const Instruction* instruction, CascadingState& cascading_state)
+    {
+        // Update color
+        if (instruction->data->branch_color.has_value())
+        {
+            cascading_state.branch_color = instruction->data->branch_color.value();
+        }
+
+        // Update sides
+        if (instruction->data->branch_sides.has_value())
+        {
+            cascading_state.branch_sides = instruction->data->branch_sides.value();
+        }
+
+        // Update Radius
+        if (instruction->data->branch_radius_change.has_value())
+        {
+            cascading_state.branch_radius_change = instruction->data->branch_radius_change.value();
+        }
+        if (instruction->data->branch_radius.has_value())
+        {
+            cascading_state.branch_radius = instruction->data->branch_radius.value();
+        }
+        else
+        {
+            cascading_state.branch_radius *= cascading_state.branch_radius_change;
+        }
+
+        // Update scale
+        if (instruction->data->scale_change.has_value())
+        {
+            cascading_state.scale_change = instruction->data->scale_change.value();
+        }
+        if (instruction->data->scale.has_value())
+        {
+            cascading_state.scale = instruction->data->scale.value();
+        }
+        else
+        {
+            cascading_state.scale *= cascading_state.scale_change;
+        }
+    }
 
     std::vector<glm::vec4> MakeCircle(int sides, float radius)
     {
@@ -71,32 +115,7 @@ namespace LSystem
 			return;
 		}
 
-        // Update cascading state:
-
-        if (instruction->data->branch_color.has_value())
-        {
-            cascading_state.branch_color = instruction->data->branch_color.value();
-        }
-        if (instruction->data->branch_radius.has_value())
-        {
-            cascading_state.branch_radius = instruction->data->branch_radius.value();
-        }
-        if (instruction->data->branch_radius.has_value())
-        {
-            cascading_state.branch_radius = instruction->data->branch_radius.value();
-        }
-        if (instruction->data->scale_change.has_value())
-        {
-            cascading_state.scale_change = instruction->data->scale_change.value();
-        }
-        if (instruction->data->scale.has_value())
-        {
-            cascading_state.scale = instruction->data->scale.value();
-        }
-        else
-        {
-            cascading_state.scale *= cascading_state.scale_change;
-        }
+        UpdateCascadingState(instruction, cascading_state);
 
 		auto local_space = parent_space * instruction->transform;
         auto branch_transform = local_space * instruction->data->transform(cascading_state.scale);

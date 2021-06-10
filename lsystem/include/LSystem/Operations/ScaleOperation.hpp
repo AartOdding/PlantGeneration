@@ -12,9 +12,9 @@ namespace LSystem
 		ScaleOperation(Plant* plant);
 
 		FloatParameter scale{ this, "Scale", 0.1, 10, 1 };
-		BoolParameter enable_scale{ this, "Enable Scale", true };
+		BoolParameter enable_scale{ this, "Override Scale", true };
 		FloatParameter scale_change{ this, "Scale Change", 0.1, 2, 1 };
-		BoolParameter enable_scale_change{ this, "Enable Scale Change", true };
+		BoolParameter enable_scale_change{ this, "Override Scale Change", true };
 
 		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem) override;
 
