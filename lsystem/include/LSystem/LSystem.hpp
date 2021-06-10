@@ -24,6 +24,7 @@
 #include <LSystem/Operations/ScaleOperation.hpp>
 #include <LSystem/Operations/StartOperation.hpp>
 
+#include <LSystem/Parameters/BoolParameter.hpp>
 #include <LSystem/Parameters/ColorParameter.hpp>
 #include <LSystem/Parameters/FloatParameter.hpp>
 #include <LSystem/Parameters/IntParameter.hpp>

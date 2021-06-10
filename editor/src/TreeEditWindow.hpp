@@ -31,6 +31,12 @@ bool DrawParameter(LSystem::Parameter* par, float width)
         changed = ImGui::ColorPicker3(color_par->name.c_str(), &color_par->value.x,
             ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoTooltip);
     }
+    else if (dynamic_cast<LSystem::BoolParameter*>(par) != nullptr)
+    {
+        auto bool_par = static_cast<LSystem::BoolParameter*>(par);
+        ImGui::SetNextItemWidth(width);
+        changed = ImGui::Checkbox(bool_par->name.c_str(), &bool_par->value);
+    }
 
     ImGui::PopID();
     return changed;

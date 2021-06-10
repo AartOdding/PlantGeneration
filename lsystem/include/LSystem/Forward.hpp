@@ -17,6 +17,7 @@ namespace LSystem
 	struct Line;
 	struct Triangle;
 
+	struct BoolParameter;
 	struct ColorParameter;
 	struct FloatParameter;
 	struct IntParameter;

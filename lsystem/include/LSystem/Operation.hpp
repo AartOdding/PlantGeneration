@@ -7,6 +7,7 @@
 #include <LSystem/Forward.hpp>
 #include <LSystem/ParameterOwner.hpp>
 
+#include <LSystem/Parameters/BoolParameter.hpp>
 #include <LSystem/Parameters/ColorParameter.hpp>
 #include <LSystem/Parameters/FloatParameter.hpp>
 #include <LSystem/Parameters/IntParameter.hpp>

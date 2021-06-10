@@ -22,6 +22,7 @@ set(PUBLIC_FILES
     include/LSystem/Operations/RandomLengthOperation.hpp
     include/LSystem/Operations/ScaleOperation.hpp
     include/LSystem/Operations/StartOperation.hpp
+    include/LSystem/Parameters/BoolParameter.hpp
     include/LSystem/Parameters/ColorParameter.hpp
     include/LSystem/Parameters/FloatParameter.hpp
     include/LSystem/Parameters/IntParameter.hpp
@@ -45,6 +46,7 @@ set(PRIVATE_FILES
     src/Operations/RandomLengthOperation.cpp
     src/Operations/ScaleOperation.cpp
     src/Operations/StartOperation.cpp
+    src/Parameters/BoolParameter.cpp
     src/Parameters/ColorParameter.cpp
     src/Parameters/FloatParameter.cpp
     src/Parameters/IntParameter.cpp
