@@ -369,7 +369,6 @@ int main()
     camera.fovy = 45.0f;                       // Camera field-of-view Y
     camera.projection = CAMERA_PERSPECTIVE;    // Camera mode type
 
-
     while (!WindowShouldClose())
     {
         operation_database.Update(&plant);
@@ -413,11 +412,25 @@ int main()
             DrawLine3D(ToVec3(l.point_a.position), ToVec3(l.point_b.position), ToColor(l.point_b.color));
         }
 
-        std::cout << buf.triangles.size() << std::endl;
-
-        for (auto& t : buf.triangles)
+        if (!buf.triangles.empty())
         {
-            DrawTriangle3D(ToVec3(t.point_1.position), ToVec3(t.point_2.position), ToVec3(t.point_3.position), ToColor(t.point_3.color));
+            Mesh mesh{};
+            mesh.vertexCount = buf.triangles.size() * 3;
+
+            auto position_data = new glm::vec3[buf.triangles.size() * 3]; // Cleaned by raylib
+
+            for (int i = 0; i < buf.triangles.size(); ++i)
+            {
+                position_data[3 * i + 0] = buf.triangles[i].point_1.position;
+                position_data[3 * i + 1] = buf.triangles[i].point_2.position;
+                position_data[3 * i + 2] = buf.triangles[i].point_3.position;
+            }
+
+            mesh.vertices = &position_data[0].x;
+
+            UploadMesh(&mesh, false);
+            DrawMesh(mesh, LoadMaterialDefault(), MatrixIdentity());
+            UnloadMesh(mesh);
         }
 
         EndMode3D();
