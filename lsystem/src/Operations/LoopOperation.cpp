@@ -8,7 +8,7 @@ namespace LSystem
     LoopOperation::LoopOperation(Plant* plant)
         : Operation(plant)
     {
-
+        AddParameter(loop_count);
     }
 
     void LoopOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem)

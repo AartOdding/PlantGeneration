@@ -11,7 +11,7 @@ namespace LSystem
 
 	struct ColorParameter : Parameter
 	{
-		ColorParameter(ParameterOwner* owner, std::string_view name, glm::vec3 value);
+		ColorParameter(std::string_view name, glm::vec3 value);
 
 		glm::vec3 value;
 

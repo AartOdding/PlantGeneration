@@ -8,7 +8,10 @@ namespace LSystem
 	ScaleOperation::ScaleOperation(Plant* plant)
 		: Operation(plant)
 	{
-
+		AddParameter(scale);
+		AddParameter(enable_scale);
+		AddParameter(scale_change);
+		AddParameter(enable_scale_change);
 	}
 
 	void ScaleOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem)

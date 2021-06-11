@@ -15,7 +15,11 @@ namespace LSystem
 	RandomColorOperation::RandomColorOperation(Plant* plant)
 		: Operation(plant)
 	{
-
+		AddParameter(color);
+		AddParameter(hue_deviation);
+		AddParameter(sat_deviation);
+		AddParameter(val_deviation);
+		AddParameter(random_seed);
 	}
 
 	void RandomColorOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem)

@@ -8,7 +8,9 @@ namespace LSystem
     ExtrudeOperation::ExtrudeOperation(Plant* plant)
         : Operation(plant)
     {
-
+        AddParameter(branch_length);
+        AddParameter(roll);
+        AddParameter(pitch);
     }
 
     void ExtrudeOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem)

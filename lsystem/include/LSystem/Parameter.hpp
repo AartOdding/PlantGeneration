@@ -3,30 +3,29 @@
 #include <string>
 #include <string_view>
 
-#include <LSystem/Forward.hpp>
+#include <LSystem/Utils/NoCopy.hpp>
+#include <LSystem/Utils/NoMove.hpp>
 
 
 
 namespace LSystem
 {
 
-	struct Parameter
+	struct Parameter : NoCopy,
+		               NoMove
 	{
-		Parameter(ParameterOwner* owner, std::string_view name);
+		Parameter(std::string_view name);
 
-		virtual ~Parameter();
-
-		Parameter() = delete;
-		Parameter(const Parameter&) = delete;
-		Parameter(Parameter&) = delete;
-		Parameter& operator=(const Parameter&) = delete;
-		Parameter& operator=(Parameter&&) = delete;
-
-		const std::string name;
+		virtual ~Parameter() = default;
+		
+		const std::string& name() const;
 
 	private:
 
-		ParameterOwner* owner;
+		Parameter() = default;
+		
+		std::string m_name;
+
     };
 
 }

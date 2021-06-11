@@ -20,6 +20,7 @@ set(PUBLIC_FILES
     include/LSystem/Operations/ForkOperation.hpp
     include/LSystem/Operations/LoopOperation.hpp
     include/LSystem/Operations/PhyllotaxisOperation.hpp
+    include/LSystem/Operations/RadiusOperation.hpp
     include/LSystem/Operations/RandomColorOperation.hpp
     include/LSystem/Operations/RandomLengthOperation.hpp
     include/LSystem/Operations/ScaleOperation.hpp
@@ -28,6 +29,8 @@ set(PUBLIC_FILES
     include/LSystem/Parameters/ColorParameter.hpp
     include/LSystem/Parameters/FloatParameter.hpp
     include/LSystem/Parameters/IntParameter.hpp
+    include/LSystem/Utils/NoCopy.hpp
+    include/LSystem/Utils/NoMove.hpp
 )
 
 # Private files, can be cpp or hpp, should be in src folder
@@ -44,6 +47,7 @@ set(PRIVATE_FILES
     src/Operations/ForkOperation.cpp
     src/Operations/LoopOperation.cpp
     src/Operations/PhyllotaxisOperation.cpp
+    src/Operations/RadiusOperation.cpp
     src/Operations/RandomColorOperation.cpp
     src/Operations/RandomLengthOperation.cpp
     src/Operations/ScaleOperation.cpp

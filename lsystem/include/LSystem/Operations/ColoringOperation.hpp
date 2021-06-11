@@ -11,7 +11,7 @@ namespace LSystem
 	{
 		ColoringOperation(Plant* plant);
 
-		ColorParameter color{ this, "Color", glm::vec3(1, 1, 1) };
+		ColorParameter color{ "Color", glm::vec3(1, 1, 1) };
 
 		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem) override;
 

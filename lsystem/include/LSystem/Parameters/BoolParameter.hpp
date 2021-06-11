@@ -11,7 +11,7 @@ namespace LSystem
 
 	struct BoolParameter : Parameter
 	{
-		BoolParameter(ParameterOwner* owner, std::string_view name, bool value);
+		BoolParameter(std::string_view name, bool value);
 
 		bool value;
 

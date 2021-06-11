@@ -8,7 +8,12 @@ namespace LSystem
 	RadiusOperation::RadiusOperation(Plant* plant)
 		: Operation(plant)
 	{
-
+		AddParameter(sides);
+		AddParameter(enable_sides);
+		AddParameter(radius);
+		AddParameter(enable_radius);
+		AddParameter(radius_change);
+		AddParameter(enable_radius_change);
 	}
 
 	void RadiusOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem)

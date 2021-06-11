@@ -9,7 +9,7 @@ namespace LSystem
 
 	struct IntParameter : Parameter
 	{
-		IntParameter(ParameterOwner* owner, std::string_view name, int min, int max, int value);
+		IntParameter(std::string_view name, int min, int max, int value);
 
 		int min;
 		int max;

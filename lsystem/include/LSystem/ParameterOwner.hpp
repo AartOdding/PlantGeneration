@@ -13,13 +13,16 @@ namespace LSystem
     {
         virtual ~ParameterOwner() = default;
 
+        bool AddParameter(Parameter& parameter);
+        bool RemoveParameter(Parameter& parameter);
+
         const std::vector<Parameter*>& Parameters();
+        const std::vector<const Parameter*>& Parameters() const;
 
     private:
 
-        friend class Parameter;
-
         std::vector<Parameter*> m_parameters;
+        std::vector<const Parameter*> m_const_parameters;
 
     };
 

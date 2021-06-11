@@ -11,9 +11,9 @@ namespace LSystem
 	{
 		RandomLengthOperation(Plant* plant);
 
-		FloatParameter min{ this, "Min", -10, 10, 0.5 };
-		FloatParameter max{ this, "Max", -10, 10, 1 };
-		IntParameter random_seed{ this, "Random Seed", 0, 10000, 0 };
+		FloatParameter min{ "Min", -10, 10, 0.5 };
+		FloatParameter max{ "Max", -10, 10, 1 };
+		IntParameter random_seed{ "Random Seed", 0, 10000, 0 };
 
 		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem) override;
 

@@ -5,8 +5,8 @@
 namespace LSystem
 {
 
-	BoolParameter::BoolParameter(ParameterOwner* owner, std::string_view name, bool val)
-		: Parameter(owner, name)
+	BoolParameter::BoolParameter(std::string_view name, bool val)
+		: Parameter(name)
 		, value(val)
 	{
 

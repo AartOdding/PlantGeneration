@@ -5,11 +5,11 @@
 namespace LSystem
 {
 
-	IntParameter::IntParameter(ParameterOwner* owner, std::string_view name, int _min, int _max, int _value)
-		: Parameter(owner, name)
-		, min(_min)
-		, max(_max)
-		, value(_value)
+	IntParameter::IntParameter(std::string_view name, int minimum, int maximum, int val)
+		: Parameter(name)
+		, min(minimum)
+		, max(maximum)
+		, value(val)
 	{
 
 	}

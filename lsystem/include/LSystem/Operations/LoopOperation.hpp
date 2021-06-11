@@ -11,7 +11,7 @@ namespace LSystem
 	{
 		LoopOperation(Plant* plant);
 
-		IntParameter loop_count{ this, "Loop Count", 0, 20, 5 };
+		IntParameter loop_count{ "Loop Count", 0, 20, 5 };
 
 		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem) override;
 

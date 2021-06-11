@@ -135,7 +135,7 @@ void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
 
         for (auto par : op->Parameters())
         {
-            max_text_width = std::max(max_text_width, ImGui::CalcTextSize(par->name.c_str()).x);
+            max_text_width = std::max(max_text_width, ImGui::CalcTextSize(par->name().c_str()).x);
         }
 
         float total_width = max_text_width + parameter_width;

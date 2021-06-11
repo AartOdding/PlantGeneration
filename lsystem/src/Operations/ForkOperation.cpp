@@ -28,7 +28,10 @@ namespace LSystem
     ForkOperation::ForkOperation(Plant* plant)
         : Operation(plant)
     {
-
+        AddParameter(branch_count);
+        AddParameter(branch_length);
+        AddParameter(spread);
+        AddParameter(roll);
     }
 
     void ForkOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem)
