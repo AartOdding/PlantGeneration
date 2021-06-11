@@ -3,6 +3,7 @@ project(4mbjam LANGUAGES CXX)
 
 # set location of module finding scrips
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+set(CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_PREFIX_PATH})
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 include(FetchContent)

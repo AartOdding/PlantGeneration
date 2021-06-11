@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(lsystem LANGUAGES CXX VERSION 0.1)
 
+find_package(cereal)
+
 # Public interface of the library, should only be hpp files in include folder.
 set(PUBLIC_FILES
     include/LSystem/Forward.hpp
@@ -60,6 +62,8 @@ add_library(${PROJECT_NAME} STATIC ${PUBLIC_FILES} ${PRIVATE_FILES})
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 target_include_directories(${PROJECT_NAME} PUBLIC ${GLM_INCLUDE_DIR})
+
+target_link_libraries(${PROJECT_NAME} PUBLIC cereal)
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC GLM_ENABLE_EXPERIMENTAL)
 
