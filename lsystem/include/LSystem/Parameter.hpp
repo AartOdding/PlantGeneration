@@ -3,27 +3,25 @@
 #include <string>
 #include <string_view>
 
-#include <LSystem/Utils/NoCopy.hpp>
-#include <LSystem/Utils/NoMove.hpp>
+#include <LSystem/Utils/Serialization.hpp>
 
 
 
 namespace LSystem
 {
 
-	struct Parameter : NoCopy,
-		               NoMove
+	struct Parameter
 	{
 		Parameter(std::string_view name);
 
-		virtual ~Parameter() = default;
+		virtual ~Parameter() = 0 { }
 		
 		const std::string& Name() const;
 
-	private:
+	protected:
 
 		Parameter() = default;
-		
+
 		std::string m_name;
 
     };

@@ -18,6 +18,22 @@ namespace LSystem
 		operator int() const;
 
 		IntParameter& operator=(int value);
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(min, max, value, m_name);
+		}
+
+	private:
+
+		friend cereal::access;
+
+		IntParameter() = default;
+
 	};
 
 }
+
+CEREAL_REGISTER_TYPE(LSystem::IntParameter);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(LSystem::Parameter, LSystem::IntParameter)

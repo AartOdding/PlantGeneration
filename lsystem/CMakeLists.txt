@@ -31,6 +31,7 @@ set(PUBLIC_FILES
     include/LSystem/Parameters/IntParameter.hpp
     include/LSystem/Utils/NoCopy.hpp
     include/LSystem/Utils/NoMove.hpp
+    include/LSystem/Utils/Serialization.hpp
 )
 
 # Private files, can be cpp or hpp, should be in src folder

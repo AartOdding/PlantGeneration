@@ -18,6 +18,22 @@ namespace LSystem
 		operator float() const;
 
 		FloatParameter& operator=(float value);
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(min, max, value, m_name);
+		}
+
+	private:
+
+		friend cereal::access;
+
+		FloatParameter() = default;
+
 	};
 
 }
+
+CEREAL_REGISTER_TYPE(LSystem::FloatParameter);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(LSystem::Parameter, LSystem::FloatParameter)

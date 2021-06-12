@@ -18,6 +18,22 @@ namespace LSystem
 		operator bool() const;
 
 		BoolParameter& operator=(bool value);
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(value, m_name);
+		}
+
+	private:
+
+		friend cereal::access;
+
+		BoolParameter() = default;
+
 	};
 
 }
+
+CEREAL_REGISTER_TYPE(LSystem::BoolParameter);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(LSystem::Parameter, LSystem::BoolParameter)

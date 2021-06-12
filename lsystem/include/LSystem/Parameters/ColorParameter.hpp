@@ -18,6 +18,22 @@ namespace LSystem
 		operator glm::vec3() const;
 		
 		ColorParameter& operator=(const glm::vec3& value);
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(value, m_name);
+		}
+
+	private:
+
+		friend cereal::access;
+
+		ColorParameter() = default;
+
 	};
 
 }
+
+CEREAL_REGISTER_TYPE(LSystem::ColorParameter);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(LSystem::Parameter, LSystem::ColorParameter)
