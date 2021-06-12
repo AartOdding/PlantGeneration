@@ -28,6 +28,7 @@ set(PUBLIC_FILES
     include/LSystem/Parameters/ColorParameter.hpp
     include/LSystem/Parameters/FloatParameter.hpp
     include/LSystem/Parameters/IntParameter.hpp
+    include/LSystem/Utils/Identifier.hpp
     include/LSystem/Utils/NoCopy.hpp
     include/LSystem/Utils/NoMove.hpp
     include/LSystem/Utils/Serialization.hpp
@@ -55,6 +56,7 @@ set(PRIVATE_FILES
     src/Parameters/ColorParameter.cpp
     src/Parameters/FloatParameter.cpp
     src/Parameters/IntParameter.cpp
+    src/Utils/Identifier.cpp
 )
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/include PREFIX Interface FILES ${PUBLIC_FILES})
