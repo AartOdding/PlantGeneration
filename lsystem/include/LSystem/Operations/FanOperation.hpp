@@ -17,6 +17,14 @@ namespace LSystem
 		FloatParameter roll{ "Roll", 0, 360, 0 };
 
 		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant) override;
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(cereal::base_class<Operation>(this), branch_count, branch_length, spread, roll);
+		}
 	};
 
 }
+
+CEREAL_REGISTER_TYPE(LSystem::FanOperation)

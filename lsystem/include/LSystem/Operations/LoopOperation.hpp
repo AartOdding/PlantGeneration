@@ -17,6 +17,12 @@ namespace LSystem
 
 		void ResetState() override;
 
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(cereal::base_class<Operation>(this), loop_count);
+		}
+
 	private:
 
 		int m_loop_count = 0;
@@ -24,3 +30,5 @@ namespace LSystem
 	};
 
 }
+
+CEREAL_REGISTER_TYPE(LSystem::LoopOperation)

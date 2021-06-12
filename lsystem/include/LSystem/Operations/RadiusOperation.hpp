@@ -19,6 +19,14 @@ namespace LSystem
 		BoolParameter enable_radius_change{ "Override Radius Change", true };
 
 		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant) override;
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(cereal::base_class<Operation>(this), sides, enable_sides, radius, enable_radius, radius_change, enable_radius_change);
+		}
 	};
 
 }
+
+CEREAL_REGISTER_TYPE(LSystem::RadiusOperation)

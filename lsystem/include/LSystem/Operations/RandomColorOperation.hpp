@@ -20,6 +20,14 @@ namespace LSystem
 		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant) override;
 
 		void ResetState() override;
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(cereal::base_class<Operation>(this), color, hue_deviation, sat_deviation, val_deviation, random_seed);
+		}
 	};
 
 }
+
+CEREAL_REGISTER_TYPE(LSystem::RandomColorOperation)

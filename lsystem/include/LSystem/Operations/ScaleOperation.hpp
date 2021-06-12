@@ -17,6 +17,14 @@ namespace LSystem
 		BoolParameter enable_scale_change{ "Override Scale Change", true };
 
 		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant) override;
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(cereal::base_class<Operation>(this), scale, enable_scale, scale_change, enable_scale_change);
+		}
 	};
 
 }
+
+CEREAL_REGISTER_TYPE(LSystem::ScaleOperation)

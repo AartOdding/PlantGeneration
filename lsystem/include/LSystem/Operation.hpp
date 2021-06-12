@@ -25,6 +25,12 @@ namespace LSystem
 		int input_count;
 		int output_count;
 		std::string description;
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(input_count, output_count, description);
+		}
 	};
 
 	struct Operation : ParameterOwner
@@ -40,12 +46,22 @@ namespace LSystem
 
 		virtual void ResetState() { }
 
-	protected:
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(m_info);
+		}
 
-		Operation() = default;
+	protected:
 
 		// Can call back into plant
 		void ActivateOutput(int output_index, const std::vector<Instruction*>& output_values, LSystem& lsystem, Plant* plant);
+
+	private:
+		
+		friend class cereal::access;
+
+		Operation() = default;
 
 		OperationInfo m_info;
 
