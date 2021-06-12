@@ -7,7 +7,6 @@
 
 #include <LSystem/Instruction.hpp>
 #include <LSystem/Operation.hpp>
-#include <LSystem/OperationOwner.hpp>
 #include <LSystem/Parameter.hpp>
 #include <LSystem/ParameterOwner.hpp>
 #include <LSystem/Plant.hpp>

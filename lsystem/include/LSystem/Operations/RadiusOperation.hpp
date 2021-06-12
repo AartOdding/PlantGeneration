@@ -7,9 +7,9 @@
 namespace LSystem
 {
 
-	struct RadiusOperation : Operation
+	struct RadiusOperation : Operation, NoCopy, NoMove
 	{
-		RadiusOperation(Plant* plant);
+		RadiusOperation();
 
 		IntParameter sides{ "Sides", 0, 21, 1 };
 		BoolParameter enable_sides{ "Sides", true };
@@ -18,12 +18,7 @@ namespace LSystem
 		FloatParameter radius_change{ "Radius Change", 0.1, 2, 1 };
 		BoolParameter enable_radius_change{ "Override Radius Change", true };
 
-		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem) override;
-
-		OperationInfo GetInfo() const override
-		{
-			return { 1, 0, "Radius" };
-		}
+		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant) override;
 	};
 
 }

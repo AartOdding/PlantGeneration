@@ -12,8 +12,8 @@
 namespace LSystem
 {
 
-	RandomColorOperation::RandomColorOperation(Plant* plant)
-		: Operation(plant)
+	RandomColorOperation::RandomColorOperation()
+		: Operation({ 1, 0, "Apply Random Color" })
 	{
 		AddParameter(color);
 		AddParameter(hue_deviation);
@@ -22,7 +22,7 @@ namespace LSystem
 		AddParameter(random_seed);
 	}
 
-	void RandomColorOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem)
+	void RandomColorOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant)
 	{
 		auto hsv = glm::hsvColor(color.value);
 		auto deviation = glm::vec3(hue_deviation.value * 360, sat_deviation.value, val_deviation.value);

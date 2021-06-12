@@ -8,32 +8,25 @@
 namespace LSystem
 {
 
-	Operation::Operation(Plant* plant)
-		: m_plant(plant)
+	struct ExecutionContext
 	{
-		assert(m_plant);
+		Plant* plant;
+	};
 
-		if (m_plant)
-		{
-			m_plant->m_operations.push_back(this);
-		}
+	Operation::Operation(const OperationInfo& info)
+		: m_info(info)
+	{
+
 	}
 
-	Operation::~Operation()
+	const OperationInfo& Operation::GetInfo() const
 	{
-		if (m_plant)
-		{
-			m_plant->m_operations.erase(
-				std::remove(
-					m_plant->m_operations.begin(),
-					m_plant->m_operations.end(), this),
-				m_plant->m_operations.end());
-		}
+		return m_info;
 	}
 
-	void Operation::ActivateOutput(int output_index, const std::vector<Instruction*>& output_values, LSystem& lsystem)
+	void Operation::ActivateOutput(int output_index, const std::vector<Instruction*>& output_values, LSystem& lsystem, Plant* plant)
 	{
-		m_plant->ActivateOutput(this, output_index, output_values, lsystem);
+		plant->ActivateOutput(this, output_index, output_values, lsystem);
 	}
 
 }

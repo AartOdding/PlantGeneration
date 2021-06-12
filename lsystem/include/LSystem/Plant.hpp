@@ -7,7 +7,6 @@
 #include <vector>
 
 #include <LSystem/Forward.hpp>
-#include <LSystem/OperationOwner.hpp>
 #include <LSystem/VertexBuffer.hpp>
 
 
@@ -62,16 +61,20 @@ namespace std
 namespace LSystem
 {
 
-	struct Plant : OperationOwner
+	struct Plant
 	{
 		Plant();
 
 		Operation* AddOperation(std::unique_ptr<Operation>&& operation);
 		bool DeleteOperation(Operation* operation);
 
+		const std::vector<Operation*>& Operations();
+		const std::vector<const Operation*>& Operations() const;
+
 		bool CreateConnection(Operation* output, int output_index, Operation* input, int input_index);
 		bool DeleteConnection(Operation* output, int output_index, Operation* input, int input_index);
 		bool AreConnected(Operation* output, int output_index, Operation* input, int input_index) const;
+
 		const std::unordered_set<Connection>& Connections() const;
 
 		VertexBuffer Generate();
@@ -84,6 +87,9 @@ namespace LSystem
 
 		std::unordered_set<Connection> m_connections;
 		std::vector<std::unique_ptr<Operation>> m_operations_owned;
+		std::vector<Operation*> m_operation_pointers;
+		std::vector<const Operation*> m_operation_pointers_const;
+
 		Operation* m_start_operation;
 
 	};

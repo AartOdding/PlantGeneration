@@ -5,8 +5,8 @@
 namespace LSystem
 {
 
-	RadiusOperation::RadiusOperation(Plant* plant)
-		: Operation(plant)
+	RadiusOperation::RadiusOperation()
+		: Operation({ 1, 0, "Set Radius" })
 	{
 		AddParameter(sides);
 		AddParameter(enable_sides);
@@ -16,7 +16,7 @@ namespace LSystem
 		AddParameter(enable_radius_change);
 	}
 
-	void RadiusOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem)
+	void RadiusOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant)
 	{
 		if (enable_sides)
 		{

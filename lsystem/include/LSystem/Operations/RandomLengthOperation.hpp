@@ -7,22 +7,17 @@
 namespace LSystem
 {
 
-	struct RandomLengthOperation : Operation
+	struct RandomLengthOperation : Operation, NoCopy, NoMove
 	{
-		RandomLengthOperation(Plant* plant);
+		RandomLengthOperation();
 
 		FloatParameter min{ "Min", -10, 10, 0.5 };
 		FloatParameter max{ "Max", -10, 10, 1 };
 		IntParameter random_seed{ "Random Seed", 0, 10000, 0 };
 
-		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem) override;
+		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant) override;
 
 		void ResetState() override;
-
-		OperationInfo GetInfo() const override
-		{
-			return { 1, 0, "Random Length" };
-		}
 	};
 
 }

@@ -11,15 +11,15 @@
 namespace LSystem
 {
 
-	RandomLengthOperation::RandomLengthOperation(Plant* plant)
-		: Operation(plant)
+	RandomLengthOperation::RandomLengthOperation()
+		: Operation({ 1, 0, "Set Random Length" })
 	{
 		AddParameter(min);
 		AddParameter(max);
 		AddParameter(random_seed);
 	}
 
-	void RandomLengthOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem)
+	void RandomLengthOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant)
 	{
 		for (auto& i : active_input_values)
 		{

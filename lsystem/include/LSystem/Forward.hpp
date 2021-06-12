@@ -8,7 +8,7 @@ namespace LSystem
 	struct InstructionData;
 	struct LSystem;
 	struct Operation;
-	struct OperationOwner;
+	struct OperationInfo;
 	struct Parameter;
 	struct ParameterOwner;
 	struct Plant;

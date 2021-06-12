@@ -12,6 +12,9 @@
 #include <LSystem/Parameters/FloatParameter.hpp>
 #include <LSystem/Parameters/IntParameter.hpp>
 
+#include <LSystem/Utils/NoCopy.hpp>
+#include <LSystem/Utils/NoMove.hpp>
+
 
 
 namespace LSystem
@@ -26,32 +29,25 @@ namespace LSystem
 
 	struct Operation : ParameterOwner
 	{
-		Operation(Plant* plant);
+		Operation(const OperationInfo& info);
 
-		virtual ~Operation();
+		virtual ~Operation() = default;
 
-		Operation() = delete;
-		Operation(const Operation&) = delete;
-		Operation(Operation&) = delete;
-		Operation& operator=(const Operation&) = delete;
-		Operation& operator=(Operation&&) = delete;
-
-		// OperationInfo is not allowed to change between calls.
-		virtual OperationInfo GetInfo() const = 0;
+		const OperationInfo& GetInfo() const;
 
 		// Called by plant, when executing "Return" output using ActivateOutput function.
-		virtual void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem) = 0;
+		virtual void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant) = 0;
 
 		virtual void ResetState() { }
 
 	protected:
 
+		Operation() = default;
+
 		// Can call back into plant
-		void ActivateOutput(int output_index, const std::vector<Instruction*>& output_values, LSystem& lsystem);
+		void ActivateOutput(int output_index, const std::vector<Instruction*>& output_values, LSystem& lsystem, Plant* plant);
 
-	private:
-
-		Plant* m_plant;
+		OperationInfo m_info;
 
 	};
 

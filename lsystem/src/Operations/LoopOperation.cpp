@@ -5,21 +5,21 @@
 namespace LSystem
 {
 
-    LoopOperation::LoopOperation(Plant* plant)
-        : Operation(plant)
+    LoopOperation::LoopOperation()
+        : Operation({ 1, 2, "Loop" })
     {
         AddParameter(loop_count);
     }
 
-    void LoopOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem)
+    void LoopOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant)
     {
         if (++m_loop_count > loop_count)
         {
-            ActivateOutput(0, active_input_values, lsystem);
+            ActivateOutput(0, active_input_values, lsystem, plant);
         }
         else
         {
-            ActivateOutput(1, active_input_values, lsystem);
+            ActivateOutput(1, active_input_values, lsystem, plant);
         }
     }
 

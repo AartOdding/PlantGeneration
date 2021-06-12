@@ -10,6 +10,7 @@
 #include <cmrc/cmrc.hpp>
 #include <algorithm>
 #include <iostream>
+#include <fstream>
 
 #include <LSystem/LSystem.hpp>
 
@@ -77,43 +78,43 @@ void DrawCreateOperationWindow(LSystem::Plant* plant)
 
     if (ImGui::Button("Extrude"))
     {
-        plant->AddOperation(std::make_unique<LSystem::ExtrudeOperation>(plant));
+        plant->AddOperation(std::make_unique<LSystem::ExtrudeOperation>());
     }
     if (ImGui::Button("Fork"))
     {
-        plant->AddOperation(std::make_unique<LSystem::ForkOperation>(plant));
+        plant->AddOperation(std::make_unique<LSystem::ForkOperation>());
     }
     if (ImGui::Button("Fan"))
     {
-        plant->AddOperation(std::make_unique<LSystem::FanOperation>(plant));
+        plant->AddOperation(std::make_unique<LSystem::FanOperation>());
     }
     if (ImGui::Button("Phyllotaxis"))
     {
-        plant->AddOperation(std::make_unique<LSystem::PhyllotaxisOperation>(plant));
+        plant->AddOperation(std::make_unique<LSystem::PhyllotaxisOperation>());
     }
     if (ImGui::Button("Color"))
     {
-        plant->AddOperation(std::make_unique<LSystem::ColoringOperation>(plant));
+        plant->AddOperation(std::make_unique<LSystem::ColoringOperation>());
     }
     if (ImGui::Button("Random Length"))
     {
-        plant->AddOperation(std::make_unique<LSystem::RandomLengthOperation>(plant));
+        plant->AddOperation(std::make_unique<LSystem::RandomLengthOperation>());
     }
     if (ImGui::Button("Random Color"))
     {
-        plant->AddOperation(std::make_unique<LSystem::RandomColorOperation>(plant));
+        plant->AddOperation(std::make_unique<LSystem::RandomColorOperation>());
     }
     if (ImGui::Button("Loop"))
     {
-        plant->AddOperation(std::make_unique<LSystem::LoopOperation>(plant));
+        plant->AddOperation(std::make_unique<LSystem::LoopOperation>());
     }
     if (ImGui::Button("Scale"))
     {
-        plant->AddOperation(std::make_unique<LSystem::ScaleOperation>(plant));
+        plant->AddOperation(std::make_unique<LSystem::ScaleOperation>());
     }
     if (ImGui::Button("Radius"))
     {
-        plant->AddOperation(std::make_unique<LSystem::RadiusOperation>(plant));
+        plant->AddOperation(std::make_unique<LSystem::RadiusOperation>());
     }
 
     ImGui::End();
@@ -352,6 +353,25 @@ std::array<uint8_t, 4> ToByteColor(const glm::vec4& rgba)
 
 int main()
 {
+    {
+        std::vector<std::shared_ptr<LSystem::Parameter>> pars;
+        pars.push_back(std::make_shared<LSystem::FloatParameter>("test_0_10_3", 0.0f, 10.0f, 3.0f));
+        pars.push_back(std::make_shared<LSystem::ColorParameter>("red", glm::vec3(1.0f, 0.0f, 0.0f)));
+        pars.push_back(std::make_shared<LSystem::FloatParameter>("test_0_11_5", 0.0f, 11.0f, 5.0f));
+        pars.push_back(std::make_shared<LSystem::ColorParameter>("green", glm::vec3(0.0f, 1.0f, 0.0f)));
+        pars.push_back(std::make_shared<LSystem::IntParameter>("test_0_10_3_int", 0, 10, 3));
+
+        std::ofstream os("polymorphism_test.xml");
+        cereal::JSONOutputArchive archive(os);
+        archive(pars);
+    }
+
+    std::ifstream is("polymorphism_test.xml");
+    cereal::JSONInputArchive archive(is);
+    std::vector<std::shared_ptr<LSystem::Parameter>> pars;
+    archive(pars);
+
+
     EditorConfig editor_config;
     CameraState camera_state;
 

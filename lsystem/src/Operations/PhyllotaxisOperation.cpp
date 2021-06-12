@@ -25,8 +25,8 @@ namespace LSystem
         return instructions;
     }
 
-    PhyllotaxisOperation::PhyllotaxisOperation(Plant* plant)
-        : Operation(plant)
+    PhyllotaxisOperation::PhyllotaxisOperation()
+        : Operation({ 1, 1, "Create Phyllotaxis" })
     {
         AddParameter(branch_count);
         AddParameter(branch_length);
@@ -34,7 +34,7 @@ namespace LSystem
         AddParameter(roll);
     }
 
-    void PhyllotaxisOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem)
+    void PhyllotaxisOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant)
     {
         std::vector<Instruction*> instructions;
 
@@ -50,7 +50,7 @@ namespace LSystem
             }
         }
 
-        ActivateOutput(0, instructions, lsystem);
+        ActivateOutput(0, instructions, lsystem, plant);
     }
 
 }

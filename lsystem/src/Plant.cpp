@@ -9,14 +9,17 @@ namespace LSystem
 
 	Plant::Plant()
 	{
-		m_operations_owned.push_back(std::make_unique<StartOperation>(this));
-		m_start_operation = m_operations_owned.back().get();
+		auto start = std::make_unique<StartOperation>();
+		m_start_operation = start.get();
+		AddOperation(std::move(start));
 	}
 
 	Operation* Plant::AddOperation(std::unique_ptr<Operation>&& operation)
 	{
+		m_operation_pointers.push_back(operation.get());
+		m_operation_pointers_const.push_back(operation.get());
 		m_operations_owned.push_back(std::move(operation));
-		return m_operations_owned.back().get();
+		return m_operation_pointers.back();
 	}
 
 	bool Plant::DeleteOperation(Operation* operation)
@@ -30,7 +33,31 @@ namespace LSystem
 				[operation](const auto& op) { return op.get() == operation; }), 
 			m_operations_owned.end());
 
+		m_operation_pointers.erase(
+			std::remove_if(
+				m_operation_pointers.begin(),
+				m_operation_pointers.end(),
+				[operation](auto op) { return op == operation; }),
+			m_operation_pointers.end());
+
+		m_operation_pointers_const.erase(
+			std::remove_if(
+				m_operation_pointers_const.begin(),
+				m_operation_pointers_const.end(),
+				[operation](auto op) { return op == operation; }),
+			m_operation_pointers_const.end());
+
 		return m_operations_owned.size() < size_begin;
+	}
+
+	const std::vector<Operation*>& Plant::Operations()
+	{
+		return m_operation_pointers;
+	}
+
+	const std::vector<const Operation*>& Plant::Operations() const
+	{
+		return m_operation_pointers_const;
 	}
 
 	bool Plant::CreateConnection(Operation* output, int output_index, Operation* input, int input_index)
@@ -72,9 +99,7 @@ namespace LSystem
 			op->ResetState();
 		}
 
-		m_start_operation->Execute(0, {}, lsystem);
-
-		//auto start = ExecuteOperation(m_start_operation, {}, lsystem);
+		m_start_operation->Execute(0, {}, lsystem, this);
 
 		return lsystem.Generate(1);
 	}
@@ -85,7 +110,7 @@ namespace LSystem
 
 		for (auto& n : next)
 		{
-			n.input->Execute(n.input_index, output_values, lsystem);
+			n.input->Execute(n.input_index, output_values, lsystem, this);
 		}
 	}
 

@@ -5,13 +5,13 @@
 namespace LSystem
 {
 
-	ColoringOperation::ColoringOperation(Plant* plant)
-		: Operation(plant)
+	ColoringOperation::ColoringOperation()
+		: Operation({ 1, 0, "Apply Color" })
 	{
 		AddParameter(color);
 	}
 
-	void ColoringOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem)
+	void ColoringOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant)
 	{
 		for (auto& i : active_input_values)
 		{

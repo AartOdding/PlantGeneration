@@ -7,16 +7,11 @@
 namespace LSystem
 {
 
-	struct StartOperation : Operation
+	struct StartOperation : Operation, NoCopy, NoMove
 	{
-		StartOperation(Plant* plant);
+		StartOperation();
 
-		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem) override;
-
-		OperationInfo GetInfo() const override
-		{
-			return { 0, 1, "Start" };
-		}
+		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant) override;
 	};
 
 }

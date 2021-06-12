@@ -9,7 +9,6 @@ set(PUBLIC_FILES
     include/LSystem/Instruction.hpp
     include/LSystem/LSystem.hpp
     include/LSystem/Operation.hpp
-    include/LSystem/OperationOwner.hpp
     include/LSystem/Parameter.hpp
     include/LSystem/ParameterOwner.hpp
     include/LSystem/Plant.hpp
@@ -38,7 +37,6 @@ set(PUBLIC_FILES
 set(PRIVATE_FILES
     src/LSystem.cpp
     src/Operation.cpp
-    src/OperationOwner.cpp
     src/Parameter.cpp
     src/ParameterOwner.cpp
     src/Plant.cpp

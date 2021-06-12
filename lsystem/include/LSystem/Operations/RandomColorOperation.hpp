@@ -7,9 +7,9 @@
 namespace LSystem
 {
 
-	struct RandomColorOperation : Operation
+	struct RandomColorOperation : Operation, NoCopy, NoMove
 	{
-		RandomColorOperation(Plant* plant);
+		RandomColorOperation();
 
 		ColorParameter color{ "Color", glm::vec3(1, 1, 1)};
 		FloatParameter hue_deviation{ "Hue Deviation", 0, 0.2, 0.02 };
@@ -17,14 +17,9 @@ namespace LSystem
 		FloatParameter val_deviation{ "Val Deviation", 0, 0.5, 0.1 };
 		IntParameter random_seed{ "Random Seed", 0, 10000, 0 };
 
-		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem) override;
+		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant) override;
 
 		void ResetState() override;
-
-		OperationInfo GetInfo() const override
-		{
-			return { 1, 0, "Random Color" };
-		}
 	};
 
 }

@@ -5,8 +5,8 @@
 namespace LSystem
 {
 
-	ScaleOperation::ScaleOperation(Plant* plant)
-		: Operation(plant)
+	ScaleOperation::ScaleOperation()
+		: Operation({ 1, 0, "Set Scale" })
 	{
 		AddParameter(scale);
 		AddParameter(enable_scale);
@@ -14,7 +14,7 @@ namespace LSystem
 		AddParameter(enable_scale_change);
 	}
 
-	void ScaleOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem)
+	void ScaleOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant)
 	{
 		if (enable_scale)
 		{

@@ -7,20 +7,15 @@
 namespace LSystem
 {
 
-	struct LoopOperation : Operation
+	struct LoopOperation : Operation, NoCopy, NoMove
 	{
-		LoopOperation(Plant* plant);
+		LoopOperation();
 
 		IntParameter loop_count{ "Loop Count", 0, 20, 5 };
 
-		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem) override;
+		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant) override;
 
 		void ResetState() override;
-
-		OperationInfo GetInfo() const override
-		{
-			return { 1, 2, "Loop" };
-		}
 
 	private:
 

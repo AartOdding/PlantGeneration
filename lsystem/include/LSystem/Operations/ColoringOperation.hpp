@@ -7,18 +7,13 @@
 namespace LSystem
 {
 
-	struct ColoringOperation : Operation
+	struct ColoringOperation : Operation, NoCopy, NoMove
 	{
-		ColoringOperation(Plant* plant);
+		ColoringOperation();
 
 		ColorParameter color{ "Color", glm::vec3(1, 1, 1) };
 
-		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem) override;
-
-		OperationInfo GetInfo() const override
-		{
-			return { 1, 0, "Apply Color" };
-		}
+		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant) override;
 	};
 
 }

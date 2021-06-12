@@ -5,15 +5,15 @@
 namespace LSystem
 {
 
-    ExtrudeOperation::ExtrudeOperation(Plant* plant)
-        : Operation(plant)
+    ExtrudeOperation::ExtrudeOperation()
+        : Operation({ 1, 1, "Create Extrusion" })
     {
         AddParameter(branch_length);
         AddParameter(roll);
         AddParameter(pitch);
     }
 
-    void ExtrudeOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem)
+    void ExtrudeOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant)
     {
         std::vector<Instruction*> instructions;
 
@@ -29,7 +29,7 @@ namespace LSystem
             }
         }
 
-        ActivateOutput(0, instructions, lsystem);
+        ActivateOutput(0, instructions, lsystem, plant);
     }
 
 }
