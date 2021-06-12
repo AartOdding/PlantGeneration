@@ -9,9 +9,7 @@ namespace LSystem
 
 	Plant::Plant()
 	{
-		auto start = std::make_unique<StartOperation>();
-		m_start_operation = start.get();
-		AddOperation(std::move(start));
+		AddOperation(std::make_unique<StartOperation>());
 	}
 
 	Operation* Plant::AddOperation(std::unique_ptr<Operation>&& operation)
@@ -90,16 +88,32 @@ namespace LSystem
 		return m_connections;
 	}
 
+	void Plant::Clear()
+	{
+		m_connections.clear();
+		m_operations_owned.clear();
+		m_operation_pointers.clear();
+		m_operation_pointers_const.clear();
+	}
+
 	VertexBuffer Plant::Generate()
 	{
 		LSystem lsystem;
 
-		for (auto& op : m_operations_owned)
+		if (!m_operations_owned.empty())
 		{
-			op->ResetState();
-		}
+			auto start = dynamic_cast<StartOperation*>(m_operations_owned[0].get());
 
-		m_start_operation->Execute(0, {}, lsystem, this);
+			if (start)
+			{
+				for (auto& op : m_operations_owned)
+				{
+					op->ResetState();
+				}
+
+				start->Execute(0, {}, lsystem, this);
+			}
+		}
 
 		return lsystem.Generate(1);
 	}

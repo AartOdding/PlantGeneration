@@ -59,7 +59,7 @@ struct EditorConfig
     int last_height = 1350;
 };
 
-void DrawEditorConfigWindow(EditorConfig& editor_config)
+void DrawEditorConfigWindow(EditorConfig& editor_config, LSystem::Plant* plant)
 {
     ImGui::Begin("Editor Config");
 
@@ -68,6 +68,19 @@ void DrawEditorConfigWindow(EditorConfig& editor_config)
     ImGui::SliderFloat("Camera up/down speed", &editor_config.camera_speed_updown, 0, 2);
     ImGui::Checkbox("Orbiting", &editor_config.orbit_mode);
     ImGui::ColorEdit3("Background color", &editor_config.background_color.x);
+
+    if (ImGui::Button("Save"))
+    {
+        std::ofstream output("plant.json");
+        cereal::JSONOutputArchive archive(output);
+        archive(*plant);
+    }
+    if (ImGui::Button("Load"))
+    {
+        std::ifstream input("plant.json");
+        cereal::JSONInputArchive archive(input);
+        archive(*plant);
+    }
 
     ImGui::End();
 }
@@ -353,25 +366,6 @@ std::array<uint8_t, 4> ToByteColor(const glm::vec4& rgba)
 
 int main()
 {
-    {
-        std::vector<std::shared_ptr<LSystem::Parameter>> pars;
-        pars.push_back(std::make_shared<LSystem::FloatParameter>("test_0_10_3", 0.0f, 10.0f, 3.0f));
-        pars.push_back(std::make_shared<LSystem::ColorParameter>("red", glm::vec3(1.0f, 0.0f, 0.0f)));
-        pars.push_back(std::make_shared<LSystem::FloatParameter>("test_0_11_5", 0.0f, 11.0f, 5.0f));
-        pars.push_back(std::make_shared<LSystem::ColorParameter>("green", glm::vec3(0.0f, 1.0f, 0.0f)));
-        pars.push_back(std::make_shared<LSystem::IntParameter>("test_0_10_3_int", 0, 10, 3));
-
-        std::ofstream os("polymorphism_test.xml");
-        cereal::JSONOutputArchive archive(os);
-        archive(pars);
-    }
-
-    std::ifstream is("polymorphism_test.xml");
-    cereal::JSONInputArchive archive(is);
-    std::vector<std::shared_ptr<LSystem::Parameter>> pars;
-    archive(pars);
-
-
     EditorConfig editor_config;
     CameraState camera_state;
 
@@ -463,7 +457,7 @@ int main()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        DrawEditorConfigWindow(editor_config);
+        DrawEditorConfigWindow(editor_config, &plant);
 
         DrawCreateOperationWindow(&plant);
         operation_database.Update(&plant);

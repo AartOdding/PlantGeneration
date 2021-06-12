@@ -77,6 +77,8 @@ namespace LSystem
 
 		const std::unordered_set<Connection>& Connections() const;
 
+		void Clear();
+
 		VertexBuffer Generate();
 
 		void ActivateOutput(Operation* output, int output_index, const std::vector<Instruction*>& output_values, LSystem& lsystem);
@@ -85,12 +87,35 @@ namespace LSystem
 
 		std::vector<Connection> GetConnectionsTo(Operation* output, int output_index);
 
-		std::unordered_set<Connection> m_connections;
 		std::vector<std::unique_ptr<Operation>> m_operations_owned;
 		std::vector<Operation*> m_operation_pointers;
 		std::vector<const Operation*> m_operation_pointers_const;
 
-		Operation* m_start_operation;
+		std::unordered_set<Connection> m_connections;
+
+	public:
+
+		template <class Archive>
+		void save(Archive& ar) const
+		{
+			ar(m_operations_owned);
+		}
+
+		template <class Archive>
+		void load(Archive& ar)
+		{
+			Clear();
+
+			ar(m_operations_owned);
+			m_operation_pointers.reserve(m_operations_owned.size());
+			m_operation_pointers_const.reserve(m_operations_owned.size());
+
+			for (auto& op : m_operations_owned)
+			{
+				m_operation_pointers.push_back(op.get());
+				m_operation_pointers_const.push_back(op.get());
+			}
+		}
 
 	};
 
