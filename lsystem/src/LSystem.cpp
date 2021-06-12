@@ -142,10 +142,14 @@ namespace LSystem
 
                     // Create triangle with two vertices from circle_a and one from circle_b.
                     auto& tri_1 = vertex_buffer.AddTriangle(circle_a[i], circle_a[j], circle_b[i]);
+                    tri_1.point_1.color = cascading_state.branch_color;
+                    tri_1.point_2.color = cascading_state.branch_color;
                     tri_1.point_3.color = cascading_state.branch_color;
 
                     // Create triangle with two vertices from circle_b and one from circle_a, together making a square.
                     auto& tri_2 = vertex_buffer.AddTriangle(circle_a[j], circle_b[i], circle_b[j]);
+                    tri_2.point_1.color = cascading_state.branch_color;
+                    tri_2.point_2.color = cascading_state.branch_color;
                     tri_2.point_3.color = cascading_state.branch_color;
                 }
             }

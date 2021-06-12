@@ -121,8 +121,10 @@ void DrawCreateOperationWindow(LSystem::Plant* plant)
     ImGui::End();
 }
 
-void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::EditorContext* context)
+bool DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::EditorContext* context)
 {
+    bool anything_changed = false;
+
     ImGui::Begin("Node Editor");
     ed::SetCurrentEditor(context);
     ed::Begin("Node Editor", ImVec2(0.0, 0.0f));
@@ -135,7 +137,7 @@ void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
 
         for (auto par : op->Parameters())
         {
-            max_text_width = std::max(max_text_width, ImGui::CalcTextSize(par->name().c_str()).x);
+            max_text_width = std::max(max_text_width, ImGui::CalcTextSize(par->Name().c_str()).x);
         }
 
         float total_width = max_text_width + parameter_width;
@@ -172,7 +174,7 @@ void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
 
         for (auto par : op->Parameters())
         {
-            DrawParameter(par, parameter_width);
+            anything_changed |= DrawParameter(par, parameter_width);
         }
 
         ed::EndNode();
@@ -211,13 +213,13 @@ void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
                     {
                         auto [output_op, output_index] = op_db->FindOutputID(dragged_to.Get());
                         auto [input_op, input_index] = op_db->FindInputID(dragged_from.Get());
-                        plant->CreateConnection(output_op, output_index, input_op, input_index);
+                        anything_changed |= plant->CreateConnection(output_op, output_index, input_op, input_index);
                     }
                     else if (op_db->IsValidInputID(dragged_to.Get()) && op_db->IsValidOutputID(dragged_from.Get()))
                     {
                         auto [output_op, output_index] = op_db->FindOutputID(dragged_from.Get());
                         auto [input_op, input_index] = op_db->FindInputID(dragged_to.Get());
-                        plant->CreateConnection(output_op, output_index, input_op, input_index);
+                        anything_changed |= plant->CreateConnection(output_op, output_index, input_op, input_index);
                     }
                 }
             }
@@ -235,7 +237,7 @@ void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
             if (ed::AcceptDeletedItem())
             {
                 auto op = op_db->FindNodeID(node_id.Get());
-                plant->DeleteOperation(op.operation);
+                anything_changed |= plant->DeleteOperation(op.operation);
             }
         }
 
@@ -247,7 +249,7 @@ void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
             if (ed::AcceptDeletedItem())
             {
                 auto c = op_db->FindConnectionID(connection_id.Get()).connection;
-                plant->DeleteConnection(c.output, c.output_index, c.input, c.input_index);
+                anything_changed |= plant->DeleteConnection(c.output, c.output_index, c.input, c.input_index);
             }
         }
     }
@@ -256,6 +258,8 @@ void DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
     ed::End();
     ed::SetCurrentEditor(nullptr);
     ImGui::End();
+
+    return anything_changed;
 }
 
 struct CameraState
@@ -331,6 +335,22 @@ Color ToColor(const glm::vec3& rgb)
     return col;
 }
 
+std::array<uint8_t, 4> ToByteColor(const glm::vec3& rgb)
+{
+    uint8_t r = std::clamp<int>(static_cast<int>(rgb.r * 255.0f), 0, 255);
+    uint8_t g = std::clamp<int>(static_cast<int>(rgb.g * 255.0f), 0, 255);
+    uint8_t b = std::clamp<int>(static_cast<int>(rgb.b * 255.0f), 0, 255);
+    return { r, g, b, 255 };
+}
+
+std::array<uint8_t, 4> ToByteColor(const glm::vec4& rgba)
+{
+    uint8_t r = std::clamp<int>(static_cast<int>(rgba.r * 255.0f), 0, 255);
+    uint8_t g = std::clamp<int>(static_cast<int>(rgba.g * 255.0f), 0, 255);
+    uint8_t b = std::clamp<int>(static_cast<int>(rgba.b * 255.0f), 0, 255);
+    uint8_t a = std::clamp<int>(static_cast<int>(rgba.a * 255.0f), 0, 255);
+    return { r, g, b, a };
+}
 
 int main()
 {
@@ -339,6 +359,10 @@ int main()
 
     LSystem::Plant plant;
     OperationDatabase operation_database;
+    auto plant_vertices = plant.Generate();
+
+    Mesh mesh{};
+    bool mesh_loaded = false;
 
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
@@ -404,33 +428,14 @@ int main()
 
         BeginMode3D(camera);
 
-
-        auto buf = plant.Generate();
-
-        for (auto& l : buf.lines)
+        for (auto& l : plant_vertices.lines)
         {
             DrawLine3D(ToVec3(l.point_a.position), ToVec3(l.point_b.position), ToColor(l.point_b.color));
         }
 
-        if (!buf.triangles.empty())
+        if (mesh_loaded)
         {
-            Mesh mesh{};
-            mesh.vertexCount = buf.triangles.size() * 3;
-
-            auto position_data = new glm::vec3[buf.triangles.size() * 3]; // Cleaned by raylib
-
-            for (int i = 0; i < buf.triangles.size(); ++i)
-            {
-                position_data[3 * i + 0] = buf.triangles[i].point_1.position;
-                position_data[3 * i + 1] = buf.triangles[i].point_2.position;
-                position_data[3 * i + 2] = buf.triangles[i].point_3.position;
-            }
-
-            mesh.vertices = &position_data[0].x;
-
-            UploadMesh(&mesh, false);
             DrawMesh(mesh, LoadMaterialDefault(), MatrixIdentity());
-            UnloadMesh(mesh);
         }
 
         EndMode3D();
@@ -445,7 +450,41 @@ int main()
         DrawCreateOperationWindow(&plant);
         operation_database.Update(&plant);
 
-        DrawNodeEditorWindow(&plant, &operation_database, node_editor_context);
+        if (DrawNodeEditorWindow(&plant, &operation_database, node_editor_context))
+        {
+            if (mesh_loaded)
+            {
+                UnloadMesh(mesh);
+                mesh = Mesh{};
+                mesh_loaded = false;
+            }
+
+            plant_vertices = plant.Generate();
+
+            if (!plant_vertices.triangles.empty())
+            {
+                mesh.vertexCount = plant_vertices.triangles.size() * 3;
+
+                auto position_data = new glm::vec3[plant_vertices.triangles.size() * 3]; // Cleaned by raylib
+                auto color_data = new std::array<uint8_t, 4>[plant_vertices.triangles.size() * 3]; // Cleaned by raylib
+
+                for (int i = 0; i < plant_vertices.triangles.size(); ++i)
+                {
+                    position_data[3 * i + 0] = plant_vertices.triangles[i].point_1.position;
+                    position_data[3 * i + 1] = plant_vertices.triangles[i].point_2.position;
+                    position_data[3 * i + 2] = plant_vertices.triangles[i].point_3.position;
+                    color_data[3 * i + 0] = ToByteColor(plant_vertices.triangles[i].point_1.color);
+                    color_data[3 * i + 1] = ToByteColor(plant_vertices.triangles[i].point_2.color);
+                    color_data[3 * i + 2] = ToByteColor(plant_vertices.triangles[i].point_3.color);
+                }
+
+                mesh.vertices = &position_data[0].x;
+                mesh.colors = color_data[0].data();
+
+                UploadMesh(&mesh, false);
+                mesh_loaded = true;
+            }
+        }
 
         ImGui::Render();
 

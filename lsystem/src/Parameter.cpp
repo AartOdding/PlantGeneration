@@ -13,7 +13,7 @@ namespace LSystem
 
 	}
 
-	const std::string& Parameter::name() const
+	const std::string& Parameter::Name() const
 	{
 		return m_name;
 	}

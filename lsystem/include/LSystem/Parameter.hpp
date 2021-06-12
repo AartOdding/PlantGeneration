@@ -18,7 +18,7 @@ namespace LSystem
 
 		virtual ~Parameter() = default;
 		
-		const std::string& name() const;
+		const std::string& Name() const;
 
 	private:
 
