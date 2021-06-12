@@ -11,9 +11,7 @@ set(SRC_FILES
 
 set(HEADER_FILES
   src/OperationDatabase.hpp
-  src/Tree.hpp
   src/TreeEditWindow.hpp
-  src/Trees.hpp
 )
 
 source_group(Sources FILES ${SRC_FILES} ${HEADER_FILES})

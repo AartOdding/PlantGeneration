@@ -18,8 +18,6 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "OperationDatabase.hpp"
-#include "Tree.hpp"
-#include "Trees.hpp"
 #include "TreeEditWindow.hpp"
 
 

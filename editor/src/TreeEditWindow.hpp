@@ -4,8 +4,6 @@
 
 #include <LSystem/LSystem.hpp>
 
-#include "Tree.hpp"
-
 
 bool DrawParameter(LSystem::Parameter* par, float width)
 {
