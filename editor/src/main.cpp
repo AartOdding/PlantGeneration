@@ -76,15 +76,13 @@ bool DrawEditorConfigWindow(EditorConfig& editor_config, LSystem::Plant* plant)
 
     if (ImGui::Button("Save"))
     {
-        std::ofstream output("plant.json");
-        cereal::JSONOutputArchive archive(output);
-        archive(*plant);
+        std::ofstream stream("plant.json");
+        plant->SaveTo(stream);
     }
     if (ImGui::Button("Load"))
     {
-        std::ifstream input("plant.json");
-        cereal::JSONInputArchive archive(input);
-        archive(*plant);
+        std::ifstream stream("plant.json");
+        plant->LoadFrom(stream);
         anything_changed = true;
     }
 
@@ -468,7 +466,7 @@ int main()
 
         // Do in two steps instead of using || to avoid shortcircuiting.
         bool changed = DrawNodeEditorWindow(&plant, &operation_database, node_editor_context);
-        changed != DrawEditorConfigWindow(editor_config, &plant);
+        changed |= DrawEditorConfigWindow(editor_config, &plant);
 
         if (changed)
         {

@@ -1,6 +1,12 @@
 #include <algorithm>
 
-#include <LSystem/LSystem.hpp>
+#include <LSystem/Connection.hpp>
+#include <LSystem/Plant.hpp>
+#include <LSystem/Operations/StartOperation.hpp>
+#include <LSystem/Utils/Serialization.hpp>
+
+#include <LSystem/Operations/Registration.hpp>
+#include <LSystem/Parameters/Registration.hpp>
 
 
 
@@ -82,6 +88,30 @@ namespace LSystem
 		return nullptr;
 	}
 
+	StartOperation* Plant::GetStartOperation()
+	{
+		for (auto op : m_operation_pointers)
+		{
+			if (dynamic_cast<StartOperation*>(op))
+			{
+				return static_cast<StartOperation*>(op);
+			}
+		}
+		return nullptr;
+	}
+
+	const StartOperation* Plant::GetStartOperation() const
+	{
+		for (auto op : m_operation_pointers_const)
+		{
+			if (dynamic_cast<const StartOperation*>(op))
+			{
+				return static_cast<const StartOperation*>(op);
+			}
+		}
+		return nullptr;
+	}
+
 	bool Plant::AddConnection(const Connection& connection)
 	{
 		if (m_connections.count(connection) == 0)
@@ -115,23 +145,33 @@ namespace LSystem
 		m_operation_pointers_const.clear();
 	}
 
+	void Plant::SaveTo(std::ostream& output_stream) const
+	{
+		cereal::JSONOutputArchive archive(output_stream);
+		archive(*this);
+	}
+
+	void Plant::LoadFrom(std::istream& input_stream)
+	{
+		Clear();
+		cereal::JSONInputArchive archive(input_stream);
+		archive(*this);
+	}
+
 	VertexBuffer Plant::Generate()
 	{
 		InstructionPool lsystem;
 
-		if (!m_operations_owned.empty())
+		auto start = GetStartOperation();
+
+		if (start)
 		{
-			auto start = dynamic_cast<StartOperation*>(m_operations_owned[0].get());
-
-			if (start)
+			for (auto& op : m_operations_owned)
 			{
-				for (auto& op : m_operations_owned)
-				{
-					op->ResetState();
-				}
-
-				start->Execute(0, {}, lsystem, this);
+				op->ResetState();
 			}
+
+			start->Execute(0, {}, lsystem, this);
 		}
 
 		return lsystem.Generate(1);

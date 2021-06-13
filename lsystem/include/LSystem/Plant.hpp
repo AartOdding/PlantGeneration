@@ -28,12 +28,17 @@ namespace LSystem
 		Operation* GetOperation(Identifier<Operation> operation);
 		const Operation* GetOperation(Identifier<Operation> operation) const;
 
+		StartOperation* GetStartOperation();
+		const StartOperation* GetStartOperation() const;
+
 		bool AddConnection(const Connection& connection);
 		bool DeleteConnection(const Connection& connection);
 
 		const std::unordered_set<Connection>& Connections() const;
 
 		void Clear();
+		void SaveTo(std::ostream& output_stream) const;
+		void LoadFrom(std::istream& input_stream);
 
 		VertexBuffer Generate();
 

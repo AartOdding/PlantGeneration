@@ -123,6 +123,7 @@ std::uint64_t OperationDatabase::GetConnectionID(const LSystem::Connection& con)
 	{
 		return m_connections.at(con).connection_id;
 	}
+	return 0;
 }
 
 LSystem::Identifier<LSystem::Operation> OperationDatabase::GetOperation(std::uint64_t id) const
