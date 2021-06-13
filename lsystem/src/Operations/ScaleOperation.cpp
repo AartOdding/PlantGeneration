@@ -1,4 +1,4 @@
-#include <LSystem/LSystem.hpp>
+#include <LSystem/Operations/ScaleOperation.hpp>
 
 
 
@@ -14,7 +14,7 @@ namespace LSystem
 		AddParameter(enable_scale_change);
 	}
 
-	void ScaleOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant)
+	void ScaleOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, InstructionPool& lsystem, Plant* plant)
 	{
 		if (enable_scale)
 		{

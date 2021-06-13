@@ -179,20 +179,20 @@ namespace LSystem
 namespace LSystem
 {
 
-    InstructionData* LSystem::AddInstructionData()
+    InstructionData* InstructionPool::AddInstructionData()
     {
         m_instructionDatas.emplace_back(std::make_unique<InstructionData>());
         return m_instructionDatas.back().get();
     }
 
-    Instruction* LSystem::AddInstruction(InstructionData* data = nullptr)
+    Instruction* InstructionPool::AddInstruction(InstructionData* data = nullptr)
     {
         m_instructions.emplace_back(std::make_unique<Instruction>());
         m_instructions.back()->data = data;
         return m_instructions.back().get();
     }
 
-    Instruction* LSystem::CreateExtrusion(float length, float roll, float pitch)
+    Instruction* InstructionPool::CreateExtrusion(float length, float roll, float pitch)
     {
         auto instruction_data = AddInstructionData();
         auto instruction = AddInstruction(instruction_data);
@@ -206,7 +206,7 @@ namespace LSystem
         return instruction;
     }
 
-    VertexBuffer LSystem::Generate(int recursions)
+    VertexBuffer InstructionPool::Generate(int recursions)
     {
         VertexBuffer render_buffer;
         CascadingState cascading_state;

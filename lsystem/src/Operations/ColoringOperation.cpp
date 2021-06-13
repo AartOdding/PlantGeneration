@@ -1,4 +1,4 @@
-#include <LSystem/LSystem.hpp>
+#include <LSystem/Operations/ColoringOperation.hpp>
 
 
 
@@ -11,7 +11,7 @@ namespace LSystem
 		AddParameter(color);
 	}
 
-	void ColoringOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant)
+	void ColoringOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, InstructionPool& lsystem, Plant* plant)
 	{
 		for (auto& i : active_input_values)
 		{

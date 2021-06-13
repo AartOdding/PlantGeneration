@@ -5,6 +5,8 @@
 #include <vector>
 
 #include <LSystem/Forward.hpp>
+#include <LSystem/Instruction.hpp>
+#include <LSystem/InstructionPool.hpp>
 #include <LSystem/ParameterOwner.hpp>
 
 #include <LSystem/Parameters/BoolParameter.hpp>
@@ -12,8 +14,12 @@
 #include <LSystem/Parameters/FloatParameter.hpp>
 #include <LSystem/Parameters/IntParameter.hpp>
 
+#include <LSystem/Utils/Identifier.hpp>
 #include <LSystem/Utils/NoCopy.hpp>
 #include <LSystem/Utils/NoMove.hpp>
+
+#include <cereal/access.hpp>
+#include <cereal/types/polymorphic.hpp>
 
 
 
@@ -40,22 +46,23 @@ namespace LSystem
 		virtual ~Operation() = default;
 
 		const OperationInfo& GetInfo() const;
+		Identifier<Operation> GetID() const;
 
 		// Called by plant, when executing "Return" output using ActivateOutput function.
-		virtual void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant) = 0;
+		virtual void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, InstructionPool& lsystem, Plant* plant) = 0;
 
 		virtual void ResetState() { }
 
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(m_info);
+			archive(m_info, m_id);
 		}
 
 	protected:
 
 		// Can call back into plant
-		void ActivateOutput(int output_index, const std::vector<Instruction*>& output_values, LSystem& lsystem, Plant* plant);
+		void ActivateOutput(int output_index, const std::vector<Instruction*>& output_values, InstructionPool& lsystem, Plant* plant);
 
 	private:
 		
@@ -64,6 +71,7 @@ namespace LSystem
 		Operation() = default;
 
 		OperationInfo m_info;
+		Identifier<Operation> m_id;
 
 	};
 

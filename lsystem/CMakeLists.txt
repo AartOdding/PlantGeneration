@@ -7,6 +7,7 @@ find_package(cereal)
 set(PUBLIC_FILES
     include/LSystem/Forward.hpp
     include/LSystem/Instruction.hpp
+    include/LSystem/InstructionPool.hpp
     include/LSystem/LSystem.hpp
     include/LSystem/Operation.hpp
     include/LSystem/Parameter.hpp
@@ -22,12 +23,14 @@ set(PUBLIC_FILES
     include/LSystem/Operations/RadiusOperation.hpp
     include/LSystem/Operations/RandomColorOperation.hpp
     include/LSystem/Operations/RandomLengthOperation.hpp
+    include/LSystem/Operations/Registration.hpp
     include/LSystem/Operations/ScaleOperation.hpp
     include/LSystem/Operations/StartOperation.hpp
     include/LSystem/Parameters/BoolParameter.hpp
     include/LSystem/Parameters/ColorParameter.hpp
     include/LSystem/Parameters/FloatParameter.hpp
     include/LSystem/Parameters/IntParameter.hpp
+    include/LSystem/Parameters/Registration.hpp
     include/LSystem/Utils/Identifier.hpp
     include/LSystem/Utils/NoCopy.hpp
     include/LSystem/Utils/NoMove.hpp

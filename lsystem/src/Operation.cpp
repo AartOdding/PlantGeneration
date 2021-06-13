@@ -15,6 +15,7 @@ namespace LSystem
 
 	Operation::Operation(const OperationInfo& info)
 		: m_info(info)
+		, m_id(Identifier<Operation>::Generate())
 	{
 
 	}
@@ -24,7 +25,12 @@ namespace LSystem
 		return m_info;
 	}
 
-	void Operation::ActivateOutput(int output_index, const std::vector<Instruction*>& output_values, LSystem& lsystem, Plant* plant)
+	Identifier<Operation> Operation::GetID() const
+	{
+		return m_id;
+	}
+
+	void Operation::ActivateOutput(int output_index, const std::vector<Instruction*>& output_values, InstructionPool& lsystem, Plant* plant)
 	{
 		plant->ActivateOutput(this, output_index, output_values, lsystem);
 	}

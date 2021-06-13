@@ -11,11 +11,17 @@ void OperationDatabase::Update(LSystem::Plant* plant)
 {
 	/////////   Operations:      ///////////////
 
-	std::unordered_set<LSystem::Operation*> operations{ plant->Operations().begin(), plant->Operations().end() };
+	std::unordered_set<LSystem::Identifier<LSystem::Operation>> operations;
+	operations.reserve(plant->Operations().size());
+
+	for (auto op : plant->Operations())
+	{
+		operations.insert(op->GetID());
+	}
 
 	// Delete all operations that no longer exist:
 
-	std::vector<LSystem::Operation*> operations_to_delete;
+	std::vector<LSystem::Identifier<LSystem::Operation>> operations_to_delete;
 
 	for (auto& [op, ids] : m_operations)
 	{
@@ -32,17 +38,17 @@ void OperationDatabase::Update(LSystem::Plant* plant)
 
 	// Add new operations:
 
-	for (auto op : operations)
+	for (auto op : plant->Operations())
 	{
-		if (m_operations.count(op) == 0)
+		if (m_operations.count(op->GetID()) == 0)
 		{
-			std::uint64_t node_id = ++unique_id;
+			std::uint64_t operation_id = ++unique_id;
 			std::vector<std::uint64_t> input_ids;
 			for (int i = 0; i < op->GetInfo().input_count; ++i) input_ids.push_back(++unique_id);
 			std::vector<std::uint64_t> output_ids;
 			for (int i = 0; i < op->GetInfo().output_count; ++i) output_ids.push_back(++unique_id);
 
-			m_operations.emplace(op, OperationIDs{ op, node_id, input_ids, output_ids });
+			m_operations.emplace(op->GetID(), OperationIDs{ op->GetID(), operation_id, input_ids, output_ids });
 		}
 	}
 
@@ -78,104 +84,118 @@ void OperationDatabase::Update(LSystem::Plant* plant)
 	}
 }
 
-OperationDatabase::OperationIDs OperationDatabase::Get(LSystem::Operation* op) const
+std::uint64_t OperationDatabase::GetOperationID(LSystem::Identifier<LSystem::Operation> op) const
 {
 	if (m_operations.count(op))
 	{
-		return m_operations.at(op);
+		return m_operations.at(op).operation_id;
 	}
-	return {};
+	return 0;
 }
 
-OperationDatabase::ConnectionIDs OperationDatabase::Get(LSystem::Connection& con) const
+std::uint64_t OperationDatabase::GetInputID(LSystem::Identifier<LSystem::Operation> op, int index) const
+{
+	if (m_operations.count(op))
+	{
+		if (index >= 0 && index < m_operations.at(op).input_ids.size())
+		{
+			return m_operations.at(op).input_ids[index];
+		}
+	}
+	return 0;
+}
+
+std::uint64_t OperationDatabase::GetOutputID(LSystem::Identifier<LSystem::Operation> op, int index) const
+{
+	if (m_operations.count(op))
+	{
+		if (index >= 0 && index < m_operations.at(op).output_ids.size())
+		{
+			return m_operations.at(op).output_ids[index];
+		}
+	}
+	return 0;
+}
+
+std::uint64_t OperationDatabase::GetConnectionID(const LSystem::Connection& con) const
 {
 	if (m_connections.count(con))
 	{
-		return m_connections.at(con);
+		return m_connections.at(con).connection_id;
 	}
-	return {};
 }
 
-OperationDatabase::OperationIDs OperationDatabase::FindNodeID(std::uint64_t node_id) const
+LSystem::Identifier<LSystem::Operation> OperationDatabase::GetOperation(std::uint64_t id) const
 {
 	for (auto& [op, ids] : m_operations)
 	{
-		if (ids.node_id == node_id)
+		if (ids.operation_id == id)
 		{
-			return ids;
+			return op;
 		}
 	}
 	return {};
 }
 
-std::pair<LSystem::Operation*, int> OperationDatabase::FindOutputID(std::uint64_t output_id) const
-{
-	for (auto& [op, ids] : m_operations)
-	{
-		for (int i = 0; i < ids.output_ids.size(); ++i)
-		{
-			if (ids.output_ids[i] == output_id)
-			{
-				return { op, i };
-			}
-		}
-	}
-	return { nullptr, -1 };
-}
-
-std::pair<LSystem::Operation*, int> OperationDatabase::FindInputID(std::uint64_t input_id) const
+std::pair<LSystem::Identifier<LSystem::Operation>, int> OperationDatabase::GetInput(std::uint64_t id) const
 {
 	for (auto& [op, ids] : m_operations)
 	{
 		for (int i = 0; i < ids.input_ids.size(); ++i)
 		{
-			if (ids.input_ids[i] == input_id)
+			if (ids.input_ids[i] == id)
 			{
 				return { op, i };
 			}
 		}
 	}
-	return { nullptr, -1 };
+	return { {}, -1 };
 }
 
-OperationDatabase::ConnectionIDs OperationDatabase::FindConnectionID(std::uint64_t connection_id) const
+std::pair<LSystem::Identifier<LSystem::Operation>, int> OperationDatabase::GetOutput(std::uint64_t id) const
+{
+	for (auto& [op, ids] : m_operations)
+	{
+		for (int i = 0; i < ids.output_ids.size(); ++i)
+		{
+			if (ids.output_ids[i] == id)
+			{
+				return { op, i };
+			}
+		}
+	}
+	return { {}, -1 };
+}
+
+LSystem::Connection OperationDatabase::GetConnection(std::uint64_t id) const
 {
 	for (auto& [con, ids] : m_connections)
 	{
-		if (ids.connection_id == connection_id)
+		if (ids.connection_id == id)
 		{
-			return ids;
+			return con;
 		}
 	}
-	return {};
+	return LSystem::Connection();
 }
 
-bool OperationDatabase::IsValidOutputID(std::uint64_t output_id) const
+
+bool OperationDatabase::IsOperationID(std::uint64_t id) const
 {
-	for (auto& [op, ids] : m_operations)
-	{
-		for (auto id : ids.output_ids)
-		{
-			if (id == output_id)
-			{
-				return true;
-			}
-		}
-	}
-	return false;
+	return GetOperation(id) != LSystem::Identifier<LSystem::Operation>();
 }
 
-bool OperationDatabase::IsValidInputID(std::uint64_t input_id) const
+bool OperationDatabase::IsInputID(std::uint64_t id) const
 {
-	for (auto& [op, ids] : m_operations)
-	{
-		for (auto id : ids.input_ids)
-		{
-			if (id == input_id)
-			{
-				return true;
-			}
-		}
-	}
-	return false;
+	return GetInput(id) != std::pair{ LSystem::Identifier<LSystem::Operation>(), -1 };
+}
+
+bool OperationDatabase::IsOutputID(std::uint64_t id) const
+{
+	return GetOutput(id) != std::pair{ LSystem::Identifier<LSystem::Operation>(), -1 };
+}
+
+bool OperationDatabase::IsConnectionID(std::uint64_t id) const
+{
+	return GetConnection(id) != LSystem::Connection{};
 }

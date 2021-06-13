@@ -1,11 +1,11 @@
-#include <LSystem/LSystem.hpp>
+#include <LSystem/Operations/ForkOperation.hpp>
 
 
 
 namespace LSystem
 {
 
-    std::vector<Instruction*> CreateFork(LSystem& lsystem, int count, float length, float spread, float roll)
+    std::vector<Instruction*> CreateFork(InstructionPool& lsystem, int count, float length, float spread, float roll)
     {
         std::vector<Instruction*> instructions;
 
@@ -34,7 +34,7 @@ namespace LSystem
         AddParameter(roll);
     }
 
-    void ForkOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant)
+    void ForkOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, InstructionPool& lsystem, Plant* plant)
     {
         std::vector<Instruction*> instructions;
 

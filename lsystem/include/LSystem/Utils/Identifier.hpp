@@ -43,6 +43,14 @@ namespace LSystem
 
 		std::uint64_t m_id = 0;
 
+	public:
+
+		template<class Archive>
+		void serialize(Archive& archive)
+		{
+			archive(m_id);
+		}
+
 	};
 
 }

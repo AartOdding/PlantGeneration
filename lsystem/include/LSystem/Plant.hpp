@@ -8,6 +8,7 @@
 
 #include <LSystem/Forward.hpp>
 #include <LSystem/VertexBuffer.hpp>
+#include <LSystem/Utils/Identifier.hpp>
 
 
 
@@ -16,15 +17,39 @@ namespace LSystem
 
 	struct Connection
 	{
-		Operation* const output;
-		Operation* const input;
-		const int output_index;
-		const int input_index;
+		Identifier<Operation> output;
+		Identifier<Operation> input;
+		int output_index;
+		int input_index;
+
+		Connection()
+			: output()
+			, input()
+			, output_index(-1)
+			, input_index(-1)
+		{
+
+		}
+
+		Connection(Identifier<Operation> o, int oi, Identifier<Operation> i, int ii)
+			: output(o)
+			, input(i)
+			, output_index(oi)
+			, input_index(ii)
+		{
+
+		}
 
 		bool operator==(const Connection& other) const
 		{
 			return output == other.output && input == other.input
 				&& output_index == other.output_index && input_index == other.input_index;
+		}
+
+		template <class Archive>
+		void serialize(Archive& ar) const
+		{
+			ar(output, input, output_index, input_index);
 		}
 	};
 
@@ -43,8 +68,8 @@ namespace std
 	{
 		std::size_t operator()(const LSystem::Connection& c) const
 		{
-			auto h1 = std::hash<LSystem::Operation*>()(c.output);
-			auto h2 = std::hash<LSystem::Operation*>()(c.input);
+			auto h1 = std::hash<LSystem::Identifier<LSystem::Operation>>()(c.output);
+			auto h2 = std::hash<LSystem::Identifier<LSystem::Operation>>()(c.input);
 			auto h3 = std::hash<int>()(c.output_index);
 			auto h4 = std::hash<int>()(c.input_index);
 			size_t result = 0;
@@ -66,14 +91,16 @@ namespace LSystem
 		Plant();
 
 		Operation* AddOperation(std::unique_ptr<Operation>&& operation);
-		bool DeleteOperation(Operation* operation);
+		bool DeleteOperation(Identifier<Operation> operation);
 
 		const std::vector<Operation*>& Operations();
 		const std::vector<const Operation*>& Operations() const;
 
-		bool CreateConnection(Operation* output, int output_index, Operation* input, int input_index);
-		bool DeleteConnection(Operation* output, int output_index, Operation* input, int input_index);
-		bool AreConnected(Operation* output, int output_index, Operation* input, int input_index) const;
+		Operation* GetOperation(Identifier<Operation> operation);
+		const Operation* GetOperation(Identifier<Operation> operation) const;
+
+		bool AddConnection(const Connection& connection);
+		bool DeleteConnection(const Connection& connection);
 
 		const std::unordered_set<Connection>& Connections() const;
 
@@ -81,11 +108,11 @@ namespace LSystem
 
 		VertexBuffer Generate();
 
-		void ActivateOutput(Operation* output, int output_index, const std::vector<Instruction*>& output_values, LSystem& lsystem);
+		void ActivateOutput(Operation* output, int output_index, const std::vector<Instruction*>& output_values, InstructionPool& lsystem);
 
 	private:
 
-		std::vector<Connection> GetConnectionsTo(Operation* output, int output_index);
+		std::vector<std::pair<Operation*, int>> GetConnectedOperations(Operation* output, int output_index);
 
 		std::vector<std::unique_ptr<Operation>> m_operations_owned;
 		std::vector<Operation*> m_operation_pointers;

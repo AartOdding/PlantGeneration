@@ -11,10 +11,29 @@ class OperationDatabase
 {
 public:
 
+	void Update(LSystem::Plant* plant);
+	
+	std::uint64_t GetOperationID(LSystem::Identifier<LSystem::Operation> op) const;
+	std::uint64_t GetInputID(LSystem::Identifier<LSystem::Operation> op, int index) const;
+	std::uint64_t GetOutputID(LSystem::Identifier<LSystem::Operation> op, int index) const;
+	std::uint64_t GetConnectionID(const LSystem::Connection& con) const;
+
+	LSystem::Identifier<LSystem::Operation> GetOperation(std::uint64_t id) const;
+	std::pair<LSystem::Identifier<LSystem::Operation>, int> GetInput(std::uint64_t id) const;
+	std::pair<LSystem::Identifier<LSystem::Operation>, int> GetOutput(std::uint64_t id) const;
+	LSystem::Connection GetConnection(std::uint64_t id) const;
+
+	bool IsOperationID(std::uint64_t id) const;
+	bool IsInputID(std::uint64_t id) const;
+	bool IsOutputID(std::uint64_t id) const;
+	bool IsConnectionID(std::uint64_t id) const;
+
+private:
+
 	struct OperationIDs
 	{
-		LSystem::Operation* const operation;
-		const std::uint64_t node_id;
+		const LSystem::Identifier<LSystem::Operation> operation;
+		const std::uint64_t operation_id;
 		const std::vector<std::uint64_t> input_ids;
 		const std::vector<std::uint64_t> output_ids;
 	};
@@ -25,22 +44,7 @@ public:
 		const std::uint64_t connection_id;
 	};
 
-	void Update(LSystem::Plant* plant);
-
-	OperationIDs Get(LSystem::Operation* op) const;
-	ConnectionIDs Get(LSystem::Connection& con) const;
-
-	OperationIDs FindNodeID(std::uint64_t node_id) const;
-	std::pair<LSystem::Operation*, int> FindOutputID(std::uint64_t output_id) const;
-	std::pair<LSystem::Operation*, int> FindInputID(std::uint64_t input_id) const;
-	ConnectionIDs FindConnectionID(std::uint64_t connection_id) const;
-
-	bool IsValidOutputID(std::uint64_t output_id) const;
-	bool IsValidInputID(std::uint64_t input_id) const;
-
-private:
-
-	std::unordered_map<LSystem::Operation*, OperationIDs> m_operations;
+	std::unordered_map<LSystem::Identifier<LSystem::Operation>, OperationIDs> m_operations;
 	std::unordered_map<LSystem::Connection, ConnectionIDs> m_connections;
 
 };

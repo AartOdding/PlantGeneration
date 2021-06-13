@@ -1,4 +1,4 @@
-#include <LSystem/LSystem.hpp>
+#include <LSystem/Operations/ExtrudeOperation.hpp>
 
 
 
@@ -13,7 +13,7 @@ namespace LSystem
         AddParameter(pitch);
     }
 
-    void ExtrudeOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant)
+    void ExtrudeOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, InstructionPool& lsystem, Plant* plant)
     {
         std::vector<Instruction*> instructions;
 

@@ -5,7 +5,7 @@
 #include <glm/gtc/random.hpp>
 #include <glm/gtx/color_space.hpp>
 
-#include <LSystem/LSystem.hpp>
+#include <LSystem/Operations/RandomColorOperation.hpp>
 
 
 
@@ -22,7 +22,7 @@ namespace LSystem
 		AddParameter(random_seed);
 	}
 
-	void RandomColorOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant)
+	void RandomColorOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, InstructionPool& lsystem, Plant* plant)
 	{
 		auto hsv = glm::hsvColor(color.value);
 		auto deviation = glm::vec3(hue_deviation.value * 360, sat_deviation.value, val_deviation.value);

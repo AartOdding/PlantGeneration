@@ -6,7 +6,7 @@ namespace LSystem
 {
 	struct Instruction;
 	struct InstructionData;
-	struct LSystem;
+	struct InstructionPool;
 	struct Operation;
 	struct OperationInfo;
 	struct Parameter;

@@ -34,6 +34,3 @@ namespace LSystem
 	};
 
 }
-
-CEREAL_REGISTER_TYPE(LSystem::FloatParameter);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(LSystem::Parameter, LSystem::FloatParameter)

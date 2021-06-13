@@ -1,4 +1,4 @@
-#include <LSystem/LSystem.hpp>
+#include <LSystem/Operations/RadiusOperation.hpp>
 
 
 
@@ -16,7 +16,7 @@ namespace LSystem
 		AddParameter(enable_radius_change);
 	}
 
-	void RadiusOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant)
+	void RadiusOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, InstructionPool& lsystem, Plant* plant)
 	{
 		if (enable_sides)
 		{

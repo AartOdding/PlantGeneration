@@ -1,4 +1,4 @@
-#include <LSystem/LSystem.hpp>
+#include <LSystem/Operations/LoopOperation.hpp>
 
 
 
@@ -11,7 +11,7 @@ namespace LSystem
         AddParameter(loop_count);
     }
 
-    void LoopOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant)
+    void LoopOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, InstructionPool& lsystem, Plant* plant)
     {
         if (++m_loop_count > loop_count)
         {

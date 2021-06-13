@@ -133,7 +133,7 @@ void DrawCreateOperationWindow(LSystem::Plant* plant)
     ImGui::End();
 }
 
-bool DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::EditorContext* context)
+bool DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* id_db, ed::EditorContext* context)
 {
     bool anything_changed = false;
 
@@ -154,19 +154,18 @@ bool DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
 
         float total_width = max_text_width + parameter_width;
 
-        const auto ids = op_db->Get(op);
         const auto info = op->GetInfo();
 
         const int row_count = std::max(info.input_count, info.output_count);
 
-        ed::BeginNode(ids.node_id);
+        ed::BeginNode(id_db->GetOperationID(op->GetID()));
         ImGui::Text(info.description.c_str());
 
         for (int i = 0; i < row_count; ++i)
         {
             if (i < info.input_count)
             {
-                ed::BeginPin(ids.input_ids[i], ed::PinKind::Input);
+                ed::BeginPin(id_db->GetInputID(op->GetID(), i), ed::PinKind::Input);
                 ImGui::Text("->");
                 ed::EndPin();
             }
@@ -178,7 +177,7 @@ bool DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
             {
                 ImGui::SameLine(total_width - ImGui::CalcTextSize("->").x);
 
-                ed::BeginPin(ids.output_ids[i], ed::PinKind::Output);
+                ed::BeginPin(id_db->GetOutputID(op->GetID(), i), ed::PinKind::Output);
                 ImGui::Text("->");
                 ed::EndPin();
             }
@@ -196,11 +195,10 @@ bool DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
 
     for (auto con : plant->Connections())
     {
-        auto link_id = op_db->Get(con).connection_id;
-        auto output_id = op_db->Get(con.output).output_ids[con.output_index];
-        auto input_id = op_db->Get(con.input).input_ids[con.input_index];
-
-        ed::Link(link_id, output_id, input_id);
+        ed::Link(
+            id_db->GetConnectionID(con), 
+            id_db->GetOutputID(con.output, con.output_index), 
+            id_db->GetInputID(con.input, con.input_index));
     }
 
     // create links
@@ -221,17 +219,17 @@ bool DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
                 {
                     // imgui-node-editor gived the output as the place where the drag is started, for us the start and end
                     // doesnt matter only the in and output
-                    if (op_db->IsValidInputID(dragged_from.Get()) && op_db->IsValidOutputID(dragged_to.Get()))
+                    if (id_db->IsInputID(dragged_from.Get()) && id_db->IsOutputID(dragged_to.Get()))
                     {
-                        auto [output_op, output_index] = op_db->FindOutputID(dragged_to.Get());
-                        auto [input_op, input_index] = op_db->FindInputID(dragged_from.Get());
-                        anything_changed |= plant->CreateConnection(output_op, output_index, input_op, input_index);
+                        auto [output_op, output_index] = id_db->GetOutput(dragged_to.Get());
+                        auto [input_op, input_index] = id_db->GetInput(dragged_from.Get());
+                        anything_changed |= plant->AddConnection({ output_op, output_index, input_op, input_index });
                     }
-                    else if (op_db->IsValidInputID(dragged_to.Get()) && op_db->IsValidOutputID(dragged_from.Get()))
+                    else if (id_db->IsInputID(dragged_to.Get()) && id_db->IsOutputID(dragged_from.Get()))
                     {
-                        auto [output_op, output_index] = op_db->FindOutputID(dragged_from.Get());
-                        auto [input_op, input_index] = op_db->FindInputID(dragged_to.Get());
-                        anything_changed |= plant->CreateConnection(output_op, output_index, input_op, input_index);
+                        auto [output_op, output_index] = id_db->GetOutput(dragged_from.Get());
+                        auto [input_op, input_index] = id_db->GetInput(dragged_to.Get());
+                        anything_changed |= plant->AddConnection({ output_op, output_index, input_op, input_index });
                     }
                 }
             }
@@ -248,8 +246,8 @@ bool DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
         {
             if (ed::AcceptDeletedItem())
             {
-                auto op = op_db->FindNodeID(node_id.Get());
-                anything_changed |= plant->DeleteOperation(op.operation);
+                auto op = id_db->GetOperation(node_id.Get());
+                anything_changed |= plant->DeleteOperation(op);
             }
         }
 
@@ -260,8 +258,8 @@ bool DrawNodeEditorWindow(LSystem::Plant* plant, OperationDatabase* op_db, ed::E
             // If you agree that link can be deleted, accept deletion.
             if (ed::AcceptDeletedItem())
             {
-                auto c = op_db->FindConnectionID(connection_id.Get()).connection;
-                anything_changed |= plant->DeleteConnection(c.output, c.output_index, c.input, c.input_index);
+                auto c = id_db->GetConnection(connection_id.Get());
+                anything_changed |= plant->DeleteConnection(c);
             }
         }
     }

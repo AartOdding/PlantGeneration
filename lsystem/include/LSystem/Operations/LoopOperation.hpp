@@ -13,7 +13,7 @@ namespace LSystem
 
 		IntParameter loop_count{ "Loop Count", 0, 20, 5 };
 
-		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant) override;
+		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, InstructionPool& lsystem, Plant* plant) override;
 
 		void ResetState() override;
 
@@ -30,5 +30,3 @@ namespace LSystem
 	};
 
 }
-
-CEREAL_REGISTER_TYPE(LSystem::LoopOperation)

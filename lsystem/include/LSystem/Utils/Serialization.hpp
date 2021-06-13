@@ -6,6 +6,7 @@
 #include <cereal/types/memory.hpp>
 #include <cereal/types/polymorphic.hpp>
 #include <cereal/types/string.hpp>
+#include <cereal/types/unordered_set.hpp>
 #include <cereal/types/vector.hpp>
 
 #include <glm/vec2.hpp>

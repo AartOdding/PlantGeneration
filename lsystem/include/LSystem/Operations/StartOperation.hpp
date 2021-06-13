@@ -11,7 +11,7 @@ namespace LSystem
 	{
 		StartOperation();
 
-		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant) override;
+		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, InstructionPool& lsystem, Plant* plant) override;
 
 		template<class Archive>
 		void serialize(Archive& archive)
@@ -21,5 +21,3 @@ namespace LSystem
 	};
 
 }
-
-CEREAL_REGISTER_TYPE(LSystem::StartOperation)

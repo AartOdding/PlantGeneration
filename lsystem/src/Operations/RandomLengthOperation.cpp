@@ -4,7 +4,7 @@
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <LSystem/LSystem.hpp>
+#include <LSystem/Operations/RandomLengthOperation.hpp>
 
 
 
@@ -19,7 +19,7 @@ namespace LSystem
 		AddParameter(random_seed);
 	}
 
-	void RandomLengthOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, LSystem& lsystem, Plant* plant)
+	void RandomLengthOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, InstructionPool& lsystem, Plant* plant)
 	{
 		for (auto& i : active_input_values)
 		{

@@ -20,7 +20,7 @@ namespace LSystem
 		return m_operation_pointers.back();
 	}
 
-	bool Plant::DeleteOperation(Operation* operation)
+	bool Plant::DeleteOperation(Identifier<Operation> operation)
 	{
 		const auto size_begin = m_operations_owned.size();
 
@@ -28,21 +28,21 @@ namespace LSystem
 			std::remove_if(
 				m_operations_owned.begin(), 
 				m_operations_owned.end(), 
-				[operation](const auto& op) { return op.get() == operation; }), 
+				[operation](const auto& op) { return op->GetID() == operation; }), 
 			m_operations_owned.end());
 
 		m_operation_pointers.erase(
 			std::remove_if(
 				m_operation_pointers.begin(),
 				m_operation_pointers.end(),
-				[operation](auto op) { return op == operation; }),
+				[operation](auto op) { return op->GetID() == operation; }),
 			m_operation_pointers.end());
 
 		m_operation_pointers_const.erase(
 			std::remove_if(
 				m_operation_pointers_const.begin(),
 				m_operation_pointers_const.end(),
-				[operation](auto op) { return op == operation; }),
+				[operation](auto op) { return op->GetID() == operation; }),
 			m_operation_pointers_const.end());
 
 		return m_operations_owned.size() < size_begin;
@@ -58,29 +58,48 @@ namespace LSystem
 		return m_operation_pointers_const;
 	}
 
-	bool Plant::CreateConnection(Operation* output, int output_index, Operation* input, int input_index)
+	Operation* Plant::GetOperation(Identifier<Operation> operation)
 	{
-		if (m_connections.count(Connection{ output, input, output_index, input_index }) == 0)
+		for (auto op : m_operation_pointers)
 		{
-			m_connections.emplace(Connection{ output, input, output_index, input_index });
+			if (op->GetID() == operation)
+			{
+				return op;
+			}
+		}
+		return nullptr;
+	}
+
+	const Operation* Plant::GetOperation(Identifier<Operation> operation) const
+	{
+		for (auto op : m_operation_pointers_const)
+		{
+			if (op->GetID() == operation)
+			{
+				return op;
+			}
+		}
+		return nullptr;
+	}
+
+	bool Plant::AddConnection(const Connection& connection)
+	{
+		if (m_connections.count(connection) == 0)
+		{
+			m_connections.emplace(connection);
 			return true;
 		}
 		return false;
 	}
 
-	bool Plant::DeleteConnection(Operation* output, int output_index, Operation* input, int input_index)
+	bool Plant::DeleteConnection(const Connection& connection)
 	{
-		if (m_connections.count(Connection{ output, input, output_index, input_index }) > 0)
+		if (m_connections.count(connection) == 0)
 		{
-			m_connections.erase(Connection{ output, input, output_index, input_index });
+			m_connections.erase(connection);
 			return true;
 		}
 		return false;
-	}
-
-	bool Plant::AreConnected(Operation* output, int output_index, Operation* input, int input_index) const
-	{
-		return m_connections.count(Connection{ output, input, output_index, input_index });
 	}
 
 	const std::unordered_set<Connection>& Plant::Connections() const
@@ -98,7 +117,7 @@ namespace LSystem
 
 	VertexBuffer Plant::Generate()
 	{
-		LSystem lsystem;
+		InstructionPool lsystem;
 
 		if (!m_operations_owned.empty())
 		{
@@ -118,28 +137,30 @@ namespace LSystem
 		return lsystem.Generate(1);
 	}
 
-	void Plant::ActivateOutput(Operation* output, int output_index, const std::vector<Instruction*>& output_values, LSystem& lsystem)
+	void Plant::ActivateOutput(Operation* output, int output_index, const std::vector<Instruction*>& output_values, InstructionPool& lsystem)
 	{
-		auto next = GetConnectionsTo(output, output_index);
+		auto next = GetConnectedOperations(output, output_index);
 
-		for (auto& n : next)
+		for (auto& [op, index] : next)
 		{
-			n.input->Execute(n.input_index, output_values, lsystem, this);
+			op->Execute(index, output_values, lsystem, this);
 		}
 	}
 
-	std::vector<Connection> Plant::GetConnectionsTo(Operation* output, int output_index)
+
+	std::vector<std::pair<Operation*, int>> Plant::GetConnectedOperations(Operation* output, int output_index)
 	{
-		std::vector<Connection> connections;
+		std::vector<std::pair<Operation*, int>> connections;
 
 		for (auto& c : m_connections)
 		{
-			if (c.output == output && c.output_index == output_index)
+			if (c.output == output->GetID() && c.output_index == output_index)
 			{
-				connections.push_back(c);
+				connections.push_back({ GetOperation(c.input), c.input_index });
 			}
 		}
 
 		return connections;
 	}
+
 }

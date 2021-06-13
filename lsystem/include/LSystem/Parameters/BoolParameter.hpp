@@ -34,6 +34,3 @@ namespace LSystem
 	};
 
 }
-
-CEREAL_REGISTER_TYPE(LSystem::BoolParameter);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(LSystem::Parameter, LSystem::BoolParameter)
