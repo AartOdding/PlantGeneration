@@ -8,9 +8,11 @@
 #include <GLFW/glfw3.h>
 
 #include <cmrc/cmrc.hpp>
+
 #include <algorithm>
-#include <iostream>
+#include <cmath>
 #include <fstream>
+#include <iostream>
 
 #include <LSystem/LSystem.hpp>
 
@@ -46,7 +48,8 @@ static std::string random_name(const int len) {
 
 struct EditorConfig
 {
-    float camera_minmax_y = 0.3;
+    float camera_min_y = -0.3;
+    float camera_max_y = 0.3;
     float camera_speed_sideways = 0.007;
     float camera_speed_updown = 0.3;
 
@@ -59,11 +62,13 @@ struct EditorConfig
     int last_height = 1350;
 };
 
-void DrawEditorConfigWindow(EditorConfig& editor_config, LSystem::Plant* plant)
+bool DrawEditorConfigWindow(EditorConfig& editor_config, LSystem::Plant* plant)
 {
+    bool anything_changed = false;
     ImGui::Begin("Editor Config");
 
-    ImGui::SliderFloat("Camera min/max Y", &editor_config.camera_minmax_y, 0, 1.5);
+    ImGui::SliderFloat("Camera min Y", &editor_config.camera_min_y, -1.5, 1.5);
+    ImGui::SliderFloat("Camera max Y", &editor_config.camera_max_y, -1.5, 1.5);
     ImGui::SliderFloat("Camera rotation speed", &editor_config.camera_speed_sideways, 0, 0.05);
     ImGui::SliderFloat("Camera up/down speed", &editor_config.camera_speed_updown, 0, 2);
     ImGui::Checkbox("Orbiting", &editor_config.orbit_mode);
@@ -80,9 +85,11 @@ void DrawEditorConfigWindow(EditorConfig& editor_config, LSystem::Plant* plant)
         std::ifstream input("plant.json");
         cereal::JSONInputArchive archive(input);
         archive(*plant);
+        anything_changed = true;
     }
 
     ImGui::End();
+    return anything_changed;
 }
 
 void DrawCreateOperationWindow(LSystem::Plant* plant)
@@ -300,7 +307,8 @@ void UpdateCameraState(Camera& camera, CameraState& camera_state, EditorConfig& 
     if (editor_config.orbit_mode)
     {
         camera_state.camera_rotation_sideways += editor_config.camera_speed_sideways;
-        camera_state.camera_rotation_updown = editor_config.camera_minmax_y * sin(editor_config.camera_speed_updown * GetTime());
+        float updown = std::sin(editor_config.camera_speed_updown * GetTime());
+        camera_state.camera_rotation_updown = LSystem::MapRange<float>(updown, -1, 1, editor_config.camera_min_y, editor_config.camera_max_y);
     }
     else
     {
@@ -455,12 +463,14 @@ int main()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        DrawEditorConfigWindow(editor_config, &plant);
-
         DrawCreateOperationWindow(&plant);
         operation_database.Update(&plant);
 
-        if (DrawNodeEditorWindow(&plant, &operation_database, node_editor_context))
+        // Do in two steps instead of using || to avoid shortcircuiting.
+        bool changed = DrawNodeEditorWindow(&plant, &operation_database, node_editor_context);
+        changed != DrawEditorConfigWindow(editor_config, &plant);
+
+        if (changed)
         {
             if (mesh_loaded)
             {

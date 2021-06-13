@@ -13,6 +13,7 @@
 
 #include <LSystem/Utils/Hash.hpp>
 #include <LSystem/Utils/Identifier.hpp>
+#include <LSystem/Utils/MapRange.hpp>
 #include <LSystem/Utils/NoCopy.hpp>
 #include <LSystem/Utils/NoMove.hpp>
 
