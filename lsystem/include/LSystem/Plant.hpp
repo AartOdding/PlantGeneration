@@ -54,7 +54,7 @@ namespace LSystem
 		template <class Archive>
 		void save(Archive& ar) const
 		{
-			ar(m_operations_owned);
+			ar(m_operations_owned, m_connections);
 		}
 
 		template <class Archive>
@@ -62,7 +62,7 @@ namespace LSystem
 		{
 			Clear();
 
-			ar(m_operations_owned);
+			ar(m_operations_owned, m_connections);
 			m_operation_pointers.reserve(m_operations_owned.size());
 			m_operation_pointers_const.reserve(m_operations_owned.size());
 

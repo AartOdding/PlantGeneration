@@ -24,13 +24,6 @@ namespace LSystem
 	{
 		const auto size_begin = m_operations_owned.size();
 
-		m_operations_owned.erase(
-			std::remove_if(
-				m_operations_owned.begin(), 
-				m_operations_owned.end(), 
-				[operation](const auto& op) { return op->GetID() == operation; }), 
-			m_operations_owned.end());
-
 		m_operation_pointers.erase(
 			std::remove_if(
 				m_operation_pointers.begin(),
@@ -44,6 +37,13 @@ namespace LSystem
 				m_operation_pointers_const.end(),
 				[operation](auto op) { return op->GetID() == operation; }),
 			m_operation_pointers_const.end());
+
+		m_operations_owned.erase(
+			std::remove_if(
+				m_operations_owned.begin(), 
+				m_operations_owned.end(), 
+				[operation](const auto& op) { return op->GetID() == operation; }), 
+			m_operations_owned.end());
 
 		return m_operations_owned.size() < size_begin;
 	}
@@ -94,7 +94,7 @@ namespace LSystem
 
 	bool Plant::DeleteConnection(const Connection& connection)
 	{
-		if (m_connections.count(connection) == 0)
+		if (m_connections.count(connection) > 0)
 		{
 			m_connections.erase(connection);
 			return true;
