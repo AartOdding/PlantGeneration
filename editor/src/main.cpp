@@ -76,12 +76,12 @@ bool DrawEditorConfigWindow(EditorConfig& editor_config, LSystem::Plant* plant)
 
     if (ImGui::Button("Save"))
     {
-        std::ofstream stream("plant.json");
+        std::ofstream stream("Plant1.plant");
         plant->SaveTo(stream);
     }
     if (ImGui::Button("Load"))
     {
-        std::ifstream stream("plant.json");
+        std::ifstream stream("Plant1.plant");
         plant->LoadFrom(stream);
         anything_changed = true;
     }

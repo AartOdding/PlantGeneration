@@ -147,14 +147,14 @@ namespace LSystem
 
 	void Plant::SaveTo(std::ostream& output_stream) const
 	{
-		cereal::JSONOutputArchive archive(output_stream);
+		cereal::PortableBinaryOutputArchive archive(output_stream);
 		archive(*this);
 	}
 
 	void Plant::LoadFrom(std::istream& input_stream)
 	{
 		Clear();
-		cereal::JSONInputArchive archive(input_stream);
+		cereal::PortableBinaryInputArchive archive(input_stream);
 		archive(*this);
 	}
 
