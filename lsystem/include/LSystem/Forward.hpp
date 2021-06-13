@@ -4,6 +4,7 @@
 
 namespace LSystem
 {
+	struct Connection;
 	struct Instruction;
 	struct InstructionData;
 	struct InstructionPool;

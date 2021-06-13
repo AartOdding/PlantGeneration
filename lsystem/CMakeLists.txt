@@ -5,6 +5,7 @@ find_package(cereal)
 
 # Public interface of the library, should only be hpp files in include folder.
 set(PUBLIC_FILES
+    include/LSystem/Connection.hpp
     include/LSystem/Forward.hpp
     include/LSystem/Instruction.hpp
     include/LSystem/InstructionPool.hpp
@@ -14,6 +15,7 @@ set(PUBLIC_FILES
     include/LSystem/ParameterOwner.hpp
     include/LSystem/Plant.hpp
     include/LSystem/VertexBuffer.hpp
+
     include/LSystem/Operations/ColoringOperation.hpp
     include/LSystem/Operations/ExtrudeOperation.hpp
     include/LSystem/Operations/FanOperation.hpp
@@ -26,11 +28,14 @@ set(PUBLIC_FILES
     include/LSystem/Operations/Registration.hpp
     include/LSystem/Operations/ScaleOperation.hpp
     include/LSystem/Operations/StartOperation.hpp
+
     include/LSystem/Parameters/BoolParameter.hpp
     include/LSystem/Parameters/ColorParameter.hpp
     include/LSystem/Parameters/FloatParameter.hpp
     include/LSystem/Parameters/IntParameter.hpp
     include/LSystem/Parameters/Registration.hpp
+
+    include/LSystem/Utils/Hash.hpp
     include/LSystem/Utils/Identifier.hpp
     include/LSystem/Utils/NoCopy.hpp
     include/LSystem/Utils/NoMove.hpp
@@ -44,6 +49,7 @@ set(PRIVATE_FILES
     src/Parameter.cpp
     src/ParameterOwner.cpp
     src/Plant.cpp
+
     src/Operations/ColoringOperation.cpp
     src/Operations/ExtrudeOperation.cpp
     src/Operations/FanOperation.cpp
@@ -55,10 +61,12 @@ set(PRIVATE_FILES
     src/Operations/RandomLengthOperation.cpp
     src/Operations/ScaleOperation.cpp
     src/Operations/StartOperation.cpp
+
     src/Parameters/BoolParameter.cpp
     src/Parameters/ColorParameter.cpp
     src/Parameters/FloatParameter.cpp
     src/Parameters/IntParameter.cpp
+
     src/Utils/Identifier.cpp
 )
 
