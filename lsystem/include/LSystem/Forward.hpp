@@ -11,7 +11,6 @@ namespace LSystem
 	struct Operation;
 	struct OperationInfo;
 	struct Parameter;
-	struct ParameterOwner;
 	struct Plant;
 	struct VertexBuffer;
 	struct Vertex;

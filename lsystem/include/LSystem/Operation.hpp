@@ -7,7 +7,6 @@
 #include <LSystem/Forward.hpp>
 #include <LSystem/Instruction.hpp>
 #include <LSystem/InstructionPool.hpp>
-#include <LSystem/ParameterOwner.hpp>
 
 #include <LSystem/Parameters/BoolParameter.hpp>
 #include <LSystem/Parameters/ColorParameter.hpp>
@@ -39,7 +38,7 @@ namespace LSystem
 		}
 	};
 
-	struct Operation : ParameterOwner
+	struct Operation
 	{
 		Operation(const OperationInfo& info);
 
@@ -47,6 +46,12 @@ namespace LSystem
 
 		const OperationInfo& GetInfo() const;
 		Identifier<Operation> GetID() const;
+
+		bool AddParameter(Parameter& parameter);
+		bool RemoveParameter(Parameter& parameter);
+
+		const std::vector<Parameter*>& Parameters();
+		const std::vector<const Parameter*>& Parameters() const;
 
 		// Called by plant, when executing "Return" output using ActivateOutput function.
 		virtual void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, InstructionPool& lsystem, Plant* plant) = 0;
@@ -72,6 +77,9 @@ namespace LSystem
 
 		OperationInfo m_info;
 		Identifier<Operation> m_id;
+
+		std::vector<Parameter*> m_parameters;
+		std::vector<const Parameter*> m_const_parameters;
 
 	};
 

@@ -5,7 +5,6 @@
 #include <LSystem/InstructionPool.hpp>
 #include <LSystem/Operation.hpp>
 #include <LSystem/Parameter.hpp>
-#include <LSystem/ParameterOwner.hpp>
 #include <LSystem/Plant.hpp>
 #include <LSystem/VertexBuffer.hpp>
 
