@@ -7,6 +7,7 @@
 #include <cmrc/cmrc.hpp>
 
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <string>
 
@@ -16,17 +17,48 @@
 #include "sphere_world.hpp"
 #include "player.hpp"
 
+#include <LSystem/LSystem.hpp>
+
+
 CMRC_DECLARE(resources);
+
+
+Vector3 ToVec3(const glm::vec3& vec)
+{
+    return { vec.x, vec.y, vec.z };
+}
+
+Color ToColor(const glm::vec3& rgb)
+{
+    Color col;
+    col.r = rgb.r * 255;
+    col.g = rgb.g * 255;
+    col.b = rgb.b * 255;
+    col.a = 255;
+    return col;
+}
 
 int main()
 {
     try
     {
         auto fs = cmrc::resources::get_filesystem();
-        auto f = fs.open("shaders/test.frag");
 
-        std::string frag = std::string(f.begin(), f.end());
-        std::cout << frag << std::endl;
+        {
+            auto plant_data = fs.open("Plant1.plant");
+            std::ofstream temp("Plant1.plant", std::ios::binary | std::ios::trunc);
+            temp.write(plant_data.begin(), plant_data.size());
+            temp.flush();
+        }
+
+        LSystem::Plant plant;
+        
+        {
+            auto plant_file = std::ifstream("Plant1.plant", std::ios::binary);
+            plant.LoadFrom(plant_file);
+        }
+
+        auto vertexBuffer = plant.Generate();
 
         const int screenWidth = 800;
         const int screenHeight = 450;
@@ -136,6 +168,11 @@ int main()
             }
 
             DrawGrid(40, 10.0f);
+
+            for (auto& l : vertexBuffer.lines)
+            {
+                DrawLine3D(ToVec3(l.point_a.position), ToVec3(l.point_b.position), ToColor(l.point_b.color));
+            }
 
             EndMode3D();
 
