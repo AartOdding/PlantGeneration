@@ -7,7 +7,7 @@
 namespace LSystem
 {
 
-	struct ExtrudeOperation : Operation, NoCopy, NoMove
+	struct ExtrudeOperation : Operation
 	{
 		ExtrudeOperation();
 

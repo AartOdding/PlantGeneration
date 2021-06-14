@@ -7,7 +7,7 @@
 namespace LSystem
 {
 
-	struct LoopOperation : Operation, NoCopy, NoMove
+	struct LoopOperation : Operation
 	{
 		LoopOperation();
 

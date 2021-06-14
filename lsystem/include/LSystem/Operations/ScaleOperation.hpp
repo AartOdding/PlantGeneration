@@ -7,7 +7,7 @@
 namespace LSystem
 {
 
-	struct ScaleOperation : Operation, NoCopy, NoMove
+	struct ScaleOperation : Operation
 	{
 		ScaleOperation();
 

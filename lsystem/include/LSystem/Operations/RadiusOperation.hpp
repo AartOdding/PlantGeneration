@@ -7,7 +7,7 @@
 namespace LSystem
 {
 
-	struct RadiusOperation : Operation, NoCopy, NoMove
+	struct RadiusOperation : Operation
 	{
 		RadiusOperation();
 

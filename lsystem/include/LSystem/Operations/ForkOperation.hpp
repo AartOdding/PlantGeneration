@@ -7,7 +7,7 @@
 namespace LSystem
 {
 
-	struct ForkOperation : Operation, NoCopy, NoMove
+	struct ForkOperation : Operation
 	{
 		ForkOperation();
 

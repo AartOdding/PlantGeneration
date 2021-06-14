@@ -7,7 +7,7 @@
 namespace LSystem
 {
 
-	struct ColoringOperation : Operation, NoCopy, NoMove
+	struct ColoringOperation : Operation
 	{
 		ColoringOperation();
 

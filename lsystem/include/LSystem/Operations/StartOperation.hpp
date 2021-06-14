@@ -7,7 +7,7 @@
 namespace LSystem
 {
 
-	struct StartOperation : Operation, NoCopy, NoMove
+	struct StartOperation : Operation
 	{
 		StartOperation();
 

@@ -7,7 +7,7 @@
 namespace LSystem
 {
 
-	struct RandomColorOperation : Operation, NoCopy, NoMove
+	struct RandomColorOperation : Operation
 	{
 		RandomColorOperation();
 

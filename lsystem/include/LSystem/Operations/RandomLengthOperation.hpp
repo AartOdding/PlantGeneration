@@ -7,7 +7,7 @@
 namespace LSystem
 {
 
-	struct RandomLengthOperation : Operation, NoCopy, NoMove
+	struct RandomLengthOperation : Operation
 	{
 		RandomLengthOperation();
 

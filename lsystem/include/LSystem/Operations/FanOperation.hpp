@@ -7,7 +7,7 @@
 namespace LSystem
 {
 
-	struct FanOperation : Operation, NoCopy, NoMove
+	struct FanOperation : Operation
 	{
 		FanOperation();
 

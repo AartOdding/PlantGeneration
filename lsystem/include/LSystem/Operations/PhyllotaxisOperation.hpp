@@ -7,7 +7,7 @@
 namespace LSystem
 {
 
-	struct PhyllotaxisOperation : Operation, NoCopy, NoMove
+	struct PhyllotaxisOperation : Operation
 	{
 		PhyllotaxisOperation();
 
