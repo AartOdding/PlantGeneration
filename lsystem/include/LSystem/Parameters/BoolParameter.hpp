@@ -22,7 +22,7 @@ namespace LSystem
 		template<class Archive>
 		void serialize(Archive& archive)
 		{
-			archive(value, m_name);
+			archive(cereal::base_class<Parameter>(this), value);
 		}
 
 	private:

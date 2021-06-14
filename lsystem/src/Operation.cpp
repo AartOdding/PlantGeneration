@@ -14,8 +14,8 @@ namespace LSystem
 	};
 
 	Operation::Operation(const OperationInfo& info)
-		: m_info(info)
-		, m_id(Identifier<Operation>::Generate())
+		: m_id(Identifier<Operation>::Generate())
+		, m_info(info)
 	{
 
 	}

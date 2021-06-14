@@ -11,6 +11,7 @@
 
 CEREAL_CLASS_VERSION(LSystem::Connection, LSystem::Connection::Version);
 CEREAL_CLASS_VERSION(LSystem::Operation, LSystem::Operation::Version);
+CEREAL_CLASS_VERSION(LSystem::Parameter, LSystem::Parameter::Version);
 
 
 

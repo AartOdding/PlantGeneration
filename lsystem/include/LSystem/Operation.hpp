@@ -70,8 +70,8 @@ namespace LSystem
 
 	private:
 
-		OperationInfo m_info;
 		Identifier<Operation> m_id;
+		OperationInfo m_info;
 
 		std::vector<Parameter*> m_parameters;
 		std::vector<const Parameter*> m_const_parameters;
