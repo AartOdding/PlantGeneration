@@ -40,11 +40,18 @@ namespace LSystem
 				&& output_index == other.output_index && input_index == other.input_index;
 		}
 
+		static constexpr std::uint32_t Version = 1;
+
 		template <typename Archive>
-		void serialize(Archive& ar)
+		void serialize(Archive& archive, const std::uint32_t version)
 		{
-			ar(output, input, output_index, input_index);
+			if (version > Version)
+			{
+				throw std::runtime_error("Error: The file you are trying to load has been created with a newer version of this software than you are currently using.");
+			}
+			archive(output, input, output_index, input_index);
 		}
+
 	};
 
 }

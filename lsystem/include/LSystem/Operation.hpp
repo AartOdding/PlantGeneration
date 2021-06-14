@@ -17,7 +17,6 @@
 #include <LSystem/Utils/NoCopy.hpp>
 #include <LSystem/Utils/NoMove.hpp>
 
-#include <cereal/access.hpp>
 #include <cereal/types/polymorphic.hpp>
 
 
@@ -30,15 +29,9 @@ namespace LSystem
 		int input_count;
 		int output_count;
 		std::string description;
-
-		template<class Archive>
-		void serialize(Archive& archive)
-		{
-			archive(input_count, output_count, description);
-		}
 	};
 
-	struct Operation
+	struct Operation : NoCopy, NoMove
 	{
 		Operation(const OperationInfo& info);
 
@@ -58,10 +51,16 @@ namespace LSystem
 
 		virtual void ResetState() { }
 
+		static constexpr std::uint32_t Version = 1;
+
 		template<class Archive>
-		void serialize(Archive& archive)
+		void serialize(Archive& archive, const std::uint32_t version)
 		{
-			archive(m_info, m_id);
+			if (version > Version)
+			{
+				throw std::runtime_error("Error: The file you are trying to load has been created with a newer version of this software than you are currently using.");
+			}
+			archive(m_id);
 		}
 
 	protected:
@@ -70,10 +69,6 @@ namespace LSystem
 		void ActivateOutput(int output_index, const std::vector<Instruction*>& output_values, InstructionPool& lsystem, Plant* plant);
 
 	private:
-		
-		friend class cereal::access;
-
-		Operation() = default;
 
 		OperationInfo m_info;
 		Identifier<Operation> m_id;

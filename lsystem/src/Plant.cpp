@@ -9,6 +9,10 @@
 #include <LSystem/Parameters/Registration.hpp>
 
 
+CEREAL_CLASS_VERSION(LSystem::Connection, LSystem::Connection::Version);
+CEREAL_CLASS_VERSION(LSystem::Operation, LSystem::Operation::Version);
+
+
 
 namespace LSystem
 {

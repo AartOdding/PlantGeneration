@@ -45,14 +45,18 @@ namespace LSystem
 
 	public:
 
-		template<class Archive>
+		template <typename Archive>
 		void serialize(Archive& archive)
 		{
+			// Because Identifier is a class template, and not a concrete class it is unfortunately not possible to specify a version
+			// using the CEREAL_CLASS_VERSION() macro. For this reason it is impossible to ever create new versions of this struct
+			// and maintain backwards compatibility! The best is nover to change the layout.
 			archive(m_id);
 		}
 
 	};
 
+	static_assert(sizeof(Identifier<bool>) == sizeof(std::uint64_t), "To maintain backwards compatibility the layout of Identifier is not allowed to change.");
 }
 
 namespace std

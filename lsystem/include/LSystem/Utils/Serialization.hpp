@@ -17,6 +17,7 @@
 
 namespace cereal
 {
+    // No need to add cereal versioning to glm's vector types because their layout will never change.
 
     template<class Archive>
     void serialize(Archive& archive, glm::vec2& vec)
