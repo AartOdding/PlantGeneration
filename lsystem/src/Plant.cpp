@@ -18,6 +18,18 @@ CEREAL_CLASS_VERSION(LSystem::ColorParameter, LSystem::ColorParameter::Version);
 CEREAL_CLASS_VERSION(LSystem::FloatParameter, LSystem::FloatParameter::Version);
 CEREAL_CLASS_VERSION(LSystem::IntParameter, LSystem::IntParameter::Version);
 
+CEREAL_CLASS_VERSION(LSystem::ColoringOperation, LSystem::ColoringOperation::Version);
+CEREAL_CLASS_VERSION(LSystem::ExtrudeOperation, LSystem::ExtrudeOperation::Version);
+CEREAL_CLASS_VERSION(LSystem::FanOperation, LSystem::FanOperation::Version);
+CEREAL_CLASS_VERSION(LSystem::ForkOperation, LSystem::ForkOperation::Version);
+CEREAL_CLASS_VERSION(LSystem::LoopOperation, LSystem::LoopOperation::Version);
+CEREAL_CLASS_VERSION(LSystem::PhyllotaxisOperation, LSystem::PhyllotaxisOperation::Version);
+CEREAL_CLASS_VERSION(LSystem::RadiusOperation, LSystem::RadiusOperation::Version);
+CEREAL_CLASS_VERSION(LSystem::RandomColorOperation, LSystem::RandomColorOperation::Version);
+CEREAL_CLASS_VERSION(LSystem::RandomLengthOperation, LSystem::RandomLengthOperation::Version);
+CEREAL_CLASS_VERSION(LSystem::ScaleOperation, LSystem::ScaleOperation::Version);
+CEREAL_CLASS_VERSION(LSystem::StartOperation, LSystem::StartOperation::Version);
+
 
 
 namespace LSystem
