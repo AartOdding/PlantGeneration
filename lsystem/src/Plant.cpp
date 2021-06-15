@@ -13,6 +13,11 @@ CEREAL_CLASS_VERSION(LSystem::Connection, LSystem::Connection::Version);
 CEREAL_CLASS_VERSION(LSystem::Operation, LSystem::Operation::Version);
 CEREAL_CLASS_VERSION(LSystem::Parameter, LSystem::Parameter::Version);
 
+CEREAL_CLASS_VERSION(LSystem::BoolParameter, LSystem::BoolParameter::Version);
+CEREAL_CLASS_VERSION(LSystem::ColorParameter, LSystem::ColorParameter::Version);
+CEREAL_CLASS_VERSION(LSystem::FloatParameter, LSystem::FloatParameter::Version);
+CEREAL_CLASS_VERSION(LSystem::IntParameter, LSystem::IntParameter::Version);
+
 
 
 namespace LSystem
