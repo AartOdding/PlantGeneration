@@ -5,26 +5,6 @@
 namespace LSystem
 {
 
-    std::vector<Instruction*> CreatePhyllotaxis(InstructionPool& lsystem, int count, float length, float spread, float roll)
-    {
-        std::vector<Instruction*> instructions;
-
-        if (count > 0)
-        {
-            instructions.reserve(count);
-
-            auto pitch_ratio = (spread / 2.0f) / glm::sqrt(static_cast<float>(count));
-            constexpr float golden_angle = 137.508;
-
-            for (int i = 0; i < count; ++i)
-            {
-                instructions.push_back(lsystem.CreateExtrusion(length, roll + i * golden_angle, pitch_ratio * glm::sqrt(static_cast<float>(i))));
-            }
-        }
-
-        return instructions;
-    }
-
     PhyllotaxisOperation::PhyllotaxisOperation()
         : Operation({ 1, 1, "Create Phyllotaxis" })
     {
@@ -34,7 +14,7 @@ namespace LSystem
         AddParameter(roll);
     }
 
-    void PhyllotaxisOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, InstructionPool& lsystem, Plant* plant)
+    void PhyllotaxisOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, Plant* plant)
     {
         std::vector<Instruction*> instructions;
 
@@ -42,15 +22,19 @@ namespace LSystem
         {
             instructions.reserve(active_input_values.size() * branch_count);
 
+            const auto pitch_ratio = (spread / 2.0f) / glm::sqrt(static_cast<float>(branch_count));
+            const auto golden_angle = 137.508f;
+
             for (auto onto : active_input_values)
             {
-                auto new_instructions = CreatePhyllotaxis(lsystem, branch_count, branch_length, spread, roll);
-                onto->data->children.insert(onto->data->children.end(), new_instructions.begin(), new_instructions.end());
-                instructions.insert(instructions.end(), new_instructions.begin(), new_instructions.end());
+                for (int i = 0; i < branch_count; ++i)
+                {
+                    instructions.push_back(Extrude(*onto, roll + i * golden_angle, pitch_ratio * glm::sqrt(static_cast<float>(i)), 0, branch_length));
+                }
             }
         }
 
-        ActivateOutput(0, instructions, lsystem, plant);
+        ActivateOutput(0, instructions, plant);
     }
 
 }

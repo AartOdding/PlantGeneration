@@ -184,7 +184,7 @@ namespace LSystem
 
 	VertexBuffer Plant::Generate()
 	{
-		InstructionPool lsystem;
+		VertexBuffer render_buffer;
 
 		auto start = GetStartOperation();
 
@@ -195,19 +195,21 @@ namespace LSystem
 				op->ResetState();
 			}
 
-			start->Execute(0, {}, lsystem, this);
+			start->Execute(0, {}, this);
+
+			ExecuteInstruction(start->start_instruction.get(), glm::mat4(1), render_buffer);
 		}
 
-		return lsystem.Generate(1);
+		return render_buffer;
 	}
 
-	void Plant::ActivateOutput(Operation* output, int output_index, const std::vector<Instruction*>& output_values, InstructionPool& lsystem)
+	void Plant::ActivateOutput(Operation* output, int output_index, const std::vector<Instruction*>& output_values)
 	{
 		auto next = GetConnectedOperations(output, output_index);
 
 		for (auto& [op, index] : next)
 		{
-			op->Execute(index, output_values, lsystem, this);
+			op->Execute(index, output_values, this);
 		}
 	}
 

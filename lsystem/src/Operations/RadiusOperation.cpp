@@ -16,27 +16,20 @@ namespace LSystem
 		AddParameter(enable_radius_change);
 	}
 
-	void RadiusOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, InstructionPool& lsystem, Plant* plant)
+	void RadiusOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, Plant* plant)
 	{
 		if (enable_sides)
 		{
 			for (auto& i : active_input_values)
 			{
-				i->data->branch_sides = sides;
+				i->branch_sides = sides;
 			}
 		}
 		if (enable_radius)
 		{
 			for (auto& i : active_input_values)
 			{
-				i->data->branch_radius = radius;
-			}
-		}
-		if (enable_radius_change)
-		{
-			for (auto& i : active_input_values)
-			{
-				i->data->branch_radius_change = radius_change;
+				i->branch_radius = radius;
 			}
 		}
 	}

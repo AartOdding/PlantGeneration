@@ -17,7 +17,7 @@ namespace LSystem
 		FloatParameter val_deviation{ "Val Deviation", 0, 0.5, 0.1 };
 		IntParameter random_seed{ "Random Seed", 0, 10000, 0 };
 
-		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, InstructionPool& lsystem, Plant* plant) override;
+		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, Plant* plant) override;
 
 		void ResetState() override;
 

@@ -11,11 +11,11 @@ namespace LSystem
 		AddParameter(color);
 	}
 
-	void ColoringOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, InstructionPool& lsystem, Plant* plant)
+	void ColoringOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, Plant* plant)
 	{
 		for (auto& i : active_input_values)
 		{
-			i->data->branch_color = color;
+			i->branch_color = color;
 		}
 	}
 

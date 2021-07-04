@@ -38,7 +38,7 @@ namespace LSystem
 
 		VertexBuffer Generate();
 
-		void ActivateOutput(Operation* output, int output_index, const std::vector<Instruction*>& output_values, InstructionPool& lsystem);
+		void ActivateOutput(Operation* output, int output_index, const std::vector<Instruction*>& output_values);
 
 		void Clear();
 		void SaveTo(std::ostream& output_stream) const;

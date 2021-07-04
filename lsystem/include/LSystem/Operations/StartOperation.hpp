@@ -11,7 +11,9 @@ namespace LSystem
 	{
 		StartOperation();
 
-		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, InstructionPool& lsystem, Plant* plant) override;
+		std::unique_ptr<Instruction> start_instruction;
+
+		void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, Plant* plant) override;
 
 		static constexpr std::uint32_t Version = 1;
 

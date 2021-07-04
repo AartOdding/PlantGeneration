@@ -67,9 +67,9 @@ namespace LSystem
 		return m_const_parameters;
 	}
 
-	void Operation::ActivateOutput(int output_index, const std::vector<Instruction*>& output_values, InstructionPool& lsystem, Plant* plant)
+	void Operation::ActivateOutput(int output_index, const std::vector<Instruction*>& output_values, Plant* plant)
 	{
-		plant->ActivateOutput(this, output_index, output_values, lsystem);
+		plant->ActivateOutput(this, output_index, output_values);
 	}
 
 }

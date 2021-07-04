@@ -8,7 +8,6 @@ set(PUBLIC_FILES
     include/LSystem/Connection.hpp
     include/LSystem/Forward.hpp
     include/LSystem/Instruction.hpp
-    include/LSystem/InstructionPool.hpp
     include/LSystem/LSystem.hpp
     include/LSystem/Operation.hpp
     include/LSystem/Parameter.hpp
@@ -44,7 +43,7 @@ set(PUBLIC_FILES
 
 # Private files, can be cpp or hpp, should be in src folder
 set(PRIVATE_FILES
-    src/LSystem.cpp
+    src/Instruction.cpp
     src/Operation.cpp
     src/Parameter.cpp
     src/Plant.cpp

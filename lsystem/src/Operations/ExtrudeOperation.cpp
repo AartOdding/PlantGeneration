@@ -13,7 +13,7 @@ namespace LSystem
         AddParameter(pitch);
     }
 
-    void ExtrudeOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, InstructionPool& lsystem, Plant* plant)
+    void ExtrudeOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, Plant* plant)
     {
         std::vector<Instruction*> instructions;
 
@@ -23,13 +23,11 @@ namespace LSystem
 
             for (auto onto : active_input_values)
             {
-                auto new_instruction = lsystem.CreateExtrusion(branch_length, roll, pitch);
-                onto->data->children.push_back(new_instruction);
-                instructions.push_back(new_instruction);
+                instructions.push_back(Extrude(*onto, roll, pitch, 0, branch_length));
             }
         }
 
-        ActivateOutput(0, instructions, lsystem, plant);
+        ActivateOutput(0, instructions, plant);
     }
 
 }

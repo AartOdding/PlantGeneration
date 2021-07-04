@@ -6,7 +6,6 @@
 
 #include <LSystem/Forward.hpp>
 #include <LSystem/Instruction.hpp>
-#include <LSystem/InstructionPool.hpp>
 
 #include <LSystem/Parameters/BoolParameter.hpp>
 #include <LSystem/Parameters/ColorParameter.hpp>
@@ -47,7 +46,7 @@ namespace LSystem
 		const std::vector<const Parameter*>& Parameters() const;
 
 		// Called by plant, when executing "Return" output using ActivateOutput function.
-		virtual void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, InstructionPool& lsystem, Plant* plant) = 0;
+		virtual void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, Plant* plant) = 0;
 
 		virtual void ResetState() { }
 
@@ -66,7 +65,7 @@ namespace LSystem
 	protected:
 
 		// Can call back into plant
-		void ActivateOutput(int output_index, const std::vector<Instruction*>& output_values, InstructionPool& lsystem, Plant* plant);
+		void ActivateOutput(int output_index, const std::vector<Instruction*>& output_values, Plant* plant);
 
 	private:
 

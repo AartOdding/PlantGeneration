@@ -19,11 +19,11 @@ namespace LSystem
 		AddParameter(random_seed);
 	}
 
-	void RandomLengthOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, InstructionPool& lsystem, Plant* plant)
+	void RandomLengthOperation::Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, Plant* plant)
 	{
 		for (auto& i : active_input_values)
 		{
-			i->data->length = glm::linearRand<float>(min, max);
+			i->distance = glm::linearRand<float>(min, max);
 		}
 	}
 
