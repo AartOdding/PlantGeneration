@@ -8,6 +8,8 @@ namespace LSystem
 	struct Instruction;
 	struct Operation;
 	struct OperationInfo;
+	struct Modifier;
+	struct ModifierInfo;
 	struct Parameter;
 	struct ParameterList;
 	struct Plant;

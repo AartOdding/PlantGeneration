@@ -2,6 +2,7 @@
 
 #include <LSystem/Connection.hpp>
 #include <LSystem/Instruction.hpp>
+#include <LSystem/Modifier.hpp>
 #include <LSystem/Operation.hpp>
 #include <LSystem/Parameter.hpp>
 #include <LSystem/Plant.hpp>

@@ -9,6 +9,7 @@ set(PUBLIC_FILES
     include/LSystem/Forward.hpp
     include/LSystem/Instruction.hpp
     include/LSystem/LSystem.hpp
+    include/LSystem/Modifier.hpp
     include/LSystem/Operation.hpp
     include/LSystem/Parameter.hpp
     include/LSystem/ParameterList.hpp
@@ -45,6 +46,7 @@ set(PUBLIC_FILES
 # Private files, can be cpp or hpp, should be in src folder
 set(PRIVATE_FILES
     src/Instruction.cpp
+    src/Modifier.cpp
     src/Operation.cpp
     src/Parameter.cpp
     src/ParameterList.cpp

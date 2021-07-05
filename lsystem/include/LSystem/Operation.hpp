@@ -6,6 +6,7 @@
 
 #include <LSystem/Forward.hpp>
 #include <LSystem/Instruction.hpp>
+#include <LSystem/Modifier.hpp>
 #include <LSystem/ParameterList.hpp>
 
 #include <LSystem/Parameters/BoolParameter.hpp>
@@ -40,6 +41,12 @@ namespace LSystem
 		const OperationInfo& GetInfo() const;
 		Identifier<Operation> GetID() const;
 
+		Modifier* AddModifier(std::unique_ptr<Modifier>&& modifier);
+		bool DeleteModifier(Identifier<Modifier> modifier);
+
+		const std::vector<Modifier*>& Modifiers();
+		const std::vector<const Modifier*>& Modifiers() const;
+
 		// Called by plant, when executing "Return" output using ActivateOutput function.
 		virtual void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, Plant* plant) = 0;
 
@@ -66,6 +73,10 @@ namespace LSystem
 
 		Identifier<Operation> m_id;
 		OperationInfo m_info;
+
+		std::vector<std::unique_ptr<Modifier>> m_modifiers_owned;
+		std::vector<Modifier*> m_modifiers_pointers;
+		std::vector<const Modifier*> m_modifiers_pointers_const;
 
 	};
 
