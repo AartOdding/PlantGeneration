@@ -9,6 +9,7 @@ namespace LSystem
 	struct Operation;
 	struct OperationInfo;
 	struct Parameter;
+	struct ParameterList;
 	struct Plant;
 	struct VertexBuffer;
 	struct Vertex;

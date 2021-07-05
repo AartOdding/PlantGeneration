@@ -1,11 +1,12 @@
 #pragma once
 
 #include <string>
-#include <string_view>
+#include <stdexcept>
 #include <vector>
 
 #include <LSystem/Forward.hpp>
 #include <LSystem/Instruction.hpp>
+#include <LSystem/ParameterList.hpp>
 
 #include <LSystem/Parameters/BoolParameter.hpp>
 #include <LSystem/Parameters/ColorParameter.hpp>
@@ -30,7 +31,7 @@ namespace LSystem
 		std::string description;
 	};
 
-	struct Operation : NoCopy, NoMove
+	struct Operation : ParameterList, NoCopy, NoMove
 	{
 		Operation(const OperationInfo& info);
 
@@ -38,12 +39,6 @@ namespace LSystem
 
 		const OperationInfo& GetInfo() const;
 		Identifier<Operation> GetID() const;
-
-		bool AddParameter(Parameter& parameter);
-		bool RemoveParameter(Parameter& parameter);
-
-		const std::vector<Parameter*>& Parameters();
-		const std::vector<const Parameter*>& Parameters() const;
 
 		// Called by plant, when executing "Return" output using ActivateOutput function.
 		virtual void Execute(int active_input_index, const std::vector<Instruction*>& active_input_values, Plant* plant) = 0;
@@ -71,9 +66,6 @@ namespace LSystem
 
 		Identifier<Operation> m_id;
 		OperationInfo m_info;
-
-		std::vector<Parameter*> m_parameters;
-		std::vector<const Parameter*> m_const_parameters;
 
 	};
 

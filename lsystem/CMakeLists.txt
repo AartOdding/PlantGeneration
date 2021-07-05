@@ -11,6 +11,7 @@ set(PUBLIC_FILES
     include/LSystem/LSystem.hpp
     include/LSystem/Operation.hpp
     include/LSystem/Parameter.hpp
+    include/LSystem/ParameterList.hpp
     include/LSystem/Plant.hpp
     include/LSystem/VertexBuffer.hpp
 
@@ -46,6 +47,7 @@ set(PRIVATE_FILES
     src/Instruction.cpp
     src/Operation.cpp
     src/Parameter.cpp
+    src/ParameterList.cpp
     src/Plant.cpp
 
     src/Operations/ColoringOperation.cpp
