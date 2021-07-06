@@ -11,6 +11,8 @@ set(SOURCES
     src/main.cpp
     src/Widgets/MainWindow.cpp
     src/Widgets/MainWindow.hpp
+    src/Widgets/Node.cpp
+    src/Widgets/Node.hpp
     src/Widgets/NodeEditorWidget.cpp
     src/Widgets/NodeEditorWidget.hpp
     src/Controllers/ModelController.cpp
@@ -21,7 +23,8 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 
-target_link_libraries(${PROJECT_NAME} Qt6::Widgets)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Widgets)
+target_link_libraries(${PROJECT_NAME} PRIVATE lsystem)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 
