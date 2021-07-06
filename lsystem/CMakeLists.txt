@@ -11,6 +11,7 @@ set(PUBLIC_FILES
     include/LSystem/LSystem.hpp
     include/LSystem/Modifier.hpp
     include/LSystem/Operation.hpp
+    include/LSystem/OperationDatabase.hpp
     include/LSystem/Parameter.hpp
     include/LSystem/ParameterList.hpp
     include/LSystem/Plant.hpp
@@ -48,6 +49,7 @@ set(PRIVATE_FILES
     src/Instruction.cpp
     src/Modifier.cpp
     src/Operation.cpp
+    src/OperationDatabase.cpp
     src/Parameter.cpp
     src/ParameterList.cpp
     src/Plant.cpp

@@ -5,8 +5,17 @@
 namespace LSystem
 {
 
+    const OperationInfo ForkOperation::info
+    {
+        1,
+        1,
+        "Fork",
+        "Creates a fork",
+        []() { return std::make_unique<ForkOperation>(); }
+    };
+
     ForkOperation::ForkOperation()
-        : Operation({ 1, 1, "Create Fork" })
+        : Operation(info)
     {
         AddParameter(branch_count);
         AddParameter(branch_length);

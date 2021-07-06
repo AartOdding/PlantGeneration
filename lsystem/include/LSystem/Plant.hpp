@@ -6,6 +6,7 @@
 #include <utility>
 #include <vector>
 
+#include <LSystem/Connection.hpp>
 #include <LSystem/Forward.hpp>
 #include <LSystem/VertexBuffer.hpp>
 #include <LSystem/Utils/Identifier.hpp>

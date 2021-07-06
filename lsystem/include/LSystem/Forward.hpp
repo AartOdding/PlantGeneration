@@ -7,6 +7,7 @@ namespace LSystem
 	struct Connection;
 	struct Instruction;
 	struct Operation;
+	struct OperationDatabase;
 	struct OperationInfo;
 	struct Modifier;
 	struct ModifierInfo;

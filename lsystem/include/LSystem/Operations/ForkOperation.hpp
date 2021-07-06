@@ -9,6 +9,8 @@ namespace LSystem
 
 	struct ForkOperation : Operation
 	{
+		static const OperationInfo info;
+
 		ForkOperation();
 
 		IntParameter branch_count{ "Count", 0, 255, 9 };

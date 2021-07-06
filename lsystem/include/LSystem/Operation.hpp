@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <string>
 #include <stdexcept>
 #include <vector>
@@ -29,7 +30,9 @@ namespace LSystem
 	{
 		int input_count;
 		int output_count;
+		std::string short_name;
 		std::string description;
+		std::function<std::unique_ptr<Operation>()> create_function;
 	};
 
 	struct Operation : ParameterList, NoCopy, NoMove
