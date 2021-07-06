@@ -4,6 +4,7 @@ project(4mbjam LANGUAGES CXX)
 # set location of module finding scrips
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 set(CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_PREFIX_PATH})
+set(CMAKE_PREFIX_PATH "D:/Frameworks/Qt/6.1.2/msvc2019_64/lib/cmake" ${CMAKE_PREFIX_PATH})
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 include(FetchContent)
@@ -37,6 +38,7 @@ include("${CMAKE_SOURCE_DIR}/cmake/imgui.cmake")
 find_package(Glm REQUIRED)
 
 add_subdirectory(editor)
+add_subdirectory(plant-editor)
 add_subdirectory(game)
 add_subdirectory(lsystem)
 add_subdirectory(resources)
