@@ -10,6 +10,7 @@
 #include <cmrc/cmrc.hpp>
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <fstream>
 #include <iostream>
